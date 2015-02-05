@@ -12,6 +12,9 @@ public class SellTicketsState : GameState {
 
 	public override void OnEnter (GameManager gameManager) {
 		this.gameManager = gameManager;
+		WrestlingEvent currentEvent = gameManager.GetCurrentEvent();
+		ticketsPerSecond += currentEvent.EventVenue.popularity * currentEvent.EventVenue.capacity / secondsToSell;
+
 		StartCoroutine("SellTickets");
 	}
 
@@ -26,6 +29,8 @@ public class SellTicketsState : GameState {
 		}
 		else {
 			ticketsSold += ticketsPerSecond * Time.deltaTime * Random.Range(0.5f, 1.5f);
+			ticketsSold = Mathf.Clamp(ticketsSold, 0.0f, gameManager.GetCurrentEvent().EventVenue.capacity);
+
 			if (Mathf.FloorToInt(ticketsSold) != gameManager.GetCurrentEvent().ticketsSold) {
 				gameManager.GetCurrentEvent().ticketsSold = Mathf.FloorToInt(ticketsSold);
 			}
