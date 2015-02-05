@@ -1,0 +1,82 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
+using System.Collections;
+using System.Collections.Generic;
+
+public class GUIManager : MonoBehaviour {
+	public Canvas canvas;
+	public GameObject selectOptionDialogPrefab;
+	public GameObject textInputDialogPrefab;
+	public GameObject infoDialogPrefab;
+	public StatusPanel statusPanel;
+
+	SelectOptionDialog dialogBox;
+	TextInputDialog textInputDialogBox;
+	GameManager gameManager;
+
+	void Start() {
+		if (canvas == null) {
+			Debug.LogError("Unable to start GUI Manager: Canvas isn't set.");
+		}
+
+		if (statusPanel == null) {
+			Debug.LogError("Unable to start GUI Manager: Status panel isn't set");
+		}
+
+		if (selectOptionDialogPrefab == null || selectOptionDialogPrefab.GetComponent<SelectOptionDialog>() == null) {
+			Debug.LogError("Unable to start GUI Manager: Select Option Dialog prefab isn't set or is missing SelectOptionDialog script.");
+		}
+
+		if (textInputDialogPrefab == null || textInputDialogPrefab.GetComponent<TextInputDialog>() == null) {
+			Debug.LogError("Unable to start GUI Manager: Text Input Dialog prefab isn't set or is missing TextInputDialog script.");
+		}
+
+		if (infoDialogPrefab == null || infoDialogPrefab.GetComponent<InfoDialog>() == null) {
+			Debug.LogError("Unable to start GUI Manager: Info Dialog prefab isn't set or is missing InfoDialog script.");
+		}
+
+		GameObject gameManagerObj = GameObject.FindGameObjectWithTag("Game Manager");
+		if (gameManagerObj == null || gameManagerObj.GetComponent<GameManager>() == null) {
+			Debug.LogError("Unable to start\t GUI Manager: No object in the scene is tagged Game Manager.");
+		}
+		gameManager = gameManagerObj.GetComponent<GameManager>();
+	}
+
+	public SelectOptionDialog InstantiateSelectOptionDialog() {
+		GameObject dialogObj = Instantiate(selectOptionDialogPrefab) as GameObject;
+		dialogObj.transform.SetParent(canvas.transform, false);
+		
+		return dialogObj.GetComponent<SelectOptionDialog>();
+	}
+
+	public TextInputDialog InstantiateTextInputDialog() {
+		GameObject dialogObj = Instantiate(textInputDialogPrefab) as GameObject;
+		dialogObj.transform.SetParent(canvas.transform, false);
+		
+		return dialogObj.GetComponent<TextInputDialog>();
+	}
+
+	public InfoDialog InstantiateInfoDialog() {
+		GameObject dialogObj = Instantiate(infoDialogPrefab) as GameObject;
+		dialogObj.transform.SetParent(canvas.transform, false);
+		
+		return dialogObj.GetComponent<InfoDialog>();
+	}
+
+	public void OnCreateEventClick() {
+		gameManager.CreateNewEvent();
+	}
+
+	public StatusPanel GetStatusPanel() {
+		return statusPanel;
+	}
+
+	public void ShowStatusPanel() {
+		statusPanel.gameObject.SetActive(true);
+	}
+
+	public void HideStatusPanel() {
+		statusPanel.gameObject.SetActive(false);
+	}
+}
