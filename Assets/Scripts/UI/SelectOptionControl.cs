@@ -1,0 +1,101 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+
+public class SelectOptionDialogOption {
+	public string name;
+	public string description;
+	public bool isInteractable;
+	
+	public SelectOptionDialogOption(string name, string description, bool isInteractable = true) {
+		this.name = name;
+		this.description = description;
+		this.isInteractable = isInteractable;
+	}
+}
+
+public class SelectOptionControl : MonoBehaviour {
+	public Toggle optionPrefab;
+	public GameObject optionContainer;
+	public Scrollbar optionScrollbar;
+	public Text secondaryTitle;
+	public Text secondaryDescription;
+
+	List<Toggle> optionObjects = new List<Toggle>();
+	List<SelectOptionDialogOption> optionData = new List<SelectOptionDialogOption>();
+	int selectedIndex = -1;
+
+	void Start() {
+		if (optionContainer == null) {
+			LogStartError("Options container isn't set");
+		}
+		
+		if (optionScrollbar == null) {
+			LogStartError("Options scrollbar isn't set");
+		}
+		
+		if (secondaryTitle == null) {
+			LogStartError("Secondary title isn't set");
+		}
+		
+		if (secondaryDescription == null) {
+			LogStartError("Secondary description isn't set");
+		}
+		
+		if (optionPrefab == null) {
+			LogStartError("Option prefab isn't set");
+		}
+	}
+	
+	void LogStartError(string message) {
+		Debug.LogError("Unable to start Select Option control: " + message);
+	}
+	
+	public void Initialize(List<SelectOptionDialogOption> options) {		
+		// Add the options to the toggle list.
+		bool isFirst = true;
+		foreach (SelectOptionDialogOption option in options) {			
+			Toggle optionToggle = Instantiate(optionPrefab) as Toggle;
+			optionToggle.transform.SetParent(optionContainer.transform, false);
+			optionToggle.GetComponentInChildren<Text>().text = option.name;
+			optionToggle.group = optionContainer.GetComponent<ToggleGroup>();
+			optionToggle.onValueChanged.AddListener(UpdateSelected);
+			optionToggle.interactable = option.isInteractable;
+			
+			// Save the data and the UI control for later usage.
+			optionObjects.Add(optionToggle);
+			optionData.Add (option);
+			
+			// Enable the first valid option by default.
+			if (isFirst && optionToggle.interactable) {
+				optionToggle.isOn = true;
+			}
+		}
+		
+		// Hide the scrollbar if there's no scrolling to be done.
+		if (optionScrollbar.size == 1.0f) {
+			optionScrollbar.gameObject.SetActive(false);
+		}
+	}
+	
+	public SelectOptionDialogOption GetSelectedOption() {
+		if (selectedIndex == -1) {
+			return null;
+		}
+		else {
+			return optionData[selectedIndex];
+		}
+	}
+	
+	void UpdateSelected(bool isOn) {
+		for (int i = 0; i < optionObjects.Count; ++i) {
+			if (optionObjects[i].isOn) {
+				// Populate secondary panel.
+				selectedIndex = i;
+				secondaryTitle.text = optionData[i].name;
+				secondaryDescription.text = optionData[i].description;
+			}
+		}
+	}
+}

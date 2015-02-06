@@ -9,6 +9,7 @@ public class GUIManager : MonoBehaviour {
 	public GameObject selectOptionDialogPrefab;
 	public GameObject textInputDialogPrefab;
 	public GameObject infoDialogPrefab;
+	public GameObject singlesMatchDialogPrefab;
 	public StatusPanel statusPanel;
 
 	SelectOptionDialog dialogBox;
@@ -34,6 +35,10 @@ public class GUIManager : MonoBehaviour {
 
 		if (infoDialogPrefab == null || infoDialogPrefab.GetComponent<InfoDialog>() == null) {
 			Debug.LogError("Unable to start GUI Manager: Info Dialog prefab isn't set or is missing InfoDialog script.");
+		}
+
+		if (singlesMatchDialogPrefab == null || singlesMatchDialogPrefab.GetComponent<SinglesMatchDialog>() == null) {
+			Debug.LogError("Unable to start GUI Manager: Singles Match Dialog prefab isn't set or is missing SinglesMatchDialog script.");
 		}
 
 		GameObject gameManagerObj = GameObject.FindGameObjectWithTag("Game Manager");
@@ -62,6 +67,13 @@ public class GUIManager : MonoBehaviour {
 		dialogObj.transform.SetParent(canvas.transform, false);
 		
 		return dialogObj.GetComponent<InfoDialog>();
+	}
+
+	public SinglesMatchDialog InstantiateSinglesMatchDialog() {
+		GameObject dialogObj = Instantiate(singlesMatchDialogPrefab) as GameObject;
+		dialogObj.transform.SetParent(canvas.transform, false);
+		
+		return dialogObj.GetComponent<SinglesMatchDialog>();
 	}
 
 	public void OnCreateEventClick() {

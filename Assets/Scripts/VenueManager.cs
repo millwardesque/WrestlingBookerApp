@@ -9,7 +9,7 @@ public class VenueManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if (!venuePrefab) {
-			Debug.LogError("Unable to start Venue Manager: No vendor prefab is set.");
+			Debug.LogError("Unable to start Venue Manager: No venue prefab is set.");
 		}
 
 		venues = new List<Venue>();
