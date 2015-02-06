@@ -5,17 +5,42 @@ using System.Collections.Generic;
 
 public class ChooseMatchesGameState : GameState {
 	GameManager gameManager;
-	SinglesMatchDialog dialog;
+	SinglesMatchDialog wrestlersDialog;
+	SelectOptionDialog matchTypeDialog;
+	SelectOptionDialog matchFinishDialog;
+	SelectOptionDialog matchWinnerDialog;
+
 	List<Wrestler> wrestlers;
+	List<WrestlingMatchType> matchTypes;
+	List<WrestlingMatchFinish> matchFinishes;
 
 	public override void OnEnter (GameManager gameManager) {
 		this.gameManager = gameManager;
-		dialog = gameManager.GetGUIManager().InstantiateSinglesMatchDialog();
-		dialog.Initialize("Choose the main event wrestlers", GetAvailableWrestlers(), GetAvailableWrestlers(), new UnityAction(OnMatchPicked));
+		wrestlersDialog = gameManager.GetGUIManager().InstantiateSinglesMatchDialog();
+		wrestlersDialog.Initialize("Wrestlers", GetAvailableWrestlers(), GetAvailableWrestlers(), new UnityAction(OnWrestlersPicked));
+	}
+
+	void OnWrestlersPicked() {
+		matchTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+		matchTypeDialog.Initialize("Match type", GetAvailableMatchTypes(), new UnityAction(OnMatchTypePicked));
+	}
+
+	void OnMatchTypePicked() {
+		matchWinnerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+		matchWinnerDialog.Initialize("Match winner", GetMatchWrestlers(), new UnityAction(OnMatchWinnerPicked));
+	}
+
+	void OnMatchWinnerPicked() {
+		matchFinishDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+		matchFinishDialog.Initialize("Match finish", GetAvailableMatchFinishes(), new UnityAction(OnMatchFinishPicked));
+	}
+
+	void OnMatchFinishPicked() {
+		OnMatchPicked ();
 	}
 
 	void OnMatchPicked() {
-		// @TODO Pull match from dialog box.
+		// @TODO Assemble match from data.
 
 		gameManager.OnWrestlingEventUpdated();
 		gameManager.SetState(gameManager.FindState("SellTicketsState"));
@@ -30,5 +55,35 @@ public class ChooseMatchesGameState : GameState {
 		}
 		
 		return wrestlerOptions;
+	}
+
+	List<SelectOptionDialogOption> GetAvailableMatchTypes() {
+		List<SelectOptionDialogOption> matchTypeOptions = new List<SelectOptionDialogOption>();
+		matchTypes = gameManager.GetMatchTypeManager().GetMatchTypes();
+		
+		foreach (WrestlingMatchType matchType in matchTypes) {
+			matchTypeOptions.Add(new SelectOptionDialogOption(matchType.typeName, matchType.description));
+		}
+		
+		return matchTypeOptions;
+	}
+
+	List<SelectOptionDialogOption> GetAvailableMatchFinishes() {
+		List<SelectOptionDialogOption> matchFinishOptions = new List<SelectOptionDialogOption>();
+		matchFinishes = gameManager.GetMatchFinishManager().GetMatchFinishes();
+		
+		foreach (WrestlingMatchFinish matchFinish in matchFinishes) {
+			matchFinishOptions.Add(new SelectOptionDialogOption(matchFinish.finishName, matchFinish.description));
+		}
+		
+		return matchFinishOptions;
+	}
+
+	List<SelectOptionDialogOption> GetMatchWrestlers() {
+		List<SelectOptionDialogOption> matchWrestlers = new List<SelectOptionDialogOption>();
+		matchWrestlers.Add (wrestlersDialog.GetWrestler1());
+		matchWrestlers.Add (wrestlersDialog.GetWrestler2());
+
+		return matchWrestlers;
 	}
 }

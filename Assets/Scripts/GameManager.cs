@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour {
 	VenueManager venueManager;
 	EventTypeManager eventTypeManager;
 	WrestlerManager wrestlerManager;
+	WrestlingMatchTypeManager matchTypeManager;
+	WrestlingMatchFinishManager matchFinishManager;
 	GUIManager guiManager;
 	WrestlingEvent currentEvent;
 	Company playerCompany;
@@ -37,6 +39,16 @@ public class GameManager : MonoBehaviour {
 		wrestlerManager = GameObject.FindObjectOfType<WrestlerManager>();
 		if (null == wrestlerManager) {
 			Debug.LogError("Error starting Game Manager: No wrestler manager was found.");
+		}
+
+		matchTypeManager = GameObject.FindObjectOfType<WrestlingMatchTypeManager>();
+		if (null == matchTypeManager) {
+			Debug.LogError("Error starting Game Manager: No wrestling match type manager was found.");
+		}
+
+		matchFinishManager = GameObject.FindObjectOfType<WrestlingMatchFinishManager>();
+		if (null == matchFinishManager) {
+			Debug.LogError("Error starting Game Manager: No wrestling match finish manager was found.");
 		}
 
 		if (null == wrestlingEventPrefab) {
@@ -113,6 +125,14 @@ public class GameManager : MonoBehaviour {
 
 	public WrestlerManager GetWrestlerManager() {
 		return wrestlerManager;
+	}
+
+	public WrestlingMatchTypeManager GetMatchTypeManager() {
+		return matchTypeManager;
+	}
+
+	public WrestlingMatchFinishManager GetMatchFinishManager() {
+		return matchFinishManager;
 	}
 	
 	public WrestlingEvent GetCurrentEvent() {

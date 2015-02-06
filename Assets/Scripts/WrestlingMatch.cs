@@ -1,15 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class WrestlingMatch : MonoBehaviour {
+public class WrestlingTeam {
+	public string name;
+	public List<Wrestler> wrestlers;
 
-	// Use this for initialization
-	void Start () {
-	
+	public WrestlingTeam(string name, List<Wrestler> wrestlers) {
+		this.name = name;
+		this.wrestlers = wrestlers;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public override string ToString() {
+		return this.name;
 	}
+}
+
+public class WrestlingMatch {
+	public List<WrestlingTeam> teams;
+	public WrestlingMatchType type;
 }
