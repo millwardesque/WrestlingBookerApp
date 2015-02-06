@@ -15,22 +15,20 @@ public class EventTypeManager : MonoBehaviour {
 		types = new List<EventType>();
 		
 		// @TODO Load these from an external source.
-		EventType type;
-
-		type = Instantiate(typePrefab) as EventType;
-		type.Initialize("House show", "A basic house show. No cameras, just local butts in seats.", 2000.0f);
-		types.Add (type);
-
-		type = Instantiate(typePrefab) as EventType;
-		type.Initialize("TV", "A TV show. Gets some national viewership.", 20000.0f);
-		types.Add (type);
-
-		type = Instantiate(typePrefab) as EventType;
-		type.Initialize("PPV", "A pay-per-view show. Draws a world-wide audience.", 100000.0f);
-		types.Add (type);
+		CreateEventType("House show", "A basic house show. No cameras, just local butts in seats.", 2000.0f);
+		CreateEventType("TV", "A TV show. Gets some national viewership.", 20000.0f);
+		CreateEventType("PPV", "A pay-per-view show. Draws a world-wide audience.", 100000.0f);
 	}
 	
 	public List<EventType> GetTypes() {
 		return types;
+	}
+
+	public EventType CreateEventType(string name, string description, float cost) {
+		EventType type = Instantiate(typePrefab) as EventType;
+		type.transform.SetParent(transform, false);
+		type.Initialize(name, description, cost);
+		types.Add (type);
+		return type;
 	}
 }

@@ -27,7 +27,7 @@ public class ChooseVenueGameState : GameState {
 		List<SelectOptionDialogOption> venueOptions = new List<SelectOptionDialogOption>();
 
 		foreach (Venue venue in venues) {
-			bool isInteractable = (venue.baseVenueCost <= gameManager.GetPlayerCompany().money);
+			bool isInteractable = (venue.baseCost <= gameManager.GetPlayerCompany().money);
 			venueOptions.Add(new SelectOptionDialogOption(venue.venueName, venue.venueDescription, isInteractable));
 		}
 		
