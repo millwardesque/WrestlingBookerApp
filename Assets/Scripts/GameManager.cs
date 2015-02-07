@@ -59,12 +59,21 @@ public class GameManager : MonoBehaviour {
 			Debug.LogError("Error starting Game Manager: No company prefab was found.");
 		}
 
-		playerCompany = Instantiate(companyPrefab) as Company;
-		playerCompany.money = 5000.0f;
+		string startStateName = "IdleGameState";
 
-		string startStateName = "NameCompanyGameState";
+		playerCompany = Instantiate(companyPrefab) as Company;
+
+		if (playerCompany.IsSaved("playerCompany")) {
+			playerCompany.Load("playerCompany");
+			GetGUIManager().GetStatusPanel().UpdateCompanyStatus(playerCompany);
+		}
+		else {
+			playerCompany.money = 5000.0f;
+			startStateName = "NameCompanyGameState";
+			GetGUIManager().HideStatusPanel();
+		}
+		
 		SetState (FindState(startStateName));
-		GetGUIManager().HideStatusPanel();
 	}
 	
 	// Update is called once per frame
@@ -148,6 +157,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void OnCompanyUpdated() {
+		playerCompany.Save("playerCompany");
 		GetGUIManager().GetStatusPanel().UpdateCompanyStatus(playerCompany);
 	}
 }
