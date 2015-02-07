@@ -15,11 +15,8 @@ public class EventFinishedState : GameState {
 
 		float talentCost = 0.0f;
 		foreach (WrestlingMatch match in wrestlingEvent.matches) {
-			Debug.Log ("Match");
 			foreach (WrestlingTeam team in match.teams) {
-				Debug.Log ("Team " + team.name);
 				foreach (Wrestler wrestler in team.wrestlers) {
-					Debug.Log ("Wrestler " + wrestler.name + " " + wrestler.perMatchCost);
 					talentCost += wrestler.perMatchCost;
 				}
 			}

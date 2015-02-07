@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -52,9 +53,9 @@ public class SelectOptionControl : MonoBehaviour {
 		Debug.LogError("Unable to start Select Option control: " + message);
 	}
 	
-	public void Initialize(List<SelectOptionDialogOption> options) {		
+	public void Initialize(List<SelectOptionDialogOption> options, int defaultIndex = 0) {		
 		// Add the options to the toggle list.
-		bool isFirst = true;
+		int count = 0;
 		foreach (SelectOptionDialogOption option in options) {			
 			Toggle optionToggle = Instantiate(optionPrefab) as Toggle;
 			optionToggle.transform.SetParent(optionContainer.transform, false);
@@ -68,9 +69,10 @@ public class SelectOptionControl : MonoBehaviour {
 			optionData.Add (option);
 			
 			// Enable the first valid option by default.
-			if (isFirst && optionToggle.interactable) {
+			if (count == defaultIndex && optionToggle.interactable) {
 				optionToggle.isOn = true;
 			}
+			count++;
 		}
 		
 		// Hide the scrollbar if there's no scrolling to be done.
@@ -85,6 +87,23 @@ public class SelectOptionControl : MonoBehaviour {
 		}
 		else {
 			return optionData[selectedIndex];
+		}
+	}
+
+	public void AddChangeListener(UnityAction<bool> listener) {
+		foreach (Toggle option in optionObjects) {
+			option.onValueChanged.AddListener(listener);
+		}
+	}
+
+	public void DisableOption(string name, bool enableAllOthers) {
+		for (int i = 0; i < optionObjects.Count; ++i) {
+			if (optionData[i].name == name) {
+				optionObjects[i].interactable = false;
+			}
+			else if (enableAllOthers) {
+				optionObjects[i].interactable = true;
+			}
 		}
 	}
 	

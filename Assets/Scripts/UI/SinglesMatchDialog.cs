@@ -47,8 +47,13 @@ public class SinglesMatchDialog : MonoBehaviour {
 	public void Initialize(string title, List<SelectOptionDialogOption> wrestler1Options, List<SelectOptionDialogOption> wrestler2Options, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null) {
 		this.title.text = title;
 		
-		wrestler1Control.Initialize(wrestler1Options);
-		wrestler2Control.Initialize(wrestler2Options);
+		wrestler1Control.Initialize(wrestler1Options, 0);
+		wrestler2Control.Initialize(wrestler2Options, 1);
+		OnWrestler1Changed(true); // Manually trigger the functionality to make sure wrestler 2 can't be set to wrestler 1
+		OnWrestler2Changed(true); // Manually trigger the functionality to make sure wrestler 1 can't be set to wrestler 2
+
+		wrestler1Control.AddChangeListener(new UnityAction<bool>(OnWrestler1Changed));
+		wrestler2Control.AddChangeListener(new UnityAction<bool>(OnWrestler2Changed));
 		
 		// Set up click handlers for the buttons.
 		okButton.onClick.AddListener(ClosePanel);
@@ -64,6 +69,22 @@ public class SinglesMatchDialog : MonoBehaviour {
 		}
 		else {
 			Destroy(cancelButton.gameObject);
+		}
+	}
+
+	public void OnWrestler1Changed(bool isOn) {
+		// Make sure wrestler 2 can't select the same wrestler.
+		if (isOn) {
+			Debug.Log ("Wrestler 1 changed.");
+			wrestler2Control.DisableOption(GetWrestler1().name, true);
+		}
+	}
+
+	public void OnWrestler2Changed(bool isOn) {
+		// Make sure wrestler 1 can't select the same wrestler.
+		if (isOn) {
+			Debug.Log ("Wrestler 2 changed.");
+			wrestler1Control.DisableOption(GetWrestler2().name, true);
 		}
 	}
 	
