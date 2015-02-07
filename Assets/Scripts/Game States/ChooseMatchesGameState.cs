@@ -40,7 +40,16 @@ public class ChooseMatchesGameState : GameState {
 	}
 
 	void OnMatchPicked() {
-		// @TODO Assemble match from data.
+		WrestlingMatch match = new WrestlingMatch();
+		Wrestler wrestler1 = wrestlers.Find( x => x.wrestlerName == wrestlersDialog.GetWrestler1().name );
+		Wrestler wrestler2 = wrestlers.Find( x => x.wrestlerName == wrestlersDialog.GetWrestler2().name );
+		match.teams.Add (new WrestlingTeam(wrestler1));
+		match.teams.Add (new WrestlingTeam(wrestler2));
+		match.type = matchTypes.Find ( x => x.typeName == matchTypeDialog.GetSelectedOption().name );
+		match.finish = matchFinishes.Find ( x => x.finishName == matchFinishDialog.GetSelectedOption().name );
+
+		WrestlingEvent currentEvent = gameManager.GetCurrentEvent();
+		currentEvent.matches.Add(match);
 
 		gameManager.OnWrestlingEventUpdated();
 		gameManager.SetState(gameManager.FindState("SellTicketsState"));
