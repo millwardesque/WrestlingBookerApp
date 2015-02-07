@@ -32,6 +32,13 @@ public class SelectOptionDialog : MonoBehaviour {
 		Debug.LogError("Unable to start Select Option Dialog: " + message);
 	}
 
+	void OnGUI() {
+		// Allow the Enter key to submit this form.
+		if (okButton.interactable && Input.GetKey(KeyCode.Return)) {
+			okButton.Select();
+		}
+	}
+
 	public void Initialize(string title, List<SelectOptionDialogOption> options, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null) {
 		this.title.text = title;
 

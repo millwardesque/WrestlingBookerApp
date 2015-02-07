@@ -37,6 +37,13 @@ public class TextInputDialog : MonoBehaviour {
 	void LogStartError(string message) {
 		Debug.LogError("Unable to start Text Input Dialog: " + message);
 	}
+	
+	void OnGUI() {
+		// Allow the Enter key to submit this form.
+		if (okButton.interactable && Input.GetKey(KeyCode.Return)) {
+			okButton.Select();
+		}
+	}
 
 	public void Initialize(string title, string description, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null) {
 		this.title.text = title;
