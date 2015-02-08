@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class WrestlerManager : MonoBehaviour {
-	List<Wrestler> wrestlers;
+	List<Wrestler> wrestlers = new List<Wrestler>();
 	public Wrestler wrestlerPrefab;
 	
 	// Use this for initialization
@@ -11,13 +12,30 @@ public class WrestlerManager : MonoBehaviour {
 		if (!wrestlerPrefab) {
 			Debug.LogError("Unable to start Wrestler Manager: No wrestler prefab is set.");
 		}
-		
-		wrestlers = new List<Wrestler>();
-		
-		// @TODO Load these from an external source.
-		
-		CreateWrestler("Bret Hart", "The best there is, the best there was, and the best there ever will be.", 8000.0f);
-		CreateWrestler("Ric Flair", "The Nature Boy! Whoooo!", 10000.0f);
+
+		LoadFromJSON("Wrestlers");
+	}
+
+	/// <summary>
+	///  Loads the wrestlers from a JSON file.
+	/// </summary>
+	/// <param name="filename">Filename.</param>
+	void LoadFromJSON(string filename) {
+		TextAsset jsonAsset = Resources.Load<TextAsset>(filename);
+		if (jsonAsset != null) {
+			string fileContents = jsonAsset.text;
+			var N = JSON.Parse(fileContents);
+			var wrestlerArray = N["wrestlers"].AsArray;
+			foreach (JSONNode wrestler in wrestlerArray) {
+				string name = wrestler["name"];
+				string description = wrestler["description"];
+				float perMatchCost = wrestler["perMatchCost"].AsFloat;
+				CreateWrestler(name, description, perMatchCost);
+			}
+		}
+		else {
+			Debug.LogError("Unable to load wrestler data from JSON at '" + filename + "': There was an error opening the file.");
+		}
 	}
 	
 	public List<Wrestler> GetWrestlers() {
