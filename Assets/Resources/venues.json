@@ -1,0 +1,7 @@
+{
+	"venues": [
+		{ "name": "Civic Center", "description": "Meh. A small venue with room for only a few people.", "baseCost": 1000.0, "gatePercentage": 0.00, "capacity": 2981, "popularity": 0.5 },
+		{ "name": "Sportatorium", "description": "The southern equivalent to MSG", "baseCost": 50000.0, "gatePercentage": 0.02, "capacity": 4500, "popularity": 0.8 },
+		{ "name": "MSG", "description": "Primetime venue in NYC.", "baseCost": 100000.0, "gatePercentage": 0.05, "capacity": 18200, "popularity": 0.7 }
+	]
+}

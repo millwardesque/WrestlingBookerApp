@@ -13,7 +13,7 @@ public class WrestlerManager : MonoBehaviour {
 			Debug.LogError("Unable to start Wrestler Manager: No wrestler prefab is set.");
 		}
 
-		LoadFromJSON("Wrestlers");
+		LoadFromJSON("wrestlers");
 	}
 
 	/// <summary>

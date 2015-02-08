@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class VenueManager : MonoBehaviour {
-	List<Venue> venues;
+	List<Venue> venues = new List<Venue>();
 	public Venue venuePrefab;
 
 	// Use this for initialization
@@ -12,13 +13,32 @@ public class VenueManager : MonoBehaviour {
 			Debug.LogError("Unable to start Venue Manager: No venue prefab is set.");
 		}
 
-		venues = new List<Venue>();
+		LoadFromJSON("venues");
+	}
 
-		// @TODO Load these from an external source.
-
-		CreateVenue("Civic Center", "Meh. A small venue with room for only a few people.", 1000.0f, 0.00f, 2981, 0.5f);
-		CreateVenue("Sportatorium", "The southern equivalent to MSG", 50000.0f, 0.02f, 4500, 0.8f);
-		CreateVenue("MSG", "Primetime venue in NYC.", 100000.0f, 0.05f, 18200, 0.7f);
+	/// <summary>
+	///  Loads the venues from a JSON file.
+	/// </summary>
+	/// <param name="filename">Filename.</param>
+	void LoadFromJSON(string filename) {
+		TextAsset jsonAsset = Resources.Load<TextAsset>(filename);
+		if (jsonAsset != null) {
+			string fileContents = jsonAsset.text;
+			var N = JSON.Parse(fileContents);
+			var venueArray = N["venues"].AsArray;
+			foreach (JSONNode venue in venueArray) {
+				string name = venue["name"];
+				string description = venue["description"];
+				float baseCost = venue["baseCost"].AsFloat;
+				float gatePercentage = venue["gatePercentage"].AsFloat;
+				int capacity = venue["capacity"].AsInt;
+				float popularity = venue["popularity"].AsFloat;
+				CreateVenue(name, description, baseCost, gatePercentage, capacity, popularity);
+			}
+		}
+		else {
+			Debug.LogError("Unable to load event type data from JSON at '" + filename + "': There was an error opening the file.");
+		}
 	}
 	
 	public List<Venue> GetVenues() {
