@@ -23,12 +23,10 @@ public class EventTypeManager : MonoBehaviour {
 	void LoadFromJSON(string filename) {
 		TextAsset jsonAsset = Resources.Load<TextAsset>(filename);
 		if (jsonAsset != null) {
-			Debug.Log ("HERE?");
 			string fileContents = jsonAsset.text;
 			var N = JSON.Parse(fileContents);
 			var eventTypeArray = N["event_types"].AsArray;
 			foreach (JSONNode eventType in eventTypeArray) {
-				Debug.Log ("here");
 				string name = eventType["name"];
 				string description = eventType["description"];
 				float cost = eventType["cost"].AsFloat;
