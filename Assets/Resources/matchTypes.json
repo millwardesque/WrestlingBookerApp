@@ -1,0 +1,6 @@
+{
+	"match_types": [
+		{ "name": "Standard", "description": "The standard singles match. Win by pinfall or submission." },
+		{ "name": "No DQ", "description": "No disqualifications / count-outs! Win by pinfall or submission only." }
+	]
+}

@@ -1,0 +1,6 @@
+{
+	"match_finishes": [
+		{ "name": "Clean win", "description": "There is a single, clear victor" },
+		{ "name": "Dirty win", "description": "The victor wins by cheating." }	
+	]
+}
