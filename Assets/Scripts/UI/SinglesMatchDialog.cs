@@ -75,7 +75,6 @@ public class SinglesMatchDialog : MonoBehaviour {
 	public void OnWrestler1Changed(bool isOn) {
 		// Make sure wrestler 2 can't select the same wrestler.
 		if (isOn) {
-			Debug.Log ("Wrestler 1 changed.");
 			wrestler2Control.DisableOption(GetWrestler1().name, true);
 		}
 	}
@@ -83,7 +82,6 @@ public class SinglesMatchDialog : MonoBehaviour {
 	public void OnWrestler2Changed(bool isOn) {
 		// Make sure wrestler 1 can't select the same wrestler.
 		if (isOn) {
-			Debug.Log ("Wrestler 2 changed.");
 			wrestler1Control.DisableOption(GetWrestler2().name, true);
 		}
 	}
