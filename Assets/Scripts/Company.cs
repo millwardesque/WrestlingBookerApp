@@ -8,7 +8,7 @@ public class Company : MonoBehaviour {
 	public List<Wrestler> roster = new List<Wrestler>();
 	GameManager gameManager;
 
-	void Start() {
+	void Awake() {
 		gameManager = GameObject.FindObjectOfType<GameManager>();
 		if (gameManager == null) {
 			Debug.LogError("Unable to start company: No object has the GameManager component.");

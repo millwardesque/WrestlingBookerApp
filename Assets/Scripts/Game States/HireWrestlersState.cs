@@ -15,20 +15,35 @@ public class HireWrestlersState : GameState {
 	}
 
 	void HireWrestler() {
-		wrestlerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
-		bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().roster.Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
+		bool hasMoreWrestlersToHire = (GetWrestlersForHire().Count > 0);
 
-		wrestlerDialog.Initialize("Hire a wrestler", GetWrestlersForHire(), new UnityAction(OnHireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring));
+		if (hasMoreWrestlersToHire) {
+			bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().roster.Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
+			wrestlerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+			wrestlerDialog.Initialize("Hire a wrestler", GetWrestlersForHire(), new UnityAction(OnHireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring));
+		}
+		else {
+			InfoDialog dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
+			dialog.Initialize("Hire a wrestler", "There aren't any more wrestlers available for hire. Please check back later!", new UnityAction(DoneHiring));
+		}
 	}
 
 	void OnHireWrestler() {
 		Wrestler hiredWrestler = wrestlers.Find ( x => x.wrestlerName == wrestlerDialog.GetSelectedOption().name );
 		gameManager.GetPlayerCompany().roster.Add(hiredWrestler);
+		gameManager.GetPlayerCompany().money -= hiredWrestler.hiringCost;
+		gameManager.OnCompanyUpdated();
 
 		bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().roster.Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
+		bool hasMoreWrestlersToHire = (GetWrestlersForHire().Count > 0);
 
 		addAnotherDialog = gameManager.GetGUIManager().InstantiateInfoDialog();
-		addAnotherDialog.Initialize("Wrestler hired!", "You hired " + hiredWrestler.wrestlerName + "!\n" + (hasTwoPlusWrestlers ? "Would you like to hire another wrestler?" : "Now, choose another wrestler!"), new UnityAction(HireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring));
+		if (hasMoreWrestlersToHire) {
+			addAnotherDialog.Initialize("Wrestler hired!", "You hired " + hiredWrestler.wrestlerName + "!\n" + (hasTwoPlusWrestlers ? "Would you like to hire another wrestler?" : "Now, choose another wrestler!"), new UnityAction(HireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring));
+		}
+		else {
+			addAnotherDialog.Initialize("Wrestler hired!", "You hired " + hiredWrestler.wrestlerName + "!\nThere aren't any more wrestlers available for hire.", new UnityAction(DoneHiring));
+		}
 	}
 
 	void DoneHiring() {
@@ -42,8 +57,8 @@ public class HireWrestlersState : GameState {
 		Company company = gameManager.GetPlayerCompany();
 		foreach (Wrestler wrestler in wrestlers) {
 			// If the wrestler isn't in the company roster, list as hireable.
-			if (null == company.roster.Find( x => x.wrestlerName == wrestler.wrestlerName)) {
-				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, "Cost: " + wrestler.perMatchCost + "\n" + wrestler.description));
+			if (null == company.roster.Find( x => x.wrestlerName == wrestler.wrestlerName) && company.money >= wrestler.hiringCost) {
+				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, "Hiring cost: $" + wrestler.hiringCost + "\nPer-match Cost: $" + wrestler.perMatchCost + "\n" + wrestler.description));
 			}
 		}
 		

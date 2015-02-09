@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour {
 			GetGUIManager().GetStatusPanel().UpdateCompanyStatus(playerCompany);
 		}
 		else {
-			playerCompany.money = 5000.0f;
+			playerCompany.money = 10000.0f;
 			startStateName = "NameCompanyGameState";
 			GetGUIManager().HideStatusPanel();
 		}
