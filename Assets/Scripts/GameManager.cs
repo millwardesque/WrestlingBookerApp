@@ -114,6 +114,11 @@ public class GameManager : MonoBehaviour {
 		return null;
 	}
 
+	public void GoToMainMenu() {
+		Application.LoadLevel("Main Menu");
+	}
+
+
 	public GameState GetDelayedGameState(GameState state) {
 		WaitGameState waitState = FindState ("WaitGameState") as WaitGameState;
 		waitState.Initialize(stateChangeDelay, state);
@@ -121,6 +126,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void ClearSavedData() {
+		playerCompany.DeleteSaved("playerCompany");
 		playerCompany = Instantiate(companyPrefab) as Company;
 		playerCompany.money = 5000.0f;
 		GetGUIManager().HideStatusPanel();

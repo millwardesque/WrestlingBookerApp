@@ -5,6 +5,12 @@ public class Company : MonoBehaviour {
 	public string companyName;
 	public float money;
 
+	public void DeleteSaved(string keyPrefix) {
+		PlayerPrefs.DeleteKey(keyPrefix);
+		PlayerPrefs.DeleteKey(keyPrefix + ".name");
+		PlayerPrefs.DeleteKey(keyPrefix + ".money");
+	}
+
 	public bool Save(string keyPrefix) {
 		PlayerPrefs.SetInt(keyPrefix, 1);
 		PlayerPrefs.SetString (keyPrefix + ".name", companyName);

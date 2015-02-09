@@ -80,6 +80,10 @@ public class GUIManager : MonoBehaviour {
 		gameManager.CreateNewEvent();
 	}
 
+	public void OnMainMenuClick() {
+		gameManager.GoToMainMenu();
+	}
+
 	public void OnClearSavedClick() {
 		gameManager.ClearSavedData();
 	}
