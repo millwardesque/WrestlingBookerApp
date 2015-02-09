@@ -1,20 +1,40 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Company : MonoBehaviour {
 	public string companyName;
 	public float money;
+	public List<Wrestler> roster = new List<Wrestler>();
+	GameManager gameManager;
 
+	void Start() {
+		gameManager = GameObject.FindObjectOfType<GameManager>();
+		if (gameManager == null) {
+			Debug.LogError("Unable to start company: No object has the GameManager component.");
+		}
+	}
+	
 	public void DeleteSaved(string keyPrefix) {
 		PlayerPrefs.DeleteKey(keyPrefix);
 		PlayerPrefs.DeleteKey(keyPrefix + ".name");
 		PlayerPrefs.DeleteKey(keyPrefix + ".money");
+		PlayerPrefs.DeleteKey(keyPrefix + ".roster");
 	}
 
 	public bool Save(string keyPrefix) {
 		PlayerPrefs.SetInt(keyPrefix, 1);
 		PlayerPrefs.SetString (keyPrefix + ".name", companyName);
 		PlayerPrefs.SetFloat (keyPrefix + ".money", money);
+
+		string wrestlerNames = "";
+		if (roster.Count > 0) {
+			foreach (Wrestler wrestler in roster) {
+				wrestlerNames += wrestler.wrestlerName + ",";
+			}
+			wrestlerNames = wrestlerNames.Substring(0, wrestlerNames.Length - 1); // Remove the trailing comma.
+		}
+		PlayerPrefs.SetString (keyPrefix + ".roster", wrestlerNames);
 
 		return true;
 	}
@@ -30,6 +50,17 @@ public class Company : MonoBehaviour {
 
 		if (PlayerPrefs.HasKey(keyPrefix + ".name")) {
 			companyName = PlayerPrefs.GetString(keyPrefix + ".name");
+		}
+
+		if (PlayerPrefs.HasKey (keyPrefix + ".roster")) {
+			string wrestlerNamesString = PlayerPrefs.GetString(keyPrefix + ".roster");
+
+			if (wrestlerNamesString.Length > 0) {
+				string[] wrestlerNames = wrestlerNamesString.Split(',');
+				foreach (string wrestlerName in wrestlerNames) {
+					roster.Add(gameManager.GetWrestlerManager().GetWrestler(wrestlerName));
+				}
+			}
 		}
 
 		return true;

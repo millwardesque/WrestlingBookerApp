@@ -134,6 +134,10 @@ public class GameManager : MonoBehaviour {
 		SetState (FindState("NameCompanyGameState"));
 	}
 
+	public void HireWreslters() {
+		SetState (FindState("HireWrestlersState"));
+	}
+
 	public GUIManager GetGUIManager() {
 		return guiManager;
 	}

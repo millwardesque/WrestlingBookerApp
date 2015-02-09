@@ -80,6 +80,10 @@ public class GUIManager : MonoBehaviour {
 		gameManager.CreateNewEvent();
 	}
 
+	public void OnHireWrestlersClick() {
+		gameManager.HireWreslters();
+	}
+
 	public void OnMainMenuClick() {
 		gameManager.GoToMainMenu();
 	}

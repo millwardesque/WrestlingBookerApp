@@ -8,7 +8,7 @@ public class WrestlerManager : MonoBehaviour {
 	public Wrestler wrestlerPrefab;
 	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		if (!wrestlerPrefab) {
 			Debug.LogError("Unable to start Wrestler Manager: No wrestler prefab is set.");
 		}
@@ -42,6 +42,10 @@ public class WrestlerManager : MonoBehaviour {
 	
 	public List<Wrestler> GetWrestlers() {
 		return wrestlers;
+	}
+
+	public Wrestler GetWrestler(string name) {
+		return wrestlers.Find( x => x.wrestlerName == name );
 	}
 	
 	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel) {

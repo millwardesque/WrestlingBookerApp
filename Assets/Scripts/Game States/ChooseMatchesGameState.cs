@@ -67,7 +67,7 @@ public class ChooseMatchesGameState : GameState {
 
 	List<SelectOptionDialogOption> GetAvailableWrestlers() {
 		List<SelectOptionDialogOption> wrestlerOptions = new List<SelectOptionDialogOption>();
-		wrestlers = gameManager.GetWrestlerManager().GetWrestlers();
+		wrestlers = gameManager.GetPlayerCompany().roster;
 		
 		foreach (Wrestler wrestler in wrestlers) {
 			wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, wrestler.description));
