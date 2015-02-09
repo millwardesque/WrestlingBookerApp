@@ -32,4 +32,15 @@ public class WrestlingMatch {
 		this.type = type;
 		this.finish = finish;
 	}
+
+	public int ParticipantCount {
+		get {
+			int count = 0;
+			foreach (WrestlingTeam team in teams) {
+				count += team.wrestlers.Count;
+			}
+
+			return count;
+		}
+	}
 }

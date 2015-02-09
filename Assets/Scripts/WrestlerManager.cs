@@ -30,7 +30,9 @@ public class WrestlerManager : MonoBehaviour {
 				string name = wrestler["name"];
 				string description = wrestler["description"];
 				float perMatchCost = wrestler["perMatchCost"].AsFloat;
-				CreateWrestler(name, description, perMatchCost);
+				float popularity = wrestler["popularity"].AsFloat;
+				bool isHeel = wrestler["isHeel"].AsBool;
+				CreateWrestler(name, description, perMatchCost, popularity, isHeel);
 			}
 		}
 		else {
@@ -42,10 +44,10 @@ public class WrestlerManager : MonoBehaviour {
 		return wrestlers;
 	}
 	
-	public Wrestler CreateWrestler(string name, string description, float perMatchCost) {
+	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel) {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
-		wrestler.Initialize(name, description, perMatchCost);
+		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel);
 		wrestlers.Add (wrestler);
 		return wrestler;
 	}

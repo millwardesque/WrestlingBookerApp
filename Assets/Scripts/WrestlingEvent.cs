@@ -14,4 +14,20 @@ public class WrestlingEvent : MonoBehaviour {
 
 	Venue eventVenue;
 	public Venue EventVenue { get; set; }
+
+	public float EventInterest {
+		get { 
+			float popularityVsMatchInterestSplit = 0.5f;
+			float interest = EventVenue.popularity * popularityVsMatchInterestSplit;
+
+			foreach (WrestlingMatch match in matches) {
+				foreach (WrestlingTeam team in match.teams) {
+					foreach (Wrestler wrestler in team.wrestlers) {
+						interest += (1.0f - popularityVsMatchInterestSplit) * wrestler.popularity * wrestler.popularity / match.ParticipantCount;
+					}
+				}
+			}
+			return interest;
+		}
+	}
 }

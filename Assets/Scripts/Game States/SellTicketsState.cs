@@ -13,8 +13,8 @@ public class SellTicketsState : GameState {
 	public override void OnEnter (GameManager gameManager) {
 		this.gameManager = gameManager;
 		WrestlingEvent currentEvent = gameManager.GetCurrentEvent();
-		ticketsPerSecond += currentEvent.EventVenue.popularity * currentEvent.EventVenue.capacity / secondsToSell;
 
+		ticketsPerSecond = currentEvent.EventInterest * currentEvent.EventVenue.capacity / secondsToSell;
 		StartCoroutine("SellTickets");
 	}
 
@@ -24,17 +24,16 @@ public class SellTicketsState : GameState {
 		if (finishedSellingTickets) {
 			if (dialog == null) {
 				dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
-				dialog.Initialize("Ticket sales", string.Format("Wow! You sold {0} tickets!", gameManager.GetCurrentEvent().ticketsSold), new UnityAction(AcknowledgedTicketSales));
 			}
 		}
 		else {
 			ticketsSold += ticketsPerSecond * Time.deltaTime * Random.Range(0.5f, 1.5f);
-			ticketsSold = Mathf.Clamp(ticketsSold, 0.0f, gameManager.GetCurrentEvent().EventVenue.capacity);
 
 			if (Mathf.FloorToInt(ticketsSold) != gameManager.GetCurrentEvent().ticketsSold) {
-				gameManager.GetCurrentEvent().ticketsSold = Mathf.FloorToInt(ticketsSold);
+				gameManager.GetCurrentEvent().ticketsSold = Mathf.Clamp(Mathf.FloorToInt(ticketsSold), 0, gameManager.GetCurrentEvent().EventVenue.capacity);
+
+				gameManager.OnWrestlingEventUpdated();
 			}
-			gameManager.OnWrestlingEventUpdated();
 		}
 	}
 
