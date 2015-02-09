@@ -16,8 +16,7 @@ public class ChooseMatchesGameState : GameState {
 
 	public override void OnEnter (GameManager gameManager) {
 		this.gameManager = gameManager;
-		wrestlersDialog = gameManager.GetGUIManager().InstantiateSinglesMatchDialog();
-		wrestlersDialog.Initialize("Wrestlers", GetAvailableWrestlers(), GetAvailableWrestlers(), new UnityAction(OnWrestlersPicked));
+		MakeNewMatch();
 	}
 
 	void OnWrestlersPicked() {
@@ -52,6 +51,17 @@ public class ChooseMatchesGameState : GameState {
 		currentEvent.matches.Add(match);
 
 		gameManager.OnWrestlingEventUpdated();
+
+		InfoDialog makeAnotherDialog = gameManager.GetGUIManager().InstantiateInfoDialog();
+		makeAnotherDialog.Initialize("Add another match?", "Press OK to add another match", new UnityAction(MakeNewMatch), true, new UnityAction(DoneWithMatches));
+	}
+
+	void MakeNewMatch() {
+		wrestlersDialog = gameManager.GetGUIManager().InstantiateSinglesMatchDialog();
+		wrestlersDialog.Initialize("Wrestlers", GetAvailableWrestlers(), GetAvailableWrestlers(), new UnityAction(OnWrestlersPicked));
+	}
+
+	void DoneWithMatches() {
 		gameManager.SetState(gameManager.FindState("SellTicketsState"));
 	}
 
