@@ -24,6 +24,7 @@ public class SellTicketsState : GameState {
 		if (finishedSellingTickets) {
 			if (dialog == null) {
 				dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
+				dialog.Initialize("Ticket sales", string.Format("Wow! You sold {0} tickets!", gameManager.GetCurrentEvent().ticketsSold), new UnityAction(AcknowledgedTicketSales));
 			}
 		}
 		else {
