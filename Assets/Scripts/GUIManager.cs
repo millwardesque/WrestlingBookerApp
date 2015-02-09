@@ -80,6 +80,10 @@ public class GUIManager : MonoBehaviour {
 		gameManager.CreateNewEvent();
 	}
 
+	public void OnClearSavedClick() {
+		gameManager.ClearSavedData();
+	}
+
 	public StatusPanel GetStatusPanel() {
 		return statusPanel;
 	}

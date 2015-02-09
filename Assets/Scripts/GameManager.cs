@@ -120,6 +120,14 @@ public class GameManager : MonoBehaviour {
 		return waitState;
 	}
 
+	public void ClearSavedData() {
+		playerCompany = Instantiate(companyPrefab) as Company;
+		playerCompany.money = 5000.0f;
+		GetGUIManager().HideStatusPanel();
+		
+		SetState (FindState("NameCompanyGameState"));
+	}
+
 	public GUIManager GetGUIManager() {
 		return guiManager;
 	}
