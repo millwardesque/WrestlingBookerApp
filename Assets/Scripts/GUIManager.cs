@@ -17,7 +17,7 @@ public class GUIManager : MonoBehaviour {
 	TextInputDialog textInputDialogBox;
 	GameManager gameManager;
 
-	void Start() {
+	void Awake() {
 		if (canvas == null) {
 			Debug.LogError("Unable to start GUI Manager: Canvas isn't set.");
 		}
@@ -45,7 +45,9 @@ public class GUIManager : MonoBehaviour {
 		if (singlesMatchDialogPrefab == null || singlesMatchDialogPrefab.GetComponent<SinglesMatchDialog>() == null) {
 			Debug.LogError("Unable to start GUI Manager: Singles Match Dialog prefab isn't set or is missing SinglesMatchDialog script.");
 		}
+	}
 
+	void Start() {
 		GameObject gameManagerObj = GameObject.FindGameObjectWithTag("Game Manager");
 		if (gameManagerObj == null || gameManagerObj.GetComponent<GameManager>() == null) {
 			Debug.LogError("Unable to start\t GUI Manager: No object in the scene is tagged Game Manager.");

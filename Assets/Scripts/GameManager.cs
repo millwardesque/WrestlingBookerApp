@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour {
 	Company playerCompany;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		GameObject guiManagerObj = GameObject.FindGameObjectWithTag("GUI Manager");
 		if (null == guiManagerObj || null == guiManagerObj.GetComponent<GUIManager>()) {
 			Debug.LogError("Error starting Game Manager: No tagged GUI Manager was found.");
@@ -58,6 +58,9 @@ public class GameManager : MonoBehaviour {
 		if (null == companyPrefab) {
 			Debug.LogError("Error starting Game Manager: No company prefab was found.");
 		}
+	}
+
+	void Start()  {
 
 		string startStateName = "IdleGameState";
 
@@ -177,5 +180,9 @@ public class GameManager : MonoBehaviour {
 	public void OnCompanyUpdated() {
 		playerCompany.Save("playerCompany");
 		GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
+	}
+
+	public void OnTimeUpdated(TimeManager timeManager) {
+		GetGUIManager().GetGameInfoPanel().UpdateTime(timeManager);
 	}
 }
