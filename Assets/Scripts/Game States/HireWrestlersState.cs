@@ -19,7 +19,7 @@ public class HireWrestlersState : GameState {
 
 		if (hasMoreWrestlersToHire) {
 			bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().roster.Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
-			wrestlerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+			wrestlerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 			wrestlerDialog.Initialize("Hire a wrestler", GetWrestlersForHire(), new UnityAction(OnHireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring));
 		}
 		else {

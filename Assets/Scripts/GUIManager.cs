@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class GUIManager : MonoBehaviour {
 	public Canvas canvas;
 	public GameObject selectOptionDialogPrefab;
+	public GameObject wideSelectOptionDialogPrefab;
 	public GameObject textInputDialogPrefab;
 	public GameObject infoDialogPrefab;
 	public GameObject singlesMatchDialogPrefab;
@@ -55,8 +56,15 @@ public class GUIManager : MonoBehaviour {
 		gameManager = gameManagerObj.GetComponent<GameManager>();
 	}
 
-	public SelectOptionDialog InstantiateSelectOptionDialog() {
-		GameObject dialogObj = Instantiate(selectOptionDialogPrefab) as GameObject;
+	public SelectOptionDialog InstantiateSelectOptionDialog(bool useWideVersion = false) {
+		GameObject dialogObj;
+
+		if (useWideVersion) {
+			dialogObj = Instantiate(wideSelectOptionDialogPrefab) as GameObject;
+		}
+		else {
+			dialogObj = Instantiate(selectOptionDialogPrefab) as GameObject;
+		}
 		dialogObj.transform.SetParent(canvas.transform, false);
 		
 		return dialogObj.GetComponent<SelectOptionDialog>();

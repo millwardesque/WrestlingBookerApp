@@ -10,7 +10,7 @@ public class ChooseVenueGameState : GameState {
 	
 	public override void OnEnter(GameManager gameManager) {
 		this.gameManager = gameManager;
-		venueDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+		venueDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 		venueDialog.Initialize("Choose the venue", GetAvailableVenues(), new UnityAction(OnVenueSelected));
 	}
 	

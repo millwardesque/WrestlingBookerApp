@@ -10,7 +10,7 @@ public class ChooseEventTypeGameState : GameState {
 	
 	public override void OnEnter(GameManager gameManager) {
 		this.gameManager = gameManager;
-		eventTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+		eventTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 		eventTypeDialog.Initialize("Choose the event type", GetAvailableEventTypes(), new UnityAction(OnTypeSelected));
 	}
 	

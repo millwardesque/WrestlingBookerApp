@@ -5,10 +5,21 @@
     	{ "name": "Hulk Hogan", "description": "Say your prayers, brother!", "perMatchCost": 15000.0, "popularity": 0.9, "isHeel": false, "hiringCost": 30000.0 },
     	{ "name": "The Rock", "description": "The most electrifying man in sports entertainment!", "perMatchCost": 13000.0, "popularity": 0.9, "isHeel": false, "hiringCost": 22000.0 },
     	{ "name": "Earthquake", "description": "Watch out for the aftershocks!", "perMatchCost": 5000.0, "popularity": 0.6, "isHeel": true, "hiringCost": 11000.0 },
-    	{ "name": "Mr. Perfect", "description": "Absolutely perfect.", "perMatchCost": 6000.0, "popularity": 0.7, "isHeel": true, "hiringCost": 12000.0 }
-    	{ "name": "Brooklyn Brawler", "description": "Jobber to the stars.", "perMatchCost": 500.0, "popularity": 0.2, "isHeel": true, "hiringCost": 1000.0 }
-    	{ "name": "Tito Santana", "description": "Ariba!.", "perMatchCost": 1000.0, "popularity": 0.4, "isHeel": false, "hiringCost": 1500.0 }
-    	{ "name": "Koko B. Ware", "description": "The Birdman.", "perMatchCost": 500.0, "popularity": 0.3, "isHeel": false, "hiringCost": 500.0 }
-    	{ "name": "Hillbilly Jim", "description": "The hick from Mudlick.", "perMatchCost" 750.0, "popularity": 0.4, "isHeel": false, "hiringCost": 750.0 }
+    	{ "name": "Mr. Perfect", "description": "Absolutely perfect.", "perMatchCost": 6000.0, "popularity": 0.7, "isHeel": true, "hiringCost": 12000.0 },
+    	{ "name": "Brooklyn Brawler", "description": "Jobber to the stars.", "perMatchCost": 500.0, "popularity": 0.2, "isHeel": true, "hiringCost": 1000.0 },
+    	{ "name": "Tito Santana", "description": "Ariba!.", "perMatchCost": 1000.0, "popularity": 0.4, "isHeel": false, "hiringCost": 1500.0 },
+    	{ "name": "Koko B. Ware", "description": "The Birdman.", "perMatchCost": 500.0, "popularity": 0.3, "isHeel": false, "hiringCost": 500.0 },
+    	{ "name": "Hillbilly Jim", "description": "The hick from Mudlick.", "perMatchCost": 750.0, "popularity": 0.4, "isHeel": false, "hiringCost": 750.0 },
+        { "name": "Rick Martel", "description": "The Model", "perMatchCost": 2000.0, "popularity": 0.4, "isHeel": true, "hiringCost": 750.0 },
+        { "name": "Dusty Rhodes", "description": "The American Dream", "perMatchCost": 10000.0, "popularity": 0.65, "isHeel": false, "hiringCost": 15000.0 },
+        { "name": "Animal", "description": "One half of the Road Warriors", "perMatchCost": 5000.0, "popularity": 0.7, "isHeel": false, "hiringCost": 7000.0 },
+        { "name": "Hawk", "description": "One half of the Road Warriors", "perMatchCost": 5000.0, "popularity": 0.7, "isHeel": false, "hiringCost": 7000.0 },
+        { "name": "Superfly Snuka", "description": "The Superfly", "perMatchCost": 3000.0, "popularity": 0.5, "isHeel": false, "hiringCost": 2000.0 },
+        { "name": "Sting", "description": "The Stinger", "perMatchCost": 9000.0, "popularity": 0.7, "isHeel": false, "hiringCost": 12000.0 },
+        { "name": "Lex Luger", "description": "The Narcissist?!", "perMatchCost": 6000.0, "popularity": 0.5, "isHeel": true, "hiringCost": 8000.0 },
+        { "name": "Arn Anderson", "description": "The Enforcer", "perMatchCost": 7000.0, "popularity": 0.6, "isHeel": true, "hiringCost": 6000.0 },
+        { "name": "Tully Blanchard", "description": "One of the four horsemen", "perMatchCost":  5000.0, "popularity":  0.5, "isHeel": true, "hiringCost": 5000.0 },
+        { "name": "Vader", "description": "The Mastodon", "perMatchCost": 8000.0, "popularity": 0.7, "isHeel": true, "hiringCost": 8000.0 },
+        { "name": "Macho Man", "description": "Ohhhh yeah! Diggit!!", "perMatchCost": 13000.0, "popularity": 0.75, "isHeel": false, "hiringCost": 12000.0 }
     ]
 }
