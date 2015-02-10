@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour {
 
 		if (playerCompany.IsSaved("playerCompany")) {
 			playerCompany.Load("playerCompany");
-			GetGUIManager().GetStatusPanel().UpdateCompanyStatus(playerCompany);
+			GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
 		}
 		else {
 			playerCompany.money = 10000.0f;
@@ -176,6 +176,6 @@ public class GameManager : MonoBehaviour {
 
 	public void OnCompanyUpdated() {
 		playerCompany.Save("playerCompany");
-		GetGUIManager().GetStatusPanel().UpdateCompanyStatus(playerCompany);
+		GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
 	}
 }
