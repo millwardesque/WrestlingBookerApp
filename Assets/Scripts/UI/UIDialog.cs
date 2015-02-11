@@ -23,8 +23,11 @@ public class UIDialog : MonoBehaviour {
 		}
 	}
 
-	public void Initialize(string title, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null) {
+	public void Initialize(string title, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
 		this.title.text = title;
+
+		okButton.GetComponentInChildren<Text>().text = okLabel;
+		cancelButton.GetComponentInChildren<Text>().text = cancelLabel;
 		
 		// Set up click handlers for the buttons.
 		okButton.onClick.AddListener(ClosePanel);

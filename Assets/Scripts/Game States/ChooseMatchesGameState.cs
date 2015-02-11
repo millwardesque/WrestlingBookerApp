@@ -53,7 +53,7 @@ public class ChooseMatchesGameState : GameState {
 		gameManager.OnWrestlingEventUpdated();
 
 		InfoDialog makeAnotherDialog = gameManager.GetGUIManager().InstantiateInfoDialog();
-		makeAnotherDialog.Initialize("Add another match?", "Press OK to add another match", new UnityAction(MakeNewMatch), true, new UnityAction(DoneWithMatches));
+		makeAnotherDialog.Initialize("Add another match?", "Would you like to add another match?", new UnityAction(MakeNewMatch), true, new UnityAction(DoneWithMatches), "Yes", "No");
 	}
 
 	void MakeNewMatch() {

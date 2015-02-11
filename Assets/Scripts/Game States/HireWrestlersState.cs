@@ -39,7 +39,7 @@ public class HireWrestlersState : GameState {
 
 		addAnotherDialog = gameManager.GetGUIManager().InstantiateInfoDialog();
 		if (hasMoreWrestlersToHire) {
-			addAnotherDialog.Initialize("Wrestler hired!", "You hired " + hiredWrestler.wrestlerName + "!\n" + (hasTwoPlusWrestlers ? "Would you like to hire another wrestler?" : "Now, choose another wrestler!"), new UnityAction(HireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring));
+			addAnotherDialog.Initialize("Wrestler hired!", "You hired " + hiredWrestler.wrestlerName + "!\n" + (hasTwoPlusWrestlers ? "Would you like to hire another wrestler?" : "Now, choose another wrestler!"), new UnityAction(HireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring), "Yes", "No");
 		}
 		else {
 			addAnotherDialog.Initialize("Wrestler hired!", "You hired " + hiredWrestler.wrestlerName + "!\nThere aren't any more wrestlers available for hire.", new UnityAction(DoneHiring));

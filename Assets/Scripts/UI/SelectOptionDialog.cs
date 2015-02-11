@@ -13,8 +13,8 @@ public class SelectOptionDialog : UIDialog {
 		}
 	}
 
-	public void Initialize(string title, List<SelectOptionDialogOption> options, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null) {
-		base.Initialize(title, okAction, canCancel, cancelAction);
+	public void Initialize(string title, List<SelectOptionDialogOption> options, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
+		base.Initialize(title, okAction, canCancel, cancelAction, okLabel, cancelLabel);
 		optionControl.Initialize(options);
 	}
 

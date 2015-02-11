@@ -18,8 +18,8 @@ public class SinglesMatchDialog : UIDialog {
 		}
 	}
 	
-	public void Initialize(string title, List<SelectOptionDialogOption> wrestler1Options, List<SelectOptionDialogOption> wrestler2Options, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null) {
-		base.Initialize(title, okAction, canCancel, cancelAction);
+	public void Initialize(string title, List<SelectOptionDialogOption> wrestler1Options, List<SelectOptionDialogOption> wrestler2Options, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
+		base.Initialize(title, okAction, canCancel, cancelAction, okLabel, cancelLabel);
 		
 		wrestler1Control.Initialize(wrestler1Options, 0);
 		wrestler2Control.Initialize(wrestler2Options, 1);

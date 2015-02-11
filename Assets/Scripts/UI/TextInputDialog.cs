@@ -19,8 +19,8 @@ public class TextInputDialog : UIDialog {
 		}
 	}
 
-	public void Initialize(string title, string description, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null) {
-		base.Initialize(title, okAction, canCancel, cancelAction);
+	public void Initialize(string title, string description, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
+		base.Initialize(title, okAction, canCancel, cancelAction, okLabel, cancelLabel);
 		this.description.text = description;
 
 		// Set up the input field validation, and manually invoke once.

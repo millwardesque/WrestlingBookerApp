@@ -12,8 +12,8 @@ public class InfoDialog : UIDialog {
 		}
 	}
 
-	public void Initialize(string title, string message, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null) {
+	public void Initialize(string title, string message, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
 		this.message.text = message;
-		base.Initialize(title, okAction, canCancel, cancelAction);
+		base.Initialize(title, okAction, canCancel, cancelAction, okLabel, cancelLabel);
 	}
 }
