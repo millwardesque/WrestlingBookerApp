@@ -33,7 +33,19 @@ public class VenueManager : MonoBehaviour {
 				float gatePercentage = venue["gatePercentage"].AsFloat;
 				int capacity = venue["capacity"].AsInt;
 				float popularity = venue["popularity"].AsFloat;
-				CreateVenue(name, description, baseCost, gatePercentage, capacity, popularity);
+
+				var matchTypePreferenceArray = venue["matchTypePreference"].AsArray;
+				Dictionary<string, float> matchTypePreferences = new Dictionary<string, float>();
+				foreach (JSONNode type in matchTypePreferenceArray) {
+					matchTypePreferences.Add(type["name"], type["preference"].AsFloat);
+				}
+
+				var matchFinishPreferenceArray = venue["matchFinishPreferences"].AsArray;
+				Dictionary<string, float> matchFinishPreferences = new Dictionary<string, float>();
+				foreach (JSONNode finish in matchFinishPreferenceArray) {
+					matchFinishPreferences.Add(finish["name"], finish["preference"].AsFloat);
+				}
+				CreateVenue(name, description, baseCost, gatePercentage, capacity, popularity, matchTypePreferences, matchFinishPreferences);
 			}
 		}
 		else {
@@ -45,10 +57,10 @@ public class VenueManager : MonoBehaviour {
 		return venues;
 	}
 
-	public Venue CreateVenue(string name, string description, float baseCost, float gatePercentage, int capacity, float popularity) {
+	public Venue CreateVenue(string name, string description, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences) {
 		Venue venue = Instantiate(venuePrefab) as Venue;
 		venue.transform.SetParent(transform, false);
-		venue.Initialize(name, description, baseCost, gatePercentage, capacity, popularity);
+		venue.Initialize(name, description, baseCost, gatePercentage, capacity, popularity, matchTypePreferences, matchFinishPreferences);
 		venues.Add (venue);
 		return venue;
 	}

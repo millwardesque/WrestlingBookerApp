@@ -14,13 +14,15 @@ public class Venue : MonoBehaviour {
 	public Dictionary<string, float> matchTypePreferences = new Dictionary<string, float>();
 	public Dictionary<string, float> matchFinishPreferences = new Dictionary<string, float>();
 
-	public void Initialize(string venueName, string venueDescription, float baseCost, float gatePercentage, int capacity, float popularity) {
+	public void Initialize(string venueName, string venueDescription, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences) {
 		this.venueName = venueName;
 		this.venueDescription = venueDescription;
 		this.baseCost = baseCost;
 		this.gatePercentage = Mathf.Clamp01(gatePercentage);
 		this.capacity = capacity;
 		this.popularity = Mathf.Clamp01(popularity);
+		this.matchTypePreferences = matchTypePreferences;
+		this.matchFinishPreferences = matchFinishPreferences;
 	}
 
 	public float GetVenueCost(WrestlingEvent wrestlingEvent) {

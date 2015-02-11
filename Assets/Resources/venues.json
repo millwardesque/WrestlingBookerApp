@@ -1,12 +1,21 @@
 {
 	"venues": [
-		{ "name": "Civic Center", "description": "Meh. A small venue with room for only a few people.", "baseCost": 1000.0, "gatePercentage": 0.00, "capacity": 2981, "popularity": 0.5 },
+		{ "name": "Civic Center", "description": "Meh. A small venue with room for only a few people.", "baseCost": 1000.0, "gatePercentage": 0.00, "capacity": 2981, "popularity": 0.5,
+			"matchFinishPreferences": [
+				{ "name": "Clean win", "preference": 0.7 },
+				{ "name": "Dirty win", "preference": 0.7 },
+				{ "name": "Countout", "preference": 0.3 },
+				{ "name": "Disqualification", "preference": 0.3 },
+				{ "name": "Outside interference", "preference": 0.7 },
+				{ "name": "Foreign object", "preference": 0.5 }
+			]
+		},
 		{ "name": "Sportatorium", "description": "The southern equivalent to MSG", "baseCost": 50000.0, "gatePercentage": 0.02, "capacity": 4500, "popularity": 0.8 },
 		{ "name": "MSG", "description": "Primetime venue in NYC.", "baseCost": 100000.0, "gatePercentage": 0.05, "capacity": 18200, "popularity": 0.7 },
-    { "name": "Skydome", "description": "Pride of Toronto", "baseCost": 75000.0, "gatePercentage": 0.05, "capacity": 65000, "popularity": 0.5 },
-    { "name": "Greensboro Coliseum Complex", "description": "Greensboro North Carolina", "baseCost": 20000.0, "gatePercentage": 0.1, "capacity": 23000, "popularity": 0.7 },
-    { "name": "Hersheypark Arena", "description": "Hershey PA", "baseCost": 5000.0, "gatePercentage": 0.0, "capacity": 7300, "popularity": 0.4 },
-    { "name": "MGM Grand Garden Arena", "description": "Las Vegas NV", "baseCost": 22000.0, "gatePercentage": 0.0, "capacity": 16800, "popularity": 0.55 },
-    { "name": "Nassau Coliseum", "description": "Long Island NY", "baseCost": 10000, "gatePercentage": 0.25, "capacity": 18100, "popularity": 0.75 }
+	    { "name": "Skydome", "description": "Pride of Toronto", "baseCost": 75000.0, "gatePercentage": 0.05, "capacity": 65000, "popularity": 0.5 },
+	    { "name": "Greensboro Coliseum Complex", "description": "Greensboro North Carolina", "baseCost": 20000.0, "gatePercentage": 0.1, "capacity": 23000, "popularity": 0.7 },
+	    { "name": "Hersheypark Arena", "description": "Hershey PA", "baseCost": 5000.0, "gatePercentage": 0.0, "capacity": 7300, "popularity": 0.4 },
+	    { "name": "MGM Grand Garden Arena", "description": "Las Vegas NV", "baseCost": 22000.0, "gatePercentage": 0.0, "capacity": 16800, "popularity": 0.55 },
+	    { "name": "Nassau Coliseum", "description": "Long Island NY", "baseCost": 10000, "gatePercentage": 0.25, "capacity": 18100, "popularity": 0.75 }
 	]
 }
