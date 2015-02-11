@@ -26,6 +26,7 @@ public class WrestlingMatch {
 	public List<WrestlingTeam> teams = new List<WrestlingTeam>();
 	public WrestlingMatchType type;
 	public WrestlingMatchFinish finish;
+	public float rating = -1.0f; // Negative number == not yet rated.
 
 	void Initialize(List<WrestlingTeam> teams, WrestlingMatchType type, WrestlingMatchFinish finish) {
 		this.teams = teams;
@@ -42,5 +43,17 @@ public class WrestlingMatch {
 
 			return count;
 		}
+	}
+
+	public string VersusString() {
+		string versus = "";
+		for (int i = 0; i < teams.Count; ++i) {
+			versus += teams[i].ToString();
+			if (i + 1 < teams.Count) {
+				versus += " vs. ";
+			}
+		}
+
+		return versus;
 	}
 }

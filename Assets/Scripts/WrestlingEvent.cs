@@ -30,4 +30,19 @@ public class WrestlingEvent : MonoBehaviour {
 			return interest;
 		}
 	}
+
+	public float Rating {
+		get {
+			float rating = 0.0f;
+
+			if (matches.Count > 0) {
+				foreach (WrestlingMatch match in matches) {
+					rating += match.rating;
+				}
+				rating /= matches.Count;
+			}
+
+			return rating;
+		}
+	}
 }

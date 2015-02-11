@@ -31,7 +31,7 @@ public class EventFinishedState : GameState {
 		gameManager.OnCompanyUpdated();
 
 		InfoDialog dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
-					           string reportText = string.Format("{0}\n{1} tickets @ ${2} = ${3}\n{4} costs: -${5}\nVenue: -${6}\nTalent: -${7}\nTotal profit = ${8}", wrestlingEvent.eventName, wrestlingEvent.ticketsSold, wrestlingEvent.ticketPrice, ticketRevenue, wrestlingEvent.Type.typeName, eventTypeCost, venueCost, talentCost, wrestlingEvent.revenue);
+		string reportText = string.Format("{0}\n{1} tickets @ ${2} = ${3}\n{4} costs: -${5}\nVenue: -${6}\nTalent: -${7}\nTotal profit = ${8}\n\nOverall rating: {9} / 10", wrestlingEvent.eventName, wrestlingEvent.ticketsSold, wrestlingEvent.ticketPrice, ticketRevenue, wrestlingEvent.Type.typeName, eventTypeCost, venueCost, talentCost, wrestlingEvent.revenue, Mathf.RoundToInt(wrestlingEvent.Rating * 10.0f));
 		dialog.Initialize("Event Report", reportText, new UnityAction(OnAcknowledgeReport));
 	}
 

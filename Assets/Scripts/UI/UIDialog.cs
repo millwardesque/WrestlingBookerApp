@@ -23,7 +23,7 @@ public class UIDialog : MonoBehaviour {
 		}
 	}
 
-	public void Initialize(string title, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
+	protected void Initialize(string title, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
 		this.title.text = title;
 
 		okButton.GetComponentInChildren<Text>().text = okLabel;
