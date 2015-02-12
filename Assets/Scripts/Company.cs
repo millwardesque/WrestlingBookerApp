@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Company : MonoBehaviour {
 	public string companyName;
 	public float money;
+	public List<WrestlingEvent> eventHistory;
 	public List<Wrestler> roster = new List<Wrestler>();
 	GameManager gameManager;
 
@@ -68,5 +69,22 @@ public class Company : MonoBehaviour {
 
 	public bool IsSaved(string keyPrefix) {
 		return PlayerPrefs.HasKey(keyPrefix);
+	}
+
+	public void AddEvent(WrestlingEvent wrestlingEvent) {
+		eventHistory.Add(wrestlingEvent);
+	}
+
+	public float GetEventTypeInterest(EventType type) {
+		int eventCount = 0;
+		float eventRatingSum = 0.0f;
+		foreach (WrestlingEvent wrestlingEvent in eventHistory) {
+			if (wrestlingEvent.Type.typeName == type.typeName) {
+				eventCount++;
+				eventRatingSum += wrestlingEvent.Rating;
+			}
+		}
+
+		return (eventCount == 0 ? 0.1f : eventRatingSum / eventCount);
 	}
 }

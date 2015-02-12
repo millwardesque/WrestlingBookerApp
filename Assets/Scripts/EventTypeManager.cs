@@ -30,7 +30,10 @@ public class EventTypeManager : MonoBehaviour {
 				string name = eventType["name"];
 				string description = eventType["description"];
 				float cost = eventType["cost"].AsFloat;
-				CreateEventType(name, description, cost);
+				float externalRevenuePerUser = eventType["externalRevenuePerUser"].AsFloat;
+				float ticketsToExternalMultiplier = eventType["ticketsToExternalMultiplier"].AsFloat;
+
+				CreateEventType(name, description, cost, externalRevenuePerUser, ticketsToExternalMultiplier);
 			}
 		}
 		else {
@@ -42,10 +45,10 @@ public class EventTypeManager : MonoBehaviour {
 		return types;
 	}
 
-	public EventType CreateEventType(string name, string description, float cost) {
+	public EventType CreateEventType(string name, string description, float cost, float externalRevenuePerUser, float ticketsToExternalMultiplier) {
 		EventType type = Instantiate(typePrefab) as EventType;
 		type.transform.SetParent(transform, false);
-		type.Initialize(name, description, cost);
+		type.Initialize(name, description, cost, externalRevenuePerUser, ticketsToExternalMultiplier);
 		types.Add (type);
 		return type;
 	}
