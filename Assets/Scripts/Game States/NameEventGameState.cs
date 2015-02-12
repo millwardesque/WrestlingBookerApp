@@ -9,7 +9,8 @@ public class NameEventGameState : GameState {
 	public override void OnEnter(GameManager gameManager) {
 		this.gameManager = gameManager;
 		eventNameDialog = gameManager.GetGUIManager().InstantiateTextInputDialog();
-		eventNameDialog.Initialize("Name your event", "Enter the name of your upcoming event.", new UnityAction(OnNameEntered));
+		int eventCount = gameManager.GetPlayerCompany().eventHistory.Count;
+		eventNameDialog.Initialize("Name your event", "Event #" + (eventCount + 1), "Enter the name of your upcoming event.", new UnityAction(OnNameEntered));
 	}
 	
 	void OnNameEntered() {

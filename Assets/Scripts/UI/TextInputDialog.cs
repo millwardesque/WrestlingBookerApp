@@ -19,13 +19,17 @@ public class TextInputDialog : UIDialog {
 		}
 	}
 
-	public void Initialize(string title, string description, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
+	public void Initialize(string title, string defaultText, string description, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
 		base.Initialize(title, okAction, canCancel, cancelAction, okLabel, cancelLabel);
 		this.description.text = description;
 
 		// Set up the input field validation, and manually invoke once.
 		inputField.onValueChange.AddListener(ValidateInput);
 		ValidateInput(inputField.text);
+
+		if (defaultText != "") {
+			inputField.text = defaultText;
+		}
 
 		// Focus on the input field
 		EventSystem.current.SetSelectedGameObject(inputField.gameObject, null);

@@ -9,7 +9,7 @@ public class NameCompanyGameState : GameState {
 	public override void OnEnter(GameManager gameManager) {
 		this.gameManager = gameManager;
 		companyNameDialog = gameManager.GetGUIManager().InstantiateTextInputDialog();
-		companyNameDialog.Initialize("Name your company", "Enter the name of your new wrestling company.", new UnityAction(OnNameEntered));
+		companyNameDialog.Initialize("Name your company", "AWA", "Enter the name of your new wrestling company.", new UnityAction(OnNameEntered));
 	}
 
 	void OnNameEntered() {
