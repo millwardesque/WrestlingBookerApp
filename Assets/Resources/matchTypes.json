@@ -2,9 +2,7 @@
 	"match_types": [
 		{ "name": "Standard", "description": "The standard singles match. Win by pinfall or submission." },
 		{ "name": "No DQ", "description": "No disqualifications / count-outs! Win by pinfall or submission only." },
-	    { "name": "Iron Man", "description": "The wrestlers fight for 60 minutes and try to score as many victories as possible in that time." },
 	    { "name": "Cage", "description": "The wrestlers are locked in a cage and winner is the first to reach the floor." },
 	    { "name": "Ladder", "description": "A belt is suspended above the ring over a ladder. The winner must climb the ladder and retrieve the belt." },
-	    { "name": "I Quit", "description": "The loser is the first to say 'I Quit!'" }
 	]
 }

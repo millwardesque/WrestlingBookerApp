@@ -34,7 +34,7 @@ public class VenueManager : MonoBehaviour {
 				int capacity = venue["capacity"].AsInt;
 				float popularity = venue["popularity"].AsFloat;
 
-				var matchTypePreferenceArray = venue["matchTypePreference"].AsArray;
+				var matchTypePreferenceArray = venue["matchTypePreferences"].AsArray;
 				Dictionary<string, float> matchTypePreferences = new Dictionary<string, float>();
 				foreach (JSONNode type in matchTypePreferenceArray) {
 					matchTypePreferences.Add(type["name"], type["preference"].AsFloat);

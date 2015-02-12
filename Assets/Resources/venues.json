@@ -8,6 +8,12 @@
 				{ "name": "Disqualification", "preference": 0.3 },
 				{ "name": "Outside interference", "preference": 0.7 },
 				{ "name": "Foreign object", "preference": 0.5 }
+			],
+			"matchTypePreferences": [
+				{ "name": "Standard", "preference": 0.6 },
+				{ "name": "No DQ", "preference": 0.3 },
+				{ "name": "Cage", "preference": 0.7 },
+				{ "name": "Ladder", "preference": 0.2 }
 			]
 		},
 		{ "name": "Sportatorium", "description": "The southern equivalent to MSG", "baseCost": 50000.0, "gatePercentage": 0.02, "capacity": 4500, "popularity": 0.8 },
