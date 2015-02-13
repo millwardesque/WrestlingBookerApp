@@ -10,8 +10,16 @@ public class ChooseEventTypeGameState : GameState {
 	
 	public override void OnEnter(GameManager gameManager) {
 		this.gameManager = gameManager;
-		eventTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
-		eventTypeDialog.Initialize("Choose the event type", GetAvailableEventTypes(), new UnityAction(OnTypeSelected));
+
+		List<SelectOptionDialogOption> availableEventTypes = GetAvailableEventTypes();
+		if (availableEventTypes.Count > 0) {
+			eventTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
+			eventTypeDialog.Initialize("Choose the event type", availableEventTypes, new UnityAction(OnTypeSelected));
+		}
+		else {
+			InfoDialog dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
+			dialog.Initialize("No events available", "You're all out of money!\nTry loaning out some wrestlers to another organization to make some more cash.", new UnityAction(OnNoneAvailableAcknowledge));
+		}
 	}
 	
 	void OnTypeSelected() {
@@ -19,7 +27,11 @@ public class ChooseEventTypeGameState : GameState {
 
 		gameManager.GetCurrentEvent().Type = selected;
 		gameManager.OnWrestlingEventUpdated();
-		gameManager.SetState(gameManager.FindState("ChooseVenueGameState"));
+		gameManager.SetState(gameManager.FindState("NameEventGameState"));
+	}
+
+ 	void OnNoneAvailableAcknowledge() {
+		gameManager.SetState(gameManager.FindState("IdleGameState"));
 	}
 
 	List<SelectOptionDialogOption> GetAvailableEventTypes() {
@@ -28,7 +40,10 @@ public class ChooseEventTypeGameState : GameState {
 
 		foreach (EventType type in types) {
 			bool isInteractable = (type.cost <= gameManager.GetPlayerCompany().money);
-			typeOptions.Add(new SelectOptionDialogOption(type.typeName, type.description, isInteractable));
+
+			if (isInteractable) {
+				typeOptions.Add(new SelectOptionDialogOption(type.typeName, type.description, isInteractable));
+			}
 		}
 
 		return typeOptions;

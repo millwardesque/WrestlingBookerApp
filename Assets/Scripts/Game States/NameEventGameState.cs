@@ -16,6 +16,6 @@ public class NameEventGameState : GameState {
 	void OnNameEntered() {
 		gameManager.GetCurrentEvent().eventName = eventNameDialog.GetUserText();
 		gameManager.OnWrestlingEventUpdated();
-		gameManager.SetState(gameManager.FindState("ChooseEventTypeGameState"));
+		gameManager.SetState(gameManager.FindState("ChooseVenueGameState"));
 	}
 }

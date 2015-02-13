@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void CreateNewEvent() {
-		string startStateName = "NameEventGameState";
+		string startStateName = "ChooseEventTypeGameState";
 		SetState(FindState(startStateName));
 		currentEvent = Instantiate(wrestlingEventPrefab) as WrestlingEvent;
 		GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);

@@ -20,17 +20,17 @@ public class ChooseMatchesGameState : GameState {
 	}
 
 	void OnWrestlersPicked() {
-		matchTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+		matchTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 		matchTypeDialog.Initialize("Match type", GetAvailableMatchTypes(), new UnityAction(OnMatchTypePicked));
 	}
 
 	void OnMatchTypePicked() {
-		matchWinnerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+		matchWinnerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 		matchWinnerDialog.Initialize("Match winner", GetMatchWrestlers(), new UnityAction(OnMatchWinnerPicked));
 	}
 
 	void OnMatchWinnerPicked() {
-		matchFinishDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog();
+		matchFinishDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 		matchFinishDialog.Initialize("Match finish", GetAvailableMatchFinishes(), new UnityAction(OnMatchFinishPicked));
 	}
 
