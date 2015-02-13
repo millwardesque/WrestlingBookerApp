@@ -8,13 +8,23 @@ public class NameEventGameState : GameState {
 	
 	public override void OnEnter(GameManager gameManager) {
 		this.gameManager = gameManager;
-		eventNameDialog = gameManager.GetGUIManager().InstantiateTextInputDialog();
-		int eventCount = gameManager.GetPlayerCompany().eventHistory.Count;
-		eventNameDialog.Initialize("Name your event", "Event #" + (eventCount + 1), "Enter the name of your upcoming event.", new UnityAction(OnNameEntered));
+		int eventNumber = gameManager.GetPlayerCompany().eventHistory.Count + 1;
+
+		if (gameManager.GetCurrentEvent().Type.typeName == "House show") { // Bypass selection for house shows and move right on to the next step.
+			SetEventName("Event #" + eventNumber);
+		}
+		else {
+			eventNameDialog = gameManager.GetGUIManager().InstantiateTextInputDialog();
+			eventNameDialog.Initialize("Name your event", "", "Enter the name of your upcoming event.", new UnityAction(OnNameEntered));
+		}
 	}
 	
 	void OnNameEntered() {
-		gameManager.GetCurrentEvent().eventName = eventNameDialog.GetUserText();
+		SetEventName(eventNameDialog.GetUserText());
+	}
+
+	void SetEventName(string name) {
+		gameManager.GetCurrentEvent().eventName = name;
 		gameManager.OnWrestlingEventUpdated();
 		gameManager.SetState(gameManager.FindState("ChooseVenueGameState"));
 	}

@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour {
 	WrestlingEvent currentEvent;
 	Company playerCompany;
 
+	float startingMoney = 10000.0f;
+
 	// Use this for initialization
 	void Awake () {
 		GameObject guiManagerObj = GameObject.FindGameObjectWithTag("GUI Manager");
@@ -71,7 +73,7 @@ public class GameManager : MonoBehaviour {
 			GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
 		}
 		else {
-			playerCompany.money = 10000.0f;
+			playerCompany.money = startingMoney;
 			startStateName = "NameCompanyGameState";
 			GetGUIManager().HideStatusPanel();
 		}
@@ -131,7 +133,7 @@ public class GameManager : MonoBehaviour {
 	public void ClearSavedData() {
 		playerCompany.DeleteSaved("playerCompany");
 		playerCompany = Instantiate(companyPrefab) as Company;
-		playerCompany.money = 5000.0f;
+		playerCompany.money = startingMoney;
 		GetGUIManager().HideStatusPanel();
 		
 		SetState (FindState("NameCompanyGameState"));

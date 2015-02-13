@@ -14,7 +14,7 @@ public class ChooseEventTypeGameState : GameState {
 		List<SelectOptionDialogOption> availableEventTypes = GetAvailableEventTypes();
 		if (availableEventTypes.Count > 0) {
 			eventTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
-			eventTypeDialog.Initialize("Choose the event type", availableEventTypes, new UnityAction(OnTypeSelected));
+			eventTypeDialog.Initialize("Event type", availableEventTypes, new UnityAction(OnTypeSelected));
 		}
 		else {
 			InfoDialog dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
