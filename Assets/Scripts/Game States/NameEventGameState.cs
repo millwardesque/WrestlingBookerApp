@@ -12,11 +12,21 @@ public class NameEventGameState : GameState {
 
 		if (gameManager.GetCurrentEvent().Type.typeName == "House show") { // Bypass selection for house shows and move right on to the next step.
 			SetEventName("Event #" + eventNumber);
+			return;
 		}
-		else {
-			eventNameDialog = gameManager.GetGUIManager().InstantiateTextInputDialog();
-			eventNameDialog.Initialize("Name your event", "", "Enter the name of your upcoming event.", new UnityAction(OnNameEntered));
+
+		// Default to the last name used for a TV since TV shows don't change titles.
+		string defaultName = "";
+		if (gameManager.GetCurrentEvent ().Type.typeName == "TV") {
+			foreach (WrestlingEvent wrestlingEvent in gameManager.GetPlayerCompany().eventHistory) {
+				if (wrestlingEvent.Type.typeName == "TV") {
+					defaultName = wrestlingEvent.eventName;
+				}
+			}
 		}
+
+		eventNameDialog = gameManager.GetGUIManager().InstantiateTextInputDialog();
+		eventNameDialog.Initialize("Name your event", defaultName, "Enter the name of your upcoming event.", new UnityAction(OnNameEntered));
 	}
 	
 	void OnNameEntered() {
