@@ -5,8 +5,9 @@ using System.Collections.Generic;
 public class Company : MonoBehaviour {
 	public string companyName;
 	public float money;
-	public List<WrestlingEvent> eventHistory;
+	public List<WrestlingEvent> eventHistory = new List<WrestlingEvent>();
 	public List<Wrestler> roster = new List<Wrestler>();
+	public int wrestlerTier = 1;
 	GameManager gameManager;
 
 	void Awake() {
@@ -21,12 +22,14 @@ public class Company : MonoBehaviour {
 		PlayerPrefs.DeleteKey(keyPrefix + ".name");
 		PlayerPrefs.DeleteKey(keyPrefix + ".money");
 		PlayerPrefs.DeleteKey(keyPrefix + ".roster");
+		PlayerPrefs.DeleteKey(keyPrefix + ".wrestlerTier");
 	}
 
 	public bool Save(string keyPrefix) {
 		PlayerPrefs.SetInt(keyPrefix, 1);
 		PlayerPrefs.SetString (keyPrefix + ".name", companyName);
 		PlayerPrefs.SetFloat (keyPrefix + ".money", money);
+		PlayerPrefs.SetInt (keyPrefix + ".wrestlerTier", wrestlerTier);
 
 		string wrestlerNames = "";
 		if (roster.Count > 0) {
@@ -51,6 +54,10 @@ public class Company : MonoBehaviour {
 
 		if (PlayerPrefs.HasKey(keyPrefix + ".name")) {
 			companyName = PlayerPrefs.GetString(keyPrefix + ".name");
+		}
+
+		if (PlayerPrefs.HasKey(keyPrefix + ".wrestlerTier")) {
+			wrestlerTier = PlayerPrefs.GetInt(keyPrefix + ".wrestlerTier");
 		}
 
 		if (PlayerPrefs.HasKey (keyPrefix + ".roster")) {

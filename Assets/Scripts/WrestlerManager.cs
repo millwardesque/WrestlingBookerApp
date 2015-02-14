@@ -33,7 +33,8 @@ public class WrestlerManager : MonoBehaviour {
 				float popularity = wrestler["popularity"].AsFloat;
 				bool isHeel = wrestler["isHeel"].AsBool;
 				float hiringCost = wrestler["hiringCost"].AsFloat;
-				CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost);
+				int tier = wrestler["tier"].AsInt;
+				CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, tier);
 			}
 		}
 		else {
@@ -41,19 +42,25 @@ public class WrestlerManager : MonoBehaviour {
 		}
 	}
 	
-	public List<Wrestler> GetWrestlers() {
-		return wrestlers;
+	public List<Wrestler> GetWrestlers(int tier = 0) {
+		if (tier == 0) {
+			return wrestlers;
+		}
+		else {
+			return wrestlers.FindAll( x => x.tier <= tier);
+		}
 	}
 
 	public Wrestler GetWrestler(string name) {
 		return wrestlers.Find( x => x.wrestlerName == name );
 	}
 	
-	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost) {
+	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int tier) {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
-		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost);
+		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, tier);
 		wrestlers.Add (wrestler);
+
 		return wrestler;
 	}
 }

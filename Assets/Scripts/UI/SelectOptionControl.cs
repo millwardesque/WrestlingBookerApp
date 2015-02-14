@@ -74,14 +74,20 @@ public class SelectOptionControl : MonoBehaviour {
 			}
 			count++;
 		}
+		UpdateScrollbar();
 	}
 
 	void Update() {
+		UpdateScrollbar();
+	}
+
+	void UpdateScrollbar() {
 		// Show / hide the scrollbar depending on whether there's scrolling to be done.
-		if (optionScrollbar.gameObject.activeSelf && optionScrollbar.size == 1.0f) {
+		float myEpsilon = 0.0000001f;
+		if (optionScrollbar.gameObject.activeSelf && (Mathf.Abs (1.0f - optionScrollbar.size) <= myEpsilon)) {
 			optionScrollbar.gameObject.SetActive(false);
 		}
-		else if (!optionScrollbar.gameObject.activeSelf && optionScrollbar.size != 1.0f) {
+		else if (!optionScrollbar.gameObject.activeSelf && (Mathf.Abs (1.0f - optionScrollbar.size) > myEpsilon)) {
 			optionScrollbar.gameObject.SetActive(true);
 		}
 	}
