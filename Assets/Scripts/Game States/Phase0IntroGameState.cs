@@ -17,10 +17,6 @@ public class Phase0IntroGameState : GameState {
 		string message = string.Format("You currently have the resources to support {0} wrestlers, so choose wisely.", gameManager.GetPlayerCompany().maxRosterSize);
 
 		InfoDialog dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
-		dialog.Initialize("Roster selection", message, new UnityAction(OnIntroFinished));
-	}
-	
-	void OnIntroFinished() {
-		ExecuteTransition("FINISHED");
+		dialog.Initialize("Roster selection", message, new UnityAction(OnFinished));
 	}
 }

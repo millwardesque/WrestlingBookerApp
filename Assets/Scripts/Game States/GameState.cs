@@ -19,4 +19,8 @@ public class GameState : MonoBehaviour {
 		}
 		transitions[transitionName]();
 	}
+
+	protected virtual void OnFinished() {
+		ExecuteTransition("FINISHED");
+	}
 }

@@ -137,14 +137,13 @@ public class GameManager : MonoBehaviour {
 
 	public void ClearSavedData() {
 		playerCompany.DeleteSaved("playerCompany");
-		GameObject.Destroy(playerCompany);
+		GameObject.Destroy(playerCompany.gameObject);
 		playerCompany = Instantiate(companyPrefab) as Company;
 
 		StartAtPhase0();
 	}
 
 	public void UpdatePhase() {
-		Debug.Log ("updating phase: " + playerCompany.phase);
 		if (GetPhase() == -1) {
 			playerCompany.money = startingMoney;
 			playerCompany.maxRosterSize = 4;
@@ -155,11 +154,15 @@ public class GameManager : MonoBehaviour {
 			playerCompany.unlockedVenues.Add (venueManager.GetVenue ("Civic Center"));
 			OnCompanyUpdated();
 		}
-		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 2) {
+		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 1) {
 			playerCompany.maxRosterSize = 6;
 			playerCompany.isInAlliance = false;
 			playerCompany.phase++;
 			OnCompanyUpdated();
+
+			GameState newState = FindState("Phase0FinishedState");
+			newState.SetTransition("FINISHED", SetIdleState);
+			SetState (newState);
 		}
 		else if (GetPhase() == 1 && playerCompany.Popularity > 0.5 && playerCompany.money > 1000000) {
 			playerCompany.isInAlliance = true;
