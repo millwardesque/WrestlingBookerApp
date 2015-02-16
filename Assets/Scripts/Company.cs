@@ -2,12 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class Company : MonoBehaviour {
 	public string companyName;
 	public float money;
+	public int maxRosterSize;
+	public int phase = -1;
 	public List<WrestlingEvent> eventHistory = new List<WrestlingEvent>();
-	public List<Wrestler> roster = new List<Wrestler>();
-	public int wrestlerTier = 1;
+	public List<Venue> unlockedVenues = new List<Venue>();
+	public bool isInAlliance;
+
+	List<Wrestler> roster = new List<Wrestler>();
 	GameManager gameManager;
 
 	void Awake() {
@@ -16,20 +21,42 @@ public class Company : MonoBehaviour {
 			Debug.LogError("Unable to start company: No object has the GameManager component.");
 		}
 	}
+
+	public bool CanAddWrestlers() {
+		return maxRosterSize > roster.Count;
+	}
+
+	public void AddWrestlerToRoster(Wrestler wrestler) {
+		if (CanAddWrestlers()) {
+			roster.Add(wrestler);
+		}
+		else {
+			throw new UnityException("Unable to add wrestler to company '" + companyName + ": The roster is full");
+		}
+	}
+
+	public List<Wrestler> GetRoster() {
+		return roster;
+	}
 	
 	public void DeleteSaved(string keyPrefix) {
 		PlayerPrefs.DeleteKey(keyPrefix);
 		PlayerPrefs.DeleteKey(keyPrefix + ".name");
 		PlayerPrefs.DeleteKey(keyPrefix + ".money");
 		PlayerPrefs.DeleteKey(keyPrefix + ".roster");
-		PlayerPrefs.DeleteKey(keyPrefix + ".wrestlerTier");
+		PlayerPrefs.DeleteKey(keyPrefix + ".maxRosterSize");
+		PlayerPrefs.DeleteKey(keyPrefix + ".phase");
+		PlayerPrefs.DeleteKey(keyPrefix + ".isInAlliance");
+		PlayerPrefs.DeleteKey(keyPrefix + ".unlockedVenues");
 	}
 
 	public bool Save(string keyPrefix) {
 		PlayerPrefs.SetInt(keyPrefix, 1);
 		PlayerPrefs.SetString (keyPrefix + ".name", companyName);
 		PlayerPrefs.SetFloat (keyPrefix + ".money", money);
-		PlayerPrefs.SetInt (keyPrefix + ".wrestlerTier", wrestlerTier);
+		PlayerPrefs.SetInt(keyPrefix + ".maxRosterSize", maxRosterSize);
+		PlayerPrefs.SetInt (keyPrefix + ".phase", phase);
+		PlayerPrefs.SetInt(keyPrefix + ".isInAlliance", (isInAlliance ? 1 : 0));
 
 		string wrestlerNames = "";
 		if (roster.Count > 0) {
@@ -39,6 +66,15 @@ public class Company : MonoBehaviour {
 			wrestlerNames = wrestlerNames.Substring(0, wrestlerNames.Length - 1); // Remove the trailing comma.
 		}
 		PlayerPrefs.SetString (keyPrefix + ".roster", wrestlerNames);
+
+		string unlockedVenueNames = "";
+		if (unlockedVenues.Count > 0) {
+			foreach (Venue venue in unlockedVenues) {
+				unlockedVenueNames += venue.venueName + ",";
+			}
+			unlockedVenueNames = unlockedVenueNames.Substring(0, unlockedVenueNames.Length - 1); // Remove the trailing comma.
+		}
+		PlayerPrefs.SetString (keyPrefix + ".unlockedVenues", unlockedVenueNames);
 
 		return true;
 	}
@@ -56,8 +92,16 @@ public class Company : MonoBehaviour {
 			companyName = PlayerPrefs.GetString(keyPrefix + ".name");
 		}
 
-		if (PlayerPrefs.HasKey(keyPrefix + ".wrestlerTier")) {
-			wrestlerTier = PlayerPrefs.GetInt(keyPrefix + ".wrestlerTier");
+		if (PlayerPrefs.HasKey(keyPrefix + ".maxRosterSize")) {
+			maxRosterSize = PlayerPrefs.GetInt(keyPrefix + ".maxRosterSize");
+		}
+
+		if (PlayerPrefs.HasKey(keyPrefix + ".phase")) {
+			phase = PlayerPrefs.GetInt(keyPrefix + ".phase");
+		}
+
+		if (PlayerPrefs.HasKey(keyPrefix + ".isInAlliance")) {
+			isInAlliance = (PlayerPrefs.GetInt(keyPrefix + ".isInAlliance") == 1 ? true : false);
 		}
 
 		if (PlayerPrefs.HasKey (keyPrefix + ".roster")) {
@@ -71,6 +115,20 @@ public class Company : MonoBehaviour {
 			}
 		}
 
+		if (PlayerPrefs.HasKey (keyPrefix + ".unlockedVenues")) {
+			string unlockedVenueString = PlayerPrefs.GetString(keyPrefix + ".unlockedVenues");
+			
+			if (unlockedVenueString.Length > 0) {
+				string[] venueNames = unlockedVenueString.Split(',');
+				foreach (string venueName in venueNames) {
+					Venue venue = gameManager.GetVenueManager().GetVenue(venueName);
+					if (venue != null) {
+						unlockedVenues.Add(venue);
+					}
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -79,19 +137,34 @@ public class Company : MonoBehaviour {
 	}
 
 	public void AddEvent(WrestlingEvent wrestlingEvent) {
-		eventHistory.Add(wrestlingEvent);
+		float oldPopularity = this.Popularity;
+		eventHistory.Insert(0, wrestlingEvent);
+		float newPopularity = this.Popularity;
+
+		if (newPopularity > oldPopularity) {
+			AttemptToUnlockVenue();
+		}
 	}
 
-	public float GetEventTypeInterest(EventType type) {
-		int eventCount = 0;
-		float eventRatingSum = 0.0f;
-		foreach (WrestlingEvent wrestlingEvent in eventHistory) {
-			if (wrestlingEvent.Type.typeName == type.typeName) {
-				eventCount++;
-				eventRatingSum += wrestlingEvent.Rating;
+	void AttemptToUnlockVenue() {
+		bool unlockNewVenue = (Random.Range(0, 5) == 0);
+		if (unlockNewVenue) {
+			Venue newVenue = gameManager.GetVenueManager().GetRandomAvailableVenue(this);
+			if (newVenue != null) {
+				unlockedVenues.Add(newVenue);
 			}
 		}
+	}
 
-		return (eventCount == 0 ? 0.1f : eventRatingSum / eventCount);
+	public float Popularity {
+		get {
+			int maxHistoryLength = Mathf.Min (10, eventHistory.Count);	// Maximum number of events in the past to search
+			float eventRatingSum = 0.0f;
+			for (int i = 0; i < eventHistory.Count; ++i) {
+				eventRatingSum += eventHistory[i].Rating;
+			}
+
+			return (maxHistoryLength == 0 ? 0.1f : eventRatingSum / maxHistoryLength);
+		}
 	}
 }

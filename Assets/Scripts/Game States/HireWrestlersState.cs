@@ -17,8 +17,12 @@ public class HireWrestlersState : GameState {
 	void HireWrestler() {
 		bool hasMoreWrestlersToHire = (GetWrestlersForHire().Count > 0);
 
-		if (hasMoreWrestlersToHire) {
-			bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().roster.Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
+		if (!gameManager.GetPlayerCompany().CanAddWrestlers()) {
+			InfoDialog dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
+			dialog.Initialize("Hire a wrestler", "You don't have any more space in your roster.", new UnityAction(DoneHiring));
+		}
+		else if (hasMoreWrestlersToHire) {
+			bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().GetRoster ().Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
 			wrestlerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 			wrestlerDialog.Initialize("Hire a wrestler", GetWrestlersForHire(), new UnityAction(OnHireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring));
 		}
@@ -30,11 +34,11 @@ public class HireWrestlersState : GameState {
 
 	void OnHireWrestler() {
 		Wrestler hiredWrestler = wrestlers.Find ( x => x.wrestlerName == wrestlerDialog.GetSelectedOption().name );
-		gameManager.GetPlayerCompany().roster.Add(hiredWrestler);
+		gameManager.GetPlayerCompany().AddWrestlerToRoster(hiredWrestler);
 		gameManager.GetPlayerCompany().money -= hiredWrestler.hiringCost;
 		gameManager.OnCompanyUpdated();
 
-		bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().roster.Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
+		bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().GetRoster().Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
 		bool hasMoreWrestlersToHire = (GetWrestlersForHire().Count > 0);
 
 		addAnotherDialog = gameManager.GetGUIManager().InstantiateInfoDialog();
@@ -47,17 +51,17 @@ public class HireWrestlersState : GameState {
 	}
 
 	void DoneHiring() {
-		gameManager.SetState(gameManager.FindState("IdleGameState"));
+		ExecuteTransition("FINISHED");
 	}
 
 	List<SelectOptionDialogOption> GetWrestlersForHire() {
 		List<SelectOptionDialogOption> wrestlerOptions = new List<SelectOptionDialogOption>();
-		wrestlers = gameManager.GetWrestlerManager().GetWrestlers(gameManager.GetWrestlerTier());
+		wrestlers = gameManager.GetWrestlerManager().GetWrestlers(gameManager.GetPhase());
 
 		Company company = gameManager.GetPlayerCompany();
 		foreach (Wrestler wrestler in wrestlers) {
 			// If the wrestler isn't in the company roster, list as hireable.
-			if (null == company.roster.Find( x => x.wrestlerName == wrestler.wrestlerName) && company.money >= wrestler.hiringCost) {
+			if (null == company.GetRoster ().Find( x => x.wrestlerName == wrestler.wrestlerName) && company.money >= wrestler.hiringCost) {
 				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, "Hiring cost: $" + wrestler.hiringCost + "\nPer-match Cost: $" + wrestler.perMatchCost + "\n" + wrestler.description));
 			}
 		}

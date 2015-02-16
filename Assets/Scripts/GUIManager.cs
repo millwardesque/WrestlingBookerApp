@@ -96,7 +96,7 @@ public class GUIManager : MonoBehaviour {
 	}
 
 	public void OnHireWrestlersClick() {
-		gameManager.HireWreslters();
+		gameManager.HireWrestlers();
 	}
 
 	public void OnMainMenuClick() {

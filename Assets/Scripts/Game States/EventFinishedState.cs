@@ -12,7 +12,7 @@ public class EventFinishedState : GameState {
 		float ticketRevenue = wrestlingEvent.ticketPrice * wrestlingEvent.ticketsSold;
 		float venueCost = wrestlingEvent.EventVenue.GetVenueCost(wrestlingEvent);
 		float eventTypeCost = wrestlingEvent.Type.cost;
-		float eventTypeSales = gameManager.GetPlayerCompany().GetEventTypeInterest(wrestlingEvent.Type) * wrestlingEvent.Type.ticketsToExternalMultiplier * wrestlingEvent.Type.externalRevenuePerUser * wrestlingEvent.ticketsSold;
+		float eventTypeSales = gameManager.GetPlayerCompany().Popularity * wrestlingEvent.Type.ticketsToExternalMultiplier * wrestlingEvent.Type.externalRevenuePerUser * wrestlingEvent.ticketsSold;
 
 		float talentCost = 0.0f;
 		foreach (WrestlingMatch match in wrestlingEvent.matches) {
@@ -52,5 +52,6 @@ public class EventFinishedState : GameState {
 
 	void OnAcknowledgeReport() {
 		gameManager.SetState(gameManager.FindState("IdleGameState"));
+		gameManager.UpdatePhase();
 	}
 }

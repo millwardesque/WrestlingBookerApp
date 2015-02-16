@@ -63,24 +63,27 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Start()  {
-
-		string startStateName = "IdleGameState";
-
+		// Load the company.
 		playerCompany = Instantiate(companyPrefab) as Company;
-
 		if (playerCompany.IsSaved("playerCompany")) {
 			playerCompany.Load("playerCompany");
 			GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
+			SetState(FindState("IdleGameState"));
 		}
 		else {
-			playerCompany.money = startingMoney;
-			startStateName = "NameCompanyGameState";
-			GetGUIManager().HideStatusPanel();
+			StartAtPhase0();
 		}
-		
-		SetState (FindState(startStateName));
 	}
-	
+
+	void StartAtPhase0() {
+		UpdatePhase();
+		GameState startState = FindState ("NameCompanyGameState");
+		startState.SetTransition("FINISHED", OnFinishedPhase0Step);
+		SetState (startState);
+		
+		GetGUIManager().HideStatusPanel();
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (state != null) {
@@ -112,7 +115,9 @@ public class GameManager : MonoBehaviour {
 	public GameState FindState(string stateName) {
 		for (int i = 0; i < availableGameStates.Length; ++i) {
 			if (availableGameStates[i].name == stateName) {
-				return Instantiate(availableGameStates[i]) as GameState;
+				GameState newState = Instantiate(availableGameStates[i]) as GameState;
+				newState.name = stateName;
+				return newState;
 			}
 		}
 		Debug.LogError("Couldn't find game state '" + stateName + "'");
@@ -132,39 +137,60 @@ public class GameManager : MonoBehaviour {
 
 	public void ClearSavedData() {
 		playerCompany.DeleteSaved("playerCompany");
+		GameObject.Destroy(playerCompany);
 		playerCompany = Instantiate(companyPrefab) as Company;
-		playerCompany.money = startingMoney;
-		GetGUIManager().HideStatusPanel();
-		
-		SetState (FindState("NameCompanyGameState"));
+
+		StartAtPhase0();
 	}
 
-	public void HireWreslters() {
-		SetState (FindState("HireWrestlersState"));
+	public void UpdatePhase() {
+		Debug.Log ("updating phase: " + playerCompany.phase);
+		if (GetPhase() == -1) {
+			playerCompany.money = startingMoney;
+			playerCompany.maxRosterSize = 4;
+			playerCompany.isInAlliance = false;
+			playerCompany.phase++;
+
+			Debug.Log (venueManager.GetVenue ("Civic Center"));
+			playerCompany.unlockedVenues.Add (venueManager.GetVenue ("Civic Center"));
+			OnCompanyUpdated();
+		}
+		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 2) {
+			playerCompany.maxRosterSize = 6;
+			playerCompany.isInAlliance = false;
+			playerCompany.phase++;
+			OnCompanyUpdated();
+		}
+		else if (GetPhase() == 1 && playerCompany.Popularity > 0.5 && playerCompany.money > 1000000) {
+			playerCompany.isInAlliance = true;
+			playerCompany.maxRosterSize = 8;
+			playerCompany.phase++;
+			OnCompanyUpdated();
+		}
+		else if (GetPhase() == 2 && playerCompany.Popularity > 0.7 && playerCompany.money > 20000000) {
+			playerCompany.isInAlliance = true;
+			playerCompany.maxRosterSize = 10;
+			playerCompany.phase++;
+			OnCompanyUpdated();
+		}
+		else if (GetPhase() == 3 && playerCompany.eventHistory.Count > 30) { // End game.
+			playerCompany.phase++;
+			OnCompanyUpdated();
+		}
 	}
 
-	public int GetWrestlerTier() {
-		if (playerCompany.money > 1000000.0f && playerCompany.eventHistory.Count > 10) {
-			return 3;
-		}
-		if (playerCompany.money > 100000.0f && playerCompany.eventHistory.Count > 5) {
-			return 2;
-		}
-		else {
-			return 1;
-		}
+	public void HireWrestlers() {
+		GameState hireState = FindState("HireWrestlersState");
+		hireState.SetTransition("FINISHED", SetIdleState);
+		SetState (hireState);
 	}
 
-	public int GetEventTypeTier() {
-		if (playerCompany.money > 1000000.0f && playerCompany.eventHistory.Count > 10) {
-			return 3;
-		}
-		if (playerCompany.money > 100000.0f && playerCompany.eventHistory.Count > 5) {
-			return 2;
-		}
-		else {
-			return 1;
-		}
+	void SetIdleState() {
+		SetState(FindState("IdleGameState"));
+	}
+
+	public int GetPhase() {
+		return GetPlayerCompany().phase;
 	}
 
 	public GUIManager GetGUIManager() {
@@ -210,5 +236,34 @@ public class GameManager : MonoBehaviour {
 
 	public void OnTimeUpdated(TimeManager timeManager) {
 		GetGUIManager().GetGameInfoPanel().UpdateTime(timeManager);
+	}
+
+	// Phase 0 callbacks
+	void OnFinishedPhase0Step() {
+		GameState nextState = null;
+
+		Debug.Log ("Finished '" + state.name + "'");
+
+		switch (state.name) {
+		case "NameCompanyGameState":
+			nextState = FindState ("Phase0IntroGameState");
+			nextState.SetTransition("FINISHED", OnFinishedPhase0Step);
+			break;
+		case "Phase0IntroGameState":
+			nextState = FindState ("HireWrestlersState");
+			nextState.SetTransition("FINISHED", OnFinishedPhase0Step);
+			break;
+		case "HireWrestlersState":
+			nextState = FindState ("Phase0CreateEventIntroState");
+			nextState.SetTransition("FINISHED", OnFinishedPhase0Step);
+			break;
+		case "Phase0CreateEventIntroState":
+			nextState = FindState ("IdleGameState");
+			break;
+		}
+
+		if (nextState != null) {
+			SetState (nextState);
+		}
 	}
 }

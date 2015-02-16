@@ -9,12 +9,13 @@ public class Venue : MonoBehaviour {
 	public float gatePercentage; // Scale of 0.0f - 1.0f
 	public int capacity;
 	public float popularity; // Scale of 0.0f - 1.0f
+	public int phase;
 
 	// These are look-up tables describing how much fans in this region like match types, finishes, etc.
 	public Dictionary<string, float> matchTypePreferences = new Dictionary<string, float>();
 	public Dictionary<string, float> matchFinishPreferences = new Dictionary<string, float>();
 
-	public void Initialize(string venueName, string venueDescription, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences) {
+	public void Initialize(string venueName, string venueDescription, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences, int phase) {
 		this.venueName = venueName;
 		this.venueDescription = venueDescription;
 		this.baseCost = baseCost;
@@ -23,6 +24,7 @@ public class Venue : MonoBehaviour {
 		this.popularity = Mathf.Clamp01(popularity);
 		this.matchTypePreferences = matchTypePreferences;
 		this.matchFinishPreferences = matchFinishPreferences;
+		this.phase = phase;
 	}
 
 	public float GetVenueCost(WrestlingEvent wrestlingEvent) {

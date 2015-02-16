@@ -13,7 +13,7 @@ public class StatusPanel : MonoBehaviour {
 		eventName.text = wrestlingEvent.eventName;
 		eventType.text = "Type: " + (wrestlingEvent.Type != null ? wrestlingEvent.Type.typeName : "<TBD>");
 		eventVenue.text = "Venue: " + (wrestlingEvent.EventVenue != null ? wrestlingEvent.EventVenue.venueName : "<TBD>");
-		ticketsSold.text = "Tickets: " + (wrestlingEvent.ticketsSold >= 0 ? wrestlingEvent.ticketsSold.ToString() : "<TBD>");
+		ticketsSold.text = (wrestlingEvent.ticketsSold >= 0 && wrestlingEvent.EventVenue != null ? string.Format ("Tickets: {0} / {1}", wrestlingEvent.ticketsSold.ToString(), wrestlingEvent.EventVenue.capacity) : "Tickets: <TBD>");
 		revenue.text = string.Format("${0}", wrestlingEvent.revenue);
 	}
 }

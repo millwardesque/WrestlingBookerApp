@@ -10,6 +10,7 @@ public class ChooseMatchesGameState : GameState {
 	SelectOptionDialog matchFinishDialog;
 	SelectOptionDialog matchWinnerDialog;
 
+	List<Wrestler> usedWrestlers = new List<Wrestler>();
 	List<Wrestler> wrestlers;
 	List<WrestlingMatchType> matchTypes;
 	List<WrestlingMatchFinish> matchFinishes;
@@ -47,13 +48,21 @@ public class ChooseMatchesGameState : GameState {
 		match.type = matchTypes.Find ( x => x.typeName == matchTypeDialog.GetSelectedOption().name );
 		match.finish = matchFinishes.Find ( x => x.finishName == matchFinishDialog.GetSelectedOption().name );
 
+		usedWrestlers.Add (wrestler1);
+		usedWrestlers.Add (wrestler2);
+
 		WrestlingEvent currentEvent = gameManager.GetCurrentEvent();
 		currentEvent.matches.Add(match);
 
 		gameManager.OnWrestlingEventUpdated();
 
 		InfoDialog makeAnotherDialog = gameManager.GetGUIManager().InstantiateInfoDialog();
-		makeAnotherDialog.Initialize("Add another match?", "Would you like to add another match?", new UnityAction(MakeNewMatch), true, new UnityAction(DoneWithMatches), "Yes", "No");
+		if (usedWrestlers.Count < wrestlers.Count) {
+			makeAnotherDialog.Initialize("Add another match?", "Would you like to add another match?", new UnityAction(MakeNewMatch), true, new UnityAction(DoneWithMatches), "Yes", "No");
+		}
+		else {
+			makeAnotherDialog.Initialize("Card finished", "All your wrestlers have a spot on the card, great job!", new UnityAction(DoneWithMatches));
+		}
 	}
 
 	void MakeNewMatch() {
@@ -67,10 +76,12 @@ public class ChooseMatchesGameState : GameState {
 
 	List<SelectOptionDialogOption> GetAvailableWrestlers() {
 		List<SelectOptionDialogOption> wrestlerOptions = new List<SelectOptionDialogOption>();
-		wrestlers = gameManager.GetPlayerCompany().roster;
+		wrestlers = gameManager.GetPlayerCompany().GetRoster();
 		
 		foreach (Wrestler wrestler in wrestlers) {
-			wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, wrestler.description));
+			if (!usedWrestlers.Contains(wrestler)) {
+				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, wrestler.description));
+			}
 		}
 		
 		return wrestlerOptions;
