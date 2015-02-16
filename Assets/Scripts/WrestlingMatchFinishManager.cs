@@ -24,7 +24,8 @@ public class WrestlingMatchFinishManager : MonoBehaviour {
 			foreach (JSONNode finish in finishArray) {
 				string name = finish["name"];
 				string description = finish["description"];
-				CreateWrestlingMatchFinish(name, description);
+				int phase = finish["phase"].AsInt;
+				CreateWrestlingMatchFinish(name, description, phase);
 			}
 		}
 		else {
@@ -32,13 +33,13 @@ public class WrestlingMatchFinishManager : MonoBehaviour {
 		}
 	}
 	
-	public List<WrestlingMatchFinish> GetMatchFinishes() {
-		return matchFinishes;
+	public List<WrestlingMatchFinish> GetMatchFinishes(int phase) {
+		return matchFinishes.FindAll( x => x.phase <= phase);
 	}
 	
-	public WrestlingMatchFinish CreateWrestlingMatchFinish(string name, string description) {
+	public WrestlingMatchFinish CreateWrestlingMatchFinish(string name, string description, int phase) {
 		WrestlingMatchFinish matchFinish = new WrestlingMatchFinish();
-		matchFinish.Initialize(name, description);
+		matchFinish.Initialize(name, description, phase);
 		matchFinishes.Add (matchFinish);
 		return matchFinish;
 	}

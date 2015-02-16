@@ -24,7 +24,8 @@ public class WrestlingMatchTypeManager : MonoBehaviour {
 			foreach (JSONNode matchType in matchTypeArray) {
 				string name = matchType["name"];
 				string description = matchType["description"];
-				CreateWrestlingMatchType(name, description);
+				int phase = matchType["phase"].AsInt;
+				CreateWrestlingMatchType(name, description, phase);
 			}
 		}
 		else {
@@ -32,13 +33,13 @@ public class WrestlingMatchTypeManager : MonoBehaviour {
 		}
 	}
 	
-	public List<WrestlingMatchType> GetMatchTypes() {
-		return matchTypes;
+	public List<WrestlingMatchType> GetMatchTypes(int phase) {
+		return matchTypes.FindAll( x => x.phase <= phase);
 	}
 	
-	public WrestlingMatchType CreateWrestlingMatchType(string name, string description) {
+	public WrestlingMatchType CreateWrestlingMatchType(string name, string description, int phase) {
 		WrestlingMatchType matchType = new WrestlingMatchType();
-		matchType.Initialize(name, description);
+		matchType.Initialize(name, description, phase);
 		matchTypes.Add (matchType);
 		return matchType;
 	}

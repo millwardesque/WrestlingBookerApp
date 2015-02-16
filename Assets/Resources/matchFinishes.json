@@ -1,10 +1,10 @@
 {
 	"match_finishes": [
-		{ "name": "Clean win", "description": "There is a single, clear victor" },
-		{ "name": "Dirty win", "description": "The victor wins by cheating." },
-	    { "name": "Countout", "description": "The loser gets counted out of the ring" },
-	    { "name": "Disqualification", "description": "The loser gets disqualified" },
-	    { "name": "Outside interference", "description": "The winner wins with the help of some outside interference." },
-	    { "name": "Foreign object", "description": "The winner wins after using a foreign object" }
+		{ "name": "Clean win", "description": "There is a single, clear victor", "phase": 0 },
+		{ "name": "Dirty win", "description": "The victor wins by cheating.", "phase": 0 },
+	    { "name": "Countout", "description": "The loser gets counted out of the ring", "phase": 1 },
+	    { "name": "Disqualification", "description": "The loser gets disqualified", "phase": 1 },
+	    { "name": "Outside interference", "description": "The winner wins with the help of some outside interference.", "phase": 1 },
+	    { "name": "Foreign object", "description": "The winner wins after using a foreign object", "phase": 1 }
 	]
 }

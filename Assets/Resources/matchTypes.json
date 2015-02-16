@@ -1,8 +1,8 @@
 {
 	"match_types": [
-		{ "name": "Standard", "description": "The standard singles match. Win by pinfall or submission." },
-		{ "name": "No DQ", "description": "No disqualifications / count-outs! Win by pinfall or submission only." },
-	    { "name": "Cage", "description": "The wrestlers are locked in a cage and winner is the first to reach the floor." },
-	    { "name": "Ladder", "description": "A belt is suspended above the ring over a ladder. The winner must climb the ladder and retrieve the belt." },
+		{ "name": "Standard", "description": "The standard singles match. Win by pinfall or submission.", "phase": 0 },
+		{ "name": "No DQ", "description": "No disqualifications / count-outs! Win by pinfall or submission only.", "phase": 0 },
+	    { "name": "Cage", "description": "The wrestlers are locked in a cage and winner is the first to reach the floor.", "phase": 1 },
+	    { "name": "Ladder", "description": "A belt is suspended above the ring over a ladder. The winner must climb the ladder and retrieve the belt.", "phase": 1 }
 	]
 }

@@ -89,7 +89,7 @@ public class ChooseMatchesGameState : GameState {
 
 	List<SelectOptionDialogOption> GetAvailableMatchTypes() {
 		List<SelectOptionDialogOption> matchTypeOptions = new List<SelectOptionDialogOption>();
-		matchTypes = gameManager.GetMatchTypeManager().GetMatchTypes();
+		matchTypes = gameManager.GetMatchTypeManager().GetMatchTypes(gameManager.GetPhase());
 		
 		foreach (WrestlingMatchType matchType in matchTypes) {
 			matchTypeOptions.Add(new SelectOptionDialogOption(matchType.typeName, matchType.description));
@@ -100,7 +100,7 @@ public class ChooseMatchesGameState : GameState {
 
 	List<SelectOptionDialogOption> GetAvailableMatchFinishes() {
 		List<SelectOptionDialogOption> matchFinishOptions = new List<SelectOptionDialogOption>();
-		matchFinishes = gameManager.GetMatchFinishManager().GetMatchFinishes();
+		matchFinishes = gameManager.GetMatchFinishManager().GetMatchFinishes(gameManager.GetPhase());
 		
 		foreach (WrestlingMatchFinish matchFinish in matchFinishes) {
 			matchFinishOptions.Add(new SelectOptionDialogOption(matchFinish.finishName, matchFinish.description));
