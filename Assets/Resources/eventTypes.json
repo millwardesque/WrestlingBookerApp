@@ -1,7 +1,7 @@
 {
 	"event_types": [
-		{ "name": "House show", "description": "A basic house show. No cameras, just local butts in seats.", "cost": 2000.0, "externalRevenuePerUser": 0.0, "ticketsToExternalMultiplier": 0.0 },
-		{ "name": "TV", "description": "A TV show. Gets some national viewership.", "cost": 20000.0, "externalRevenuePerUser": 5.0, "ticketsToExternalMultiplier": 100.0 },
-		{ "name": "PPV", "description": "A pay-per-view show. Draws a world-wide audience.", "cost": 100000.0, "externalRevenuePerUser": 30.0, "ticketsToExternalMultiplier": 50.0 }
+		{ "name": "House show", "description": "A basic house show. No cameras, just local butts in seats.", "cost": 2000.0, "externalRevenuePerUser": 0.0, "ticketsToExternalMultiplier": 0.0, "tier": 1 },
+		{ "name": "TV", "description": "A TV show. Gets some national viewership.", "cost": 100000.0, "externalRevenuePerUser": 2.0, "ticketsToExternalMultiplier": 100.0, "tier": 2 },
+		{ "name": "PPV", "description": "A pay-per-view show. Draws a world-wide audience.", "cost": 500000.0, "externalRevenuePerUser": 10.0, "ticketsToExternalMultiplier": 50.0, "tier": 3 }
 	]
 }

@@ -32,8 +32,9 @@ public class EventTypeManager : MonoBehaviour {
 				float cost = eventType["cost"].AsFloat;
 				float externalRevenuePerUser = eventType["externalRevenuePerUser"].AsFloat;
 				float ticketsToExternalMultiplier = eventType["ticketsToExternalMultiplier"].AsFloat;
+				int tier = eventType["tier"].AsInt;
 
-				CreateEventType(name, description, cost, externalRevenuePerUser, ticketsToExternalMultiplier);
+				CreateEventType(name, description, cost, externalRevenuePerUser, ticketsToExternalMultiplier, tier);
 			}
 		}
 		else {
@@ -41,14 +42,19 @@ public class EventTypeManager : MonoBehaviour {
 		}
 	}
 	
-	public List<EventType> GetTypes() {
-		return types;
+	public List<EventType> GetTypes(int tier = 0) {
+		if (tier == 0) {
+			return types;
+		}
+		else {
+			return types.FindAll( x => x.tier <= tier);
+		}
 	}
 
-	public EventType CreateEventType(string name, string description, float cost, float externalRevenuePerUser, float ticketsToExternalMultiplier) {
+	public EventType CreateEventType(string name, string description, float cost, float externalRevenuePerUser, float ticketsToExternalMultiplier, int tier) {
 		EventType type = Instantiate(typePrefab) as EventType;
 		type.transform.SetParent(transform, false);
-		type.Initialize(name, description, cost, externalRevenuePerUser, ticketsToExternalMultiplier);
+		type.Initialize(name, description, cost, externalRevenuePerUser, ticketsToExternalMultiplier, tier);
 		types.Add (type);
 		return type;
 	}

@@ -7,12 +7,14 @@ public class EventType : MonoBehaviour {
 	public float cost;
 	public float externalRevenuePerUser = 0.0f;
 	public float ticketsToExternalMultiplier = 1.0f;
+	public int tier = 1;
 	
-	public void Initialize(string typeName, string description, float cost, float externalRevenuePerUser, float ticketsToExternalMultiplier) {
+	public void Initialize(string typeName, string description, float cost, float externalRevenuePerUser, float ticketsToExternalMultiplier, int tier) {
 		this.typeName = typeName;
 		this.description = description;
 		this.cost = cost;
 		this.externalRevenuePerUser = externalRevenuePerUser;
 		this.ticketsToExternalMultiplier = ticketsToExternalMultiplier;
+		this.tier = tier;
 	}
 }

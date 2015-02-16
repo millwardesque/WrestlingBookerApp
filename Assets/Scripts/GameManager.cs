@@ -155,6 +155,18 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public int GetEventTypeTier() {
+		if (playerCompany.money > 1000000.0f && playerCompany.eventHistory.Count > 10) {
+			return 3;
+		}
+		if (playerCompany.money > 100000.0f && playerCompany.eventHistory.Count > 5) {
+			return 2;
+		}
+		else {
+			return 1;
+		}
+	}
+
 	public GUIManager GetGUIManager() {
 		return guiManager;
 	}

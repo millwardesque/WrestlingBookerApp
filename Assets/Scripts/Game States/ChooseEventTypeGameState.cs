@@ -36,13 +36,13 @@ public class ChooseEventTypeGameState : GameState {
 
 	List<SelectOptionDialogOption> GetAvailableEventTypes() {
 		List<SelectOptionDialogOption> typeOptions = new List<SelectOptionDialogOption>();
-		types = gameManager.GetEventTypeManager().GetTypes ();
+		types = gameManager.GetEventTypeManager().GetTypes (gameManager.GetEventTypeTier());
 
 		foreach (EventType type in types) {
 			bool isInteractable = (type.cost <= gameManager.GetPlayerCompany().money);
 
 			if (isInteractable) {
-				typeOptions.Add(new SelectOptionDialogOption(type.typeName, type.description, isInteractable));
+				typeOptions.Add(new SelectOptionDialogOption(type.typeName, string.Format ("Cost: ${0}\n{1}", type.cost, type.description), isInteractable));
 			}
 		}
 
