@@ -3,26 +3,45 @@
 		{ "name": "Civic Center", "description": "Meh. A small venue with room for only a few people.", "phase": 0, "baseCost": 1000.0, "gatePercentage": 0.00, "capacity": 2981, "popularity": 0.5,
 			"matchFinishPreferences": [
 				{ "name": "Clean win", "preference": 0.7 },
-				{ "name": "Dirty win", "preference": 0.7 },
 				{ "name": "Countout", "preference": 0.3 },
-				{ "name": "Disqualification", "preference": 0.3 },
-				{ "name": "Outside interference", "preference": 0.7 },
-				{ "name": "Foreign object", "preference": 0.5 }
 			],
 			"matchTypePreferences": [
 				{ "name": "Standard", "preference": 0.6 },
 				{ "name": "No DQ", "preference": 0.3 },
 				{ "name": "Cage", "preference": 0.7 },
-				{ "name": "Ladder", "preference": 0.2 }
 			],
 			unlockableMatchType: "Cage"
 		},
+		{ "name": "Hersheypark Arena", "description": "Hershey PA", "phase": 1, "baseCost": 5000.0, "gatePercentage": 0.0, "capacity": 7300, "popularity": 0.4,
+			"matchFinishPreferences": [
+				{ "name": "Dirty win", "preference": 0.3 },
+				{ "name": "Disqualification", "preference": 0.7 },
+			],
+			"matchTypePreferences": [
+				{ "name": "Standard", "preference": 0.3 },
+				{ "name": "No DQ", "preference": 0.6 },
+				{ "name": "Ladder", "preference": 0.7 }
+			],
+			unlockableMatchType: "Ladder"
+		},
+	    { "name": "Nassau Coliseum", "description": "Long Island NY", "phase": 1, "baseCost": 10000, "gatePercentage": 0.25, "capacity": 18100, "popularity": 0.75,
+	    	"matchFinishPreferences": [
+				{ "name": "Squash", "preference": 0.7 },
+				{ "name": "Foreign object", "preference": 0.3 },
+			],
+			"matchTypePreferences": [
+				{ "name": "Standard", "preference": 0.3 },
+				{ "name": "Cage", "preference": 0.6 },
+				{ "name": "Ladder", "preference": 0.7 }
+			],
+			unlockableMatchType: "Ladder"
+		},
+		
+		{ "name": "Skydome", "description": "Pride of Toronto", "phase": 2, "baseCost": 75000.0, "gatePercentage": 0.05, "capacity": 65000, "popularity": 0.5 },
+	    { "name": "Greensboro Coliseum Complex", "description": "Greensboro North Carolina", "phase": 2, "baseCost": 20000.0, "gatePercentage": 0.1, "capacity": 23000, "popularity": 0.7 },
+	    { "name": "MGM Grand Garden Arena", "description": "Las Vegas NV", "phase": 2, "baseCost": 22000.0, "gatePercentage": 0.0, "capacity": 16800, "popularity": 0.55 },
+		
 		{ "name": "Sportatorium", "description": "The southern equivalent to MSG", "phase": 3, "baseCost": 50000.0, "gatePercentage": 0.02, "capacity": 4500, "popularity": 0.8 },
 		{ "name": "MSG", "description": "Primetime venue in NYC.", "phase": 3, "baseCost": 100000.0, "gatePercentage": 0.05, "capacity": 18200, "popularity": 0.7 },
-	    { "name": "Skydome", "description": "Pride of Toronto", "phase": 2, "baseCost": 75000.0, "gatePercentage": 0.05, "capacity": 65000, "popularity": 0.5 },
-	    { "name": "Greensboro Coliseum Complex", "description": "Greensboro North Carolina", "phase": 2, "baseCost": 20000.0, "gatePercentage": 0.1, "capacity": 23000, "popularity": 0.7 },
-	    { "name": "Hersheypark Arena", "description": "Hershey PA", "phase": 1, "baseCost": 5000.0, "gatePercentage": 0.0, "capacity": 7300, "popularity": 0.4 },
-	    { "name": "MGM Grand Garden Arena", "description": "Las Vegas NV", "phase": 2, "baseCost": 22000.0, "gatePercentage": 0.0, "capacity": 16800, "popularity": 0.55 },
-	    { "name": "Nassau Coliseum", "description": "Long Island NY", "phase": 1, "baseCost": 10000, "gatePercentage": 0.25, "capacity": 18100, "popularity": 0.75, unlockableMatchType: "Ladder" }
 	]
 }
