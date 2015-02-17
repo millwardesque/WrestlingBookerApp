@@ -8,7 +8,7 @@ public class Company : MonoBehaviour {
 	public float money;
 	public int maxRosterSize;
 	public int phase = -1;
-	public List<WrestlingEvent> eventHistory = new List<WrestlingEvent>();
+	public List<HistoricalWrestlingEvent> eventHistory = new List<HistoricalWrestlingEvent>();
 	public List<Venue> unlockedVenues = new List<Venue>();
 	public List<WrestlingMatchType> unlockedMatchTypes = new List<WrestlingMatchType>();
 	public bool isInAlliance;
@@ -50,6 +50,15 @@ public class Company : MonoBehaviour {
 		PlayerPrefs.DeleteKey(keyPrefix + ".isInAlliance");
 		PlayerPrefs.DeleteKey(keyPrefix + ".unlockedVenues");
 		PlayerPrefs.DeleteKey(keyPrefix + ".unlockedMatchTypes");
+
+		for (int i = 0; i < eventHistory.Count; ++i) {
+			string keyName = keyPrefix + ".historicalEvent." + i;
+			if (PlayerPrefs.HasKey(keyName)) {
+				PlayerPrefs.DeleteKey(keyName);
+			}
+		}
+		PlayerPrefs.DeleteKey(keyPrefix + ".numHistoricalEvents");
+
 	}
 
 	public bool Save(string keyPrefix) {
@@ -60,6 +69,13 @@ public class Company : MonoBehaviour {
 		PlayerPrefs.SetInt (keyPrefix + ".phase", phase);
 		PlayerPrefs.SetInt(keyPrefix + ".isInAlliance", (isInAlliance ? 1 : 0));
 
+		// Save the past events.
+		PlayerPrefs.SetInt(keyPrefix + ".numHistoricalEvents", this.eventHistory.Count);
+		for (int i = 0; i < eventHistory.Count; ++i) {
+			eventHistory[i].Save(keyPrefix + ".historicalEvent." + i);
+		}
+
+		// Save the roster
 		string wrestlerNames = "";
 		if (roster.Count > 0) {
 			foreach (Wrestler wrestler in roster) {
@@ -69,6 +85,7 @@ public class Company : MonoBehaviour {
 		}
 		PlayerPrefs.SetString (keyPrefix + ".roster", wrestlerNames);
 
+		// Save the unlocked venues.
 		string unlockedVenueNames = "";
 		if (unlockedVenues.Count > 0) {
 			foreach (Venue venue in unlockedVenues) {
@@ -78,6 +95,7 @@ public class Company : MonoBehaviour {
 		}
 		PlayerPrefs.SetString (keyPrefix + ".unlockedVenues", unlockedVenueNames);
 
+		// Save the unlocked match types.
 		string unlockedMatchTypeNames = "";
 		if (unlockedMatchTypes.Count > 0) {
 			foreach (WrestlingMatchType matchType in unlockedMatchTypes) {
@@ -114,6 +132,20 @@ public class Company : MonoBehaviour {
 		if (PlayerPrefs.HasKey(keyPrefix + ".isInAlliance")) {
 			isInAlliance = (PlayerPrefs.GetInt(keyPrefix + ".isInAlliance") == 1 ? true : false);
 		}
+
+		// Load the past events.
+		if (PlayerPrefs.HasKey (keyPrefix + ".numHistoricalEvents")) {
+			int historyCount = PlayerPrefs.GetInt (keyPrefix + ".numHistoricalEvents");
+			for (int i = 0; i < historyCount; ++i) {
+				string keyName = keyPrefix + ".historicalEvent." + i;
+				if (PlayerPrefs.HasKey(keyName)) {
+					HistoricalWrestlingEvent pastEvent = new HistoricalWrestlingEvent();
+					pastEvent.Load(keyName);
+					eventHistory.Add (pastEvent);
+				}
+			}
+		}
+
 
 		if (PlayerPrefs.HasKey (keyPrefix + ".roster")) {
 			string wrestlerNamesString = PlayerPrefs.GetString(keyPrefix + ".roster");
@@ -163,7 +195,7 @@ public class Company : MonoBehaviour {
 
 	public void AddEvent(WrestlingEvent wrestlingEvent) {
 		float oldPopularity = this.Popularity;
-		eventHistory.Insert(0, wrestlingEvent);
+		eventHistory.Insert(0, wrestlingEvent.AsHistoricalEvent());
 		float newPopularity = this.Popularity;
 
 		if (newPopularity >= oldPopularity) {
@@ -185,19 +217,12 @@ public class Company : MonoBehaviour {
 	public void AttemptUnlockMatchTypeByVenue(Venue venue) {
 		bool unlockNewMatchType = (Random.Range(0, 3) == 0);
 		if (unlockNewMatchType) {
-			Debug.Log("Unlocking match type!");
 			WrestlingMatchType matchType = gameManager.GetMatchTypeManager().GetMatchType(venue.unlockableMatchType);
 			if (matchType != null && matchType.phase <= phase) {
 				Debug.Log("Unlocking match type: " + matchType.typeName);
 				gameManager.GetGUIManager().AddNotification("Match type '" + matchType.typeName + "' unlocked");
 				unlockedMatchTypes.Add (matchType);
 			}
-			else {
-				Debug.Log ("Match type is null or the wrong phase.");
-			}
-		}
-		else {
-			Debug.Log("Bad random unlock match luck.");
 		}
 	}
 
@@ -206,7 +231,7 @@ public class Company : MonoBehaviour {
 			int maxHistoryLength = Mathf.Min (10, eventHistory.Count);	// Maximum number of events in the past to search
 			float eventRatingSum = 0.0f;
 			for (int i = 0; i < eventHistory.Count; ++i) {
-				eventRatingSum += eventHistory[i].Rating;
+				eventRatingSum += eventHistory[i].rating;
 			}
 
 			return (maxHistoryLength == 0 ? 0.1f : eventRatingSum / maxHistoryLength);

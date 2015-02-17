@@ -18,9 +18,9 @@ public class NameEventGameState : GameState {
 		// Default to the last name used for a TV since TV shows don't change titles.
 		string defaultName = "";
 		if (gameManager.GetCurrentEvent ().Type.typeName == "TV") {
-			foreach (WrestlingEvent wrestlingEvent in gameManager.GetPlayerCompany().eventHistory) {
-				if (wrestlingEvent.Type.typeName == "TV") {
-					defaultName = wrestlingEvent.eventName;
+			foreach (HistoricalWrestlingEvent wrestlingEvent in gameManager.GetPlayerCompany().eventHistory) {
+				if (wrestlingEvent.type == "TV") {
+					defaultName = wrestlingEvent.name;
 				}
 			}
 		}

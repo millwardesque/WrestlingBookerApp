@@ -9,5 +9,6 @@ public class CompanyEditor : Editor {
 		Company companyTarget = target as Company;
 		DrawDefaultInspector();
 		EditorGUILayout.LabelField("Popularity", companyTarget.Popularity.ToString());
+		EditorGUILayout.LabelField("Past Event Count", companyTarget.eventHistory.Count.ToString());
 	}
 }
