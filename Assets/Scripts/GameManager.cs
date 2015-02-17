@@ -287,6 +287,10 @@ public class GameManager : MonoBehaviour {
 		GetGUIManager().GetGameInfoPanel().UpdateTime(timeManager);
 	}
 
+	public void OnEventFinished() {
+		GameObject.Destroy(currentEvent.gameObject);
+	}
+
 	// Phase 0 callbacks
 	void OnFinishedPhase0Step() {
 		GameState nextState = null;

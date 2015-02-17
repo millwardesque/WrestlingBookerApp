@@ -218,8 +218,7 @@ public class Company : MonoBehaviour {
 		bool unlockNewMatchType = (Random.Range(0, 3) == 0);
 		if (unlockNewMatchType) {
 			WrestlingMatchType matchType = gameManager.GetMatchTypeManager().GetMatchType(venue.unlockableMatchType);
-			if (matchType != null && matchType.phase <= phase) {
-				Debug.Log("Unlocking match type: " + matchType.typeName);
+			if (matchType != null && matchType.phase <= phase && unlockedMatchTypes.Find(x => x.typeName == matchType.typeName) == null) {
 				gameManager.GetGUIManager().AddNotification("Match type '" + matchType.typeName + "' unlocked");
 				unlockedMatchTypes.Add (matchType);
 			}
