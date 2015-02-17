@@ -13,6 +13,7 @@ public class GUIManager : MonoBehaviour {
 	public GameObject singlesMatchDialogPrefab;
 	public StatusPanel statusPanel;
 	public GameInfoPanel gameInfoPanel;
+	public NotificationPanel notificationPanel;
 
 	SelectOptionDialog dialogBox;
 	TextInputDialog textInputDialogBox;
@@ -29,6 +30,10 @@ public class GUIManager : MonoBehaviour {
 
 		if (gameInfoPanel == null) {
 			Debug.LogError("Unable to start GUI Manager: Game Info panel isn't set");
+		}
+
+		if (notificationPanel == null) {
+			Debug.LogError("Unable to start GUI Manager: Notification panel isn't set");
 		}
 
 		if (selectOptionDialogPrefab == null || selectOptionDialogPrefab.GetComponent<SelectOptionDialog>() == null) {
@@ -121,5 +126,9 @@ public class GUIManager : MonoBehaviour {
 
 	public GameInfoPanel GetGameInfoPanel() {
 		return gameInfoPanel;
+	}
+
+	public void AddNotification(string message) {
+		notificationPanel.QueueNotification(message);
 	}
 }
