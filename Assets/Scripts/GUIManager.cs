@@ -102,7 +102,7 @@ public class GUIManager : MonoBehaviour {
 	}
 
 	public void OnCreateEventClick() {
-		gameManager.CreateNewEvent();
+		gameManager.CreateNewEventAttempt();
 	}
 
 	public void OnHireWrestlersClick() {

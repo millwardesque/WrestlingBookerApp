@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -91,11 +92,36 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void CreateNewEvent() {
+	public void CreateNewEventAttempt() {
+		if (currentEvent == null) {
+			CreateNewEvent();
+		}
+		else {
+			ConfirmState confirmState = FindState("ConfirmState") as ConfirmState;
+			confirmState.Initialize("Stop current event?", "You can only have one active event at a time. Would you like to stop work on your current event?", new UnityAction(OnOkToCancelEvent), new UnityAction(OnCancelToCancelEvent));
+			PushState (confirmState);
+		}
+	}
+
+	void CreateNewEvent() {
 		string startStateName = "ChooseEventTypeGameState";
 		ReplaceState(FindState(startStateName));
+
+		if (currentEvent != null) {
+			GameObject.Destroy(currentEvent.gameObject);
+		}
+
 		currentEvent = Instantiate(wrestlingEventPrefab) as WrestlingEvent;
 		GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);
+	}
+
+	void OnOkToCancelEvent() {
+		PopState();
+		CreateNewEvent ();
+	}
+
+	void OnCancelToCancelEvent() {
+		PopState();
 	}
 
 	public void PushState(GameState newState) {
