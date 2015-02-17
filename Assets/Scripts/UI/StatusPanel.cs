@@ -4,16 +4,22 @@ using System.Collections;
 
 public class StatusPanel : MonoBehaviour {
 	public Text eventName;
-	public Text eventType;
-	public Text eventVenue;
-	public Text ticketsSold;
+	public Text ticketsSoldCount;
+	public Slider ticketsSoldProgress;
 	public Text revenue;
 
 	public void UpdateEventStatus(WrestlingEvent wrestlingEvent) {
 		eventName.text = wrestlingEvent.eventName;
-		eventType.text = "Type: " + (wrestlingEvent.Type != null ? wrestlingEvent.Type.typeName : "<TBD>");
-		eventVenue.text = "Venue: " + (wrestlingEvent.EventVenue != null ? wrestlingEvent.EventVenue.venueName : "<TBD>");
-		ticketsSold.text = (wrestlingEvent.ticketsSold >= 0 && wrestlingEvent.EventVenue != null ? string.Format ("Tickets: {0} / {1}", wrestlingEvent.ticketsSold.ToString(), wrestlingEvent.EventVenue.capacity) : "Tickets: <TBD>");
+		ticketsSoldCount.text = (wrestlingEvent.ticketsSold >= 0 && wrestlingEvent.EventVenue != null ? string.Format ("{0} / {1}", wrestlingEvent.ticketsSold.ToString(), wrestlingEvent.EventVenue.capacity) : "0");
 		revenue.text = string.Format("${0}", wrestlingEvent.revenue);
+
+		if (wrestlingEvent.EventVenue != null) {
+			ticketsSoldProgress.minValue = 0;
+			ticketsSoldProgress.maxValue = wrestlingEvent.EventVenue.capacity;
+			ticketsSoldProgress.value = wrestlingEvent.ticketsSold;
+		}
+		else {
+			ticketsSoldProgress.value = 0;
+		}
 	}
 }
