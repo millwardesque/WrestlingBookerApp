@@ -34,7 +34,17 @@ public class WrestlerManager : MonoBehaviour {
 				bool isHeel = wrestler["isHeel"].AsBool;
 				float hiringCost = wrestler["hiringCost"].AsFloat;
 				int phase = wrestler["phase"].AsInt;
-				CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase);
+				float charisma = wrestler["charisma"].AsFloat;
+				float work = wrestler["work"].AsFloat;
+				float appearance = wrestler["appearance"].AsFloat;
+
+				var matchTypeAffinityArray = wrestler["matchTypeAffinities"].AsArray;
+				Dictionary<string, float> matchTypeAffinities = new Dictionary<string, float>();
+				foreach (JSONNode type in matchTypeAffinityArray) {
+					matchTypeAffinities.Add(type["name"], type["affinity"].AsFloat);
+				}
+
+				CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
 			}
 		}
 		else {
@@ -50,10 +60,10 @@ public class WrestlerManager : MonoBehaviour {
 		return wrestlers.Find( x => x.wrestlerName == name );
 	}
 	
-	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase) {
+	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities) {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
-		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase);
+		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
 		wrestlers.Add (wrestler);
 
 		return wrestler;

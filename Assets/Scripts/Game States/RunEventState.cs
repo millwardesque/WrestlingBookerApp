@@ -29,8 +29,28 @@ public class RunEventState : GameState {
 		currentMatchIndex++;
 		bool unlockedMatchType = false;
 
-		match.rating = currentEvent.EventVenue.GetMatchTypePreference(match.type) + currentEvent.EventVenue.GetMatchFinishPreference(match.finish);
-		match.rating /= 2.0f;
+		int matchFactorCount = 0;
+		float matchTypeRating = currentEvent.EventVenue.GetMatchTypePreference(match.type);
+		float matchFinishRating = currentEvent.EventVenue.GetMatchFinishPreference(match.finish);
+		match.rating = matchTypeRating + matchFinishRating;
+		matchFactorCount += 2;
+
+		// Add wrestler affinities.
+		float wrestlerPerformanceRating = 0.0f;
+		if (match.ParticipantCount > 0) {
+			foreach (WrestlingTeam team in match.teams) {
+				foreach (Wrestler wrestler in team.wrestlers) {
+					wrestlerPerformanceRating += wrestler.GetMatchTypeAffinity(match.type) * wrestler.work;
+				}
+			}
+			wrestlerPerformanceRating /= match.ParticipantCount;
+
+			match.rating += wrestlerPerformanceRating;
+			matchFactorCount++;
+		}
+
+		// Take the average.
+		match.rating /= (float) matchFactorCount;
 
 		if (currentEvent.EventVenue.GetMatchTypePreference(match.type) > 0.5 && !unlockedMatchType) {
 		    gameManager.GetPlayerCompany().AttemptUnlockMatchTypeByVenue(currentEvent.EventVenue);
@@ -39,8 +59,9 @@ public class RunEventState : GameState {
 
 		string matchReport = "";
 		matchReport += match.VersusString() + "\n";
-		matchReport += string.Format("The fans thought the match type was a {0}/10\n", Mathf.RoundToInt(currentEvent.EventVenue.GetMatchTypePreference(match.type) * 10.0f));
-		matchReport += string.Format("They thought the finish was a {0}/10\n", Mathf.RoundToInt(currentEvent.EventVenue.GetMatchFinishPreference(match.finish) * 10.0f));
+		matchReport += string.Format("Fans thought the wrestlers' performance was a {0}/10\n", Mathf.RoundToInt(wrestlerPerformanceRating * 10.0f));
+		matchReport += string.Format("They thought the match type was a {0}/10\n", Mathf.RoundToInt(matchTypeRating * 10.0f));
+		matchReport += string.Format("They thought the finish was a {0}/10\n", Mathf.RoundToInt(matchFinishRating * 10.0f));
 		matchReport += string.Format("Overall, they rated the match {0}/10", Mathf.RoundToInt(match.rating * 10.0f));
 
 		// Note: currentMatchIndex is used as-is in the dialog title because it's already been incremented, eliminating the need to add one to eliminate zero-indexing confusion.
