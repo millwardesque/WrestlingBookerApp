@@ -32,6 +32,10 @@ public class WrestlingMatchTypeManager : MonoBehaviour {
 			Debug.LogError("Unable to load event type data from JSON at '" + filename + "': There was an error opening the file.");
 		}
 	}
+
+	public WrestlingMatchType GetMatchType(string name) {
+		return matchTypes.Find ( x => x.typeName == name );
+	}
 	
 	public List<WrestlingMatchType> GetMatchTypes(int phase) {
 		return matchTypes.FindAll( x => x.phase <= phase);

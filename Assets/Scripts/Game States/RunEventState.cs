@@ -27,9 +27,15 @@ public class RunEventState : GameState {
 	void ProcessNextMatch() {
 		WrestlingMatch match = matches[currentMatchIndex];
 		currentMatchIndex++;
+		bool unlockedMatchType = false;
 
 		match.rating = currentEvent.EventVenue.GetMatchTypePreference(match.type) + currentEvent.EventVenue.GetMatchFinishPreference(match.finish);
 		match.rating /= 2.0f;
+
+		if (currentEvent.EventVenue.GetMatchTypePreference(match.type) > 0.5 && !unlockedMatchType) {
+		    gameManager.GetPlayerCompany().AttemptUnlockMatchTypeByVenue(currentEvent.EventVenue);
+			unlockedMatchType = true;
+		}
 
 		string matchReport = "";
 		matchReport += match.VersusString() + "\n";

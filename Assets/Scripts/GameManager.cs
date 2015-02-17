@@ -150,8 +150,9 @@ public class GameManager : MonoBehaviour {
 			playerCompany.isInAlliance = false;
 			playerCompany.phase++;
 
-			Debug.Log (venueManager.GetVenue ("Civic Center"));
 			playerCompany.unlockedVenues.Add (venueManager.GetVenue ("Civic Center"));
+			playerCompany.unlockedMatchTypes.Add (matchTypeManager.GetMatchType("Standard"));
+			playerCompany.unlockedMatchTypes.Add (matchTypeManager.GetMatchType("No DQ"));
 			OnCompanyUpdated();
 		}
 		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 1) {
@@ -169,6 +170,10 @@ public class GameManager : MonoBehaviour {
 			playerCompany.maxRosterSize = 8;
 			playerCompany.phase++;
 			OnCompanyUpdated();
+
+			GameState newState = FindState("Phase1FinishedState");
+			newState.SetTransition("FINISHED", SetIdleState);
+			SetState (newState);
 		}
 		else if (GetPhase() == 2 && playerCompany.Popularity > 0.7 && playerCompany.money > 20000000) {
 			playerCompany.isInAlliance = true;

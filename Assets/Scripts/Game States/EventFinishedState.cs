@@ -23,8 +23,6 @@ public class EventFinishedState : GameState {
 			}
 		}
 
-		Debug.Log ("@TODO: Add merchandise and food sales");
-
 		wrestlingEvent.revenue = ticketRevenue + eventTypeSales - venueCost - eventTypeCost - talentCost;
 		gameManager.OnWrestlingEventUpdated();
 

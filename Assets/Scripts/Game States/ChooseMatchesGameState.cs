@@ -89,7 +89,7 @@ public class ChooseMatchesGameState : GameState {
 
 	List<SelectOptionDialogOption> GetAvailableMatchTypes() {
 		List<SelectOptionDialogOption> matchTypeOptions = new List<SelectOptionDialogOption>();
-		matchTypes = gameManager.GetMatchTypeManager().GetMatchTypes(gameManager.GetPhase());
+		matchTypes = gameManager.GetPlayerCompany().unlockedMatchTypes;
 		
 		foreach (WrestlingMatchType matchType in matchTypes) {
 			matchTypeOptions.Add(new SelectOptionDialogOption(matchType.typeName, matchType.description));

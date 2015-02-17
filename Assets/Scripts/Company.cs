@@ -10,6 +10,7 @@ public class Company : MonoBehaviour {
 	public int phase = -1;
 	public List<WrestlingEvent> eventHistory = new List<WrestlingEvent>();
 	public List<Venue> unlockedVenues = new List<Venue>();
+	public List<WrestlingMatchType> unlockedMatchTypes = new List<WrestlingMatchType>();
 	public bool isInAlliance;
 
 	List<Wrestler> roster = new List<Wrestler>();
@@ -48,6 +49,7 @@ public class Company : MonoBehaviour {
 		PlayerPrefs.DeleteKey(keyPrefix + ".phase");
 		PlayerPrefs.DeleteKey(keyPrefix + ".isInAlliance");
 		PlayerPrefs.DeleteKey(keyPrefix + ".unlockedVenues");
+		PlayerPrefs.DeleteKey(keyPrefix + ".unlockedMatchTypes");
 	}
 
 	public bool Save(string keyPrefix) {
@@ -75,6 +77,15 @@ public class Company : MonoBehaviour {
 			unlockedVenueNames = unlockedVenueNames.Substring(0, unlockedVenueNames.Length - 1); // Remove the trailing comma.
 		}
 		PlayerPrefs.SetString (keyPrefix + ".unlockedVenues", unlockedVenueNames);
+
+		string unlockedMatchTypeNames = "";
+		if (unlockedMatchTypes.Count > 0) {
+			foreach (WrestlingMatchType matchType in unlockedMatchTypes) {
+				unlockedMatchTypeNames += matchType.typeName + ",";
+			}
+			unlockedMatchTypeNames = unlockedMatchTypeNames.Substring(0, unlockedMatchTypeNames.Length - 1); // Remove the trailing comma.
+		}
+		PlayerPrefs.SetString (keyPrefix + ".unlockedMatchTypes", unlockedMatchTypeNames);
 
 		return true;
 	}
@@ -129,6 +140,20 @@ public class Company : MonoBehaviour {
 			}
 		}
 
+		if (PlayerPrefs.HasKey (keyPrefix + ".unlockedMatchTypes")) {
+			string unlockedMatchTypeString = PlayerPrefs.GetString(keyPrefix + ".unlockedMatchTypes");
+			
+			if (unlockedMatchTypeString.Length > 0) {
+				string[] matchTypeNames = unlockedMatchTypeString.Split(',');
+				foreach (string matchTypeName in matchTypeNames) {
+					WrestlingMatchType matchType = gameManager.GetMatchTypeManager().GetMatchType(matchTypeName);
+					if (matchType != null) {
+						unlockedMatchTypes.Add(matchType);
+					}
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -154,6 +179,25 @@ public class Company : MonoBehaviour {
 				gameManager.GetGUIManager().AddNotification("Venue '" + newVenue.venueName + "' unlocked");
 				unlockedVenues.Add(newVenue);
 			}
+		}
+	}
+
+	public void AttemptUnlockMatchTypeByVenue(Venue venue) {
+		bool unlockNewMatchType = (Random.Range(0, 3) == 0);
+		if (unlockNewMatchType) {
+			Debug.Log("Unlocking match type!");
+			WrestlingMatchType matchType = gameManager.GetMatchTypeManager().GetMatchType(venue.unlockableMatchType);
+			if (matchType != null && matchType.phase <= phase) {
+				Debug.Log("Unlocking match type: " + matchType.typeName);
+				gameManager.GetGUIManager().AddNotification("Match type '" + matchType.typeName + "' unlocked");
+				unlockedMatchTypes.Add (matchType);
+			}
+			else {
+				Debug.Log ("Match type is null or the wrong phase.");
+			}
+		}
+		else {
+			Debug.Log("Bad random unlock match luck.");
 		}
 	}
 
