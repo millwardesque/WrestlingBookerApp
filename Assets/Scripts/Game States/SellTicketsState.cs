@@ -15,7 +15,6 @@ public class SellTicketsState : GameState {
 		WrestlingEvent currentEvent = gameManager.GetCurrentEvent();
 
 		ticketsPerSecond = currentEvent.EventInterest * currentEvent.EventVenue.capacity / secondsToSell;
-		StartCoroutine("SellTickets");
 	}
 
 	public override void OnUpdate(GameManager gameManager) {
@@ -28,6 +27,10 @@ public class SellTicketsState : GameState {
 			}
 		}
 		else {
+			secondsToSell -= Time.deltaTime;
+			if (secondsToSell <= 0.0f) {
+				finishedSellingTickets = true;
+			}
 			ticketsSold += ticketsPerSecond * Time.deltaTime * Random.Range(0.5f, 1.5f);
 
 			if (Mathf.FloorToInt(ticketsSold) != gameManager.GetCurrentEvent().ticketsSold) {
@@ -39,11 +42,6 @@ public class SellTicketsState : GameState {
 	}
 
 	void AcknowledgedTicketSales() {
-		gameManager.SetState(gameManager.FindState("RunEventState"));
-	}
-
-	IEnumerator SellTickets() {
-		yield return new WaitForSeconds(secondsToSell);
-		finishedSellingTickets = true;
+		gameManager.ReplaceState(gameManager.FindState("RunEventState"));
 	}
 }

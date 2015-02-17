@@ -57,7 +57,7 @@ public class ChooseMatchesGameState : GameState {
 		gameManager.OnWrestlingEventUpdated();
 
 		InfoDialog makeAnotherDialog = gameManager.GetGUIManager().InstantiateInfoDialog();
-		if (usedWrestlers.Count < wrestlers.Count) {
+		if (wrestlers.Count - usedWrestlers.Count >= 2) {
 			makeAnotherDialog.Initialize("Add another match?", "Would you like to add another match?", new UnityAction(MakeNewMatch), true, new UnityAction(DoneWithMatches), "Yes", "No");
 		}
 		else {
@@ -71,7 +71,7 @@ public class ChooseMatchesGameState : GameState {
 	}
 
 	void DoneWithMatches() {
-		gameManager.SetState(gameManager.FindState("SellTicketsState"));
+		gameManager.ReplaceState(gameManager.FindState("SellTicketsState"));
 	}
 
 	List<SelectOptionDialogOption> GetAvailableWrestlers() {

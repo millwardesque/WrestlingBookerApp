@@ -8,6 +8,8 @@ public class GameState : MonoBehaviour {
 	public virtual void OnEnter(GameManager gameManager) { }
 	public virtual void OnExit(GameManager gameManager) { }
 	public virtual void OnUpdate(GameManager gameManager) { }
+	public virtual void OnPause(GameManager gameManager) { }
+	public virtual void OnUnpause(GameManager gameManager) { }
 
 	public void SetTransition(string transitionName, System.Action action) {
 		transitions.Add(transitionName, action);

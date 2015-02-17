@@ -27,11 +27,11 @@ public class ChooseEventTypeGameState : GameState {
 
 		gameManager.GetCurrentEvent().Type = selected;
 		gameManager.OnWrestlingEventUpdated();
-		gameManager.SetState(gameManager.FindState("NameEventGameState"));
+		gameManager.ReplaceState(gameManager.FindState("NameEventGameState"));
 	}
 
  	void OnNoneAvailableAcknowledge() {
-		gameManager.SetState(gameManager.FindState("IdleGameState"));
+		gameManager.ReplaceState(gameManager.FindState("IdleGameState"));
 	}
 
 	List<SelectOptionDialogOption> GetAvailableEventTypes() {
@@ -50,6 +50,6 @@ public class ChooseEventTypeGameState : GameState {
 	}
 
 	void OnCancel() {
-		gameManager.SetState(gameManager.FindState("IdleGameState"));
+		gameManager.ReplaceState(gameManager.FindState("IdleGameState"));
 	}
 }

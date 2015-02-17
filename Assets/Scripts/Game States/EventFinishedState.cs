@@ -49,7 +49,7 @@ public class EventFinishedState : GameState {
 	}
 
 	void OnAcknowledgeReport() {
-		gameManager.SetState(gameManager.FindState("IdleGameState"));
+		gameManager.ReplaceState(gameManager.FindState("IdleGameState"));
 		gameManager.UpdatePhase();
 	}
 }

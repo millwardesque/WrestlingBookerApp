@@ -49,6 +49,6 @@ public class RunEventState : GameState {
 	}
 
 	void FinishedRunningEvent() {
-		gameManager.SetState(gameManager.FindState("EventFinishedState"));
+		gameManager.ReplaceState(gameManager.FindState("EventFinishedState"));
 	}
 }

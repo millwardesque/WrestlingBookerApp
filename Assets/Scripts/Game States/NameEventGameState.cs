@@ -36,6 +36,6 @@ public class NameEventGameState : GameState {
 	void SetEventName(string name) {
 		gameManager.GetCurrentEvent().eventName = name;
 		gameManager.OnWrestlingEventUpdated();
-		gameManager.SetState(gameManager.FindState("ChooseVenueGameState"));
+		gameManager.ReplaceState(gameManager.FindState("ChooseVenueGameState"));
 	}
 }

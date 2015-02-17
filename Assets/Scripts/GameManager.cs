@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
 	public WrestlingEvent wrestlingEventPrefab;
 	public Company companyPrefab;
 
-	GameState state;
+	Stack<GameState> stateStack = new Stack<GameState>();
 	VenueManager venueManager;
 	EventTypeManager eventTypeManager;
 	WrestlerManager wrestlerManager;
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour {
 		if (playerCompany.IsSaved("playerCompany")) {
 			playerCompany.Load("playerCompany");
 			GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
-			SetState(FindState("IdleGameState"));
+			ReplaceState(FindState("IdleGameState"));
 		}
 		else {
 			StartAtPhase0();
@@ -79,37 +79,52 @@ public class GameManager : MonoBehaviour {
 		UpdatePhase();
 		GameState startState = FindState ("NameCompanyGameState");
 		startState.SetTransition("FINISHED", OnFinishedPhase0Step);
-		SetState (startState);
+		ReplaceState (startState);
 		
 		GetGUIManager().HideStatusPanel();
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (state != null) {
-			state.OnUpdate(this);
+		if (stateStack.Count > 0) {
+			stateStack.Peek().OnUpdate(this);
 		}
 	}
 
 	public void CreateNewEvent() {
 		string startStateName = "ChooseEventTypeGameState";
-		SetState(FindState(startStateName));
+		ReplaceState(FindState(startStateName));
 		currentEvent = Instantiate(wrestlingEventPrefab) as WrestlingEvent;
 		GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);
 	}
 
-	public void SetState(GameState newState) {
+	public void PushState(GameState newState) {
+		if (stateStack.Count > 0) {
+			stateStack.Peek().OnPause(this);
+		}
+		stateStack.Push(newState);
+		newState.OnEnter(this);
+	}
+
+	public void PopState() {
+		if (stateStack.Count > 0) {
+			GameState oldState = stateStack.Pop();
+			oldState.OnExit(this);
+			Destroy (oldState.gameObject);
+		}
+
+		if (stateStack.Count > 0) {
+			stateStack.Peek().OnUnpause(this);
+		}
+	}
+
+	public void ReplaceState(GameState newState) {
 		if (null == newState) {
 			return;
 		}
 
-		if (null != state) {
-			state.OnExit(this);
-			Destroy (state.gameObject);
-		}
-
-		state = newState;
-		state.OnEnter(this);
+		PopState ();
+		PushState (newState);
 	}
 
 	public GameState FindState(string stateName) {
@@ -163,7 +178,7 @@ public class GameManager : MonoBehaviour {
 
 			GameState newState = FindState("Phase0FinishedState");
 			newState.SetTransition("FINISHED", SetIdleState);
-			SetState (newState);
+			ReplaceState (newState);
 		}
 		else if (GetPhase() == 1 && playerCompany.Popularity > 0.5 && playerCompany.money > 1000000) {
 			playerCompany.isInAlliance = true;
@@ -173,7 +188,7 @@ public class GameManager : MonoBehaviour {
 
 			GameState newState = FindState("Phase1FinishedState");
 			newState.SetTransition("FINISHED", SetIdleState);
-			SetState (newState);
+			ReplaceState (newState);
 		}
 		else if (GetPhase() == 2 && playerCompany.Popularity > 0.7 && playerCompany.money > 20000000) {
 			playerCompany.isInAlliance = true;
@@ -189,12 +204,12 @@ public class GameManager : MonoBehaviour {
 
 	public void HireWrestlers() {
 		GameState hireState = FindState("HireWrestlersState");
-		hireState.SetTransition("FINISHED", SetIdleState);
-		SetState (hireState);
+		hireState.SetTransition("FINISHED", PopState);
+		PushState (hireState);
 	}
 
 	void SetIdleState() {
-		SetState(FindState("IdleGameState"));
+		ReplaceState(FindState("IdleGameState"));
 	}
 
 	public int GetPhase() {
@@ -250,9 +265,7 @@ public class GameManager : MonoBehaviour {
 	void OnFinishedPhase0Step() {
 		GameState nextState = null;
 
-		Debug.Log ("Finished '" + state.name + "'");
-
-		switch (state.name) {
+		switch (stateStack.Peek().name) {
 		case "NameCompanyGameState":
 			nextState = FindState ("Phase0IntroGameState");
 			nextState.SetTransition("FINISHED", OnFinishedPhase0Step);
@@ -271,7 +284,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (nextState != null) {
-			SetState (nextState);
+			ReplaceState (nextState);
 		}
 	}
 }
