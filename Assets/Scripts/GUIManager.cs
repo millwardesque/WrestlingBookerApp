@@ -11,6 +11,7 @@ public class GUIManager : MonoBehaviour {
 	public GameObject textInputDialogPrefab;
 	public GameObject infoDialogPrefab;
 	public GameObject singlesMatchDialogPrefab;
+	public Slider progressBarPrefab;
 	public StatusPanel statusPanel;
 	public GameInfoPanel gameInfoPanel;
 	public NotificationPanel notificationPanel;
@@ -50,6 +51,10 @@ public class GUIManager : MonoBehaviour {
 
 		if (singlesMatchDialogPrefab == null || singlesMatchDialogPrefab.GetComponent<SinglesMatchDialog>() == null) {
 			Debug.LogError("Unable to start GUI Manager: Singles Match Dialog prefab isn't set or is missing SinglesMatchDialog script.");
+		}
+
+		if (progressBarPrefab == null) {
+			Debug.LogError("Unable to start GUI Manager: Progress bar prefab isn't set.");
 		}
 	}
 
