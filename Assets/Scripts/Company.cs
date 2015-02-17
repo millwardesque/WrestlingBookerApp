@@ -141,7 +141,7 @@ public class Company : MonoBehaviour {
 		eventHistory.Insert(0, wrestlingEvent);
 		float newPopularity = this.Popularity;
 
-		if (newPopularity > oldPopularity) {
+		if (newPopularity >= oldPopularity) {
 			AttemptToUnlockVenue();
 		}
 	}
@@ -151,6 +151,7 @@ public class Company : MonoBehaviour {
 		if (unlockNewVenue) {
 			Venue newVenue = gameManager.GetVenueManager().GetRandomAvailableVenue(this);
 			if (newVenue != null) {
+				gameManager.GetGUIManager().AddNotification("Venue '" + newVenue.venueName + "' unlocked");
 				unlockedVenues.Add(newVenue);
 			}
 		}
