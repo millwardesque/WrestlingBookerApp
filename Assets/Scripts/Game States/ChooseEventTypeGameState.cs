@@ -14,7 +14,7 @@ public class ChooseEventTypeGameState : GameState {
 		List<SelectOptionDialogOption> availableEventTypes = GetAvailableEventTypes();
 		if (availableEventTypes.Count > 0) {
 			eventTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
-			eventTypeDialog.Initialize("Event type", availableEventTypes, new UnityAction(OnTypeSelected));
+			eventTypeDialog.Initialize("Event type", availableEventTypes, new UnityAction(OnTypeSelected), true, new UnityAction(OnCancel));
 		}
 		else {
 			InfoDialog dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
@@ -47,5 +47,9 @@ public class ChooseEventTypeGameState : GameState {
 		}
 
 		return typeOptions;
+	}
+
+	void OnCancel() {
+		gameManager.SetState(gameManager.FindState("IdleGameState"));
 	}
 }
