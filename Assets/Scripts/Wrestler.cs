@@ -37,4 +37,10 @@ public class Wrestler : MonoBehaviour {
 			return 0.5f;
 		}
 	}
+
+	public string DescriptionWithStats {
+		get {
+			return string.Format ("Match Cost: ${0}\nWork: {1}\nCharisma: {2}\n{3}", perMatchCost, Utilities.FractionString(work, 10), Utilities.FractionString(charisma, 10), description);
+		}
+	}
 }

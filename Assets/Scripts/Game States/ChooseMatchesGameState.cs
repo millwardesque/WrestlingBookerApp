@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class ChooseMatchesGameState : GameState {
 	GameManager gameManager;
+	WrestlingMatch match = new WrestlingMatch();
 	SinglesMatchDialog wrestlersDialog;
 	SelectOptionDialog matchTypeDialog;
 	SelectOptionDialog matchFinishDialog;
@@ -21,36 +22,31 @@ public class ChooseMatchesGameState : GameState {
 	}
 
 	void OnWrestlersPicked() {
+		Wrestler wrestler1 = wrestlers.Find( x => x.wrestlerName == wrestlersDialog.GetWrestler1().name );
+		Wrestler wrestler2 = wrestlers.Find( x => x.wrestlerName == wrestlersDialog.GetWrestler2().name );
+		match.teams.Add (new WrestlingTeam(wrestler1));
+		match.teams.Add (new WrestlingTeam(wrestler2));
+		usedWrestlers.Add (wrestler1);
+		usedWrestlers.Add (wrestler2);
+
 		matchTypeDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 		matchTypeDialog.Initialize("Match type", GetAvailableMatchTypes(), new UnityAction(OnMatchTypePicked));
 	}
 
 	void OnMatchTypePicked() {
-		matchWinnerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
-		matchWinnerDialog.Initialize("Match winner", GetMatchWrestlers(), new UnityAction(OnMatchWinnerPicked));
-	}
+		match.type = matchTypes.Find ( x => x.typeName == matchTypeDialog.GetSelectedOption().name );
 
-	void OnMatchWinnerPicked() {
 		matchFinishDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 		matchFinishDialog.Initialize("Match finish", GetAvailableMatchFinishes(), new UnityAction(OnMatchFinishPicked));
 	}
 
 	void OnMatchFinishPicked() {
+		match.finish = matchFinishes.Find ( x => x.finishName == matchFinishDialog.GetSelectedOption().name );
+
 		OnMatchPicked ();
 	}
 
 	void OnMatchPicked() {
-		WrestlingMatch match = new WrestlingMatch();
-		Wrestler wrestler1 = wrestlers.Find( x => x.wrestlerName == wrestlersDialog.GetWrestler1().name );
-		Wrestler wrestler2 = wrestlers.Find( x => x.wrestlerName == wrestlersDialog.GetWrestler2().name );
-		match.teams.Add (new WrestlingTeam(wrestler1));
-		match.teams.Add (new WrestlingTeam(wrestler2));
-		match.type = matchTypes.Find ( x => x.typeName == matchTypeDialog.GetSelectedOption().name );
-		match.finish = matchFinishes.Find ( x => x.finishName == matchFinishDialog.GetSelectedOption().name );
-
-		usedWrestlers.Add (wrestler1);
-		usedWrestlers.Add (wrestler2);
-
 		WrestlingEvent currentEvent = gameManager.GetCurrentEvent();
 		currentEvent.matches.Add(match);
 
@@ -80,7 +76,7 @@ public class ChooseMatchesGameState : GameState {
 		
 		foreach (Wrestler wrestler in wrestlers) {
 			if (!usedWrestlers.Contains(wrestler)) {
-				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, wrestler.description));
+				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, wrestler.DescriptionWithStats));
 			}
 		}
 		
@@ -92,7 +88,17 @@ public class ChooseMatchesGameState : GameState {
 		matchTypes = gameManager.GetPlayerCompany().unlockedMatchTypes;
 		
 		foreach (WrestlingMatchType matchType in matchTypes) {
-			matchTypeOptions.Add(new SelectOptionDialogOption(matchType.typeName, matchType.description));
+			float localPreference = gameManager.GetCurrentEvent().EventVenue.GetMatchTypePreference(matchType);
+			string localPreferenceString = Utilities.FractionString(localPreference, 10);
+
+			float wrestlerEffectiveness = 0;
+			foreach (Wrestler wrestler in match.Participants) {
+				wrestlerEffectiveness += wrestler.GetMatchTypeAffinity(matchType) / match.ParticipantCount;
+			}
+			string wrestlerEffectivenessString = Utilities.FractionString(wrestlerEffectiveness, 10);
+
+			string matchTypeDescription = string.Format("Local popularity: {0}\nWrestler effectiveness: {1}\n{2}", localPreferenceString, wrestlerEffectivenessString, matchType.description);
+			matchTypeOptions.Add(new SelectOptionDialogOption(matchType.typeName, matchTypeDescription));
 		}
 		
 		return matchTypeOptions;
@@ -103,7 +109,12 @@ public class ChooseMatchesGameState : GameState {
 		matchFinishes = gameManager.GetMatchFinishManager().GetMatchFinishes(gameManager.GetPhase());
 		
 		foreach (WrestlingMatchFinish matchFinish in matchFinishes) {
-			matchFinishOptions.Add(new SelectOptionDialogOption(matchFinish.finishName, matchFinish.description));
+
+			float localPreference = gameManager.GetCurrentEvent().EventVenue.GetMatchFinishPreference(matchFinish);
+			string localPreferenceString = Utilities.FractionString(localPreference, 10);
+
+			string matchFinishDescription = string.Format("Local popularity: {0}\n{1}", localPreferenceString, matchFinish.description);
+			matchFinishOptions.Add(new SelectOptionDialogOption(matchFinish.finishName, matchFinishDescription));
 		}
 		
 		return matchFinishOptions;

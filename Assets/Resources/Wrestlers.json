@@ -37,10 +37,10 @@
     		]
     	},
     	
-    	{ "name": "Earthquake", "description": "Watch out for the aftershocks!", "perMatchCost": 5000.0, "popularity": 0.6, "isHeel": true, "hiringCost": 11000.0, "phase": 1 },
-    	{ "name": "Mr. Perfect", "description": "Absolutely perfect.", "perMatchCost": 6000.0, "popularity": 0.7, "isHeel": true, "hiringCost": 12000.0, "phase": 1 },
-    	{ "name": "Superfly Snuka", "description": "The Superfly", "perMatchCost": 3000.0, "popularity": 0.5, "isHeel": false, "hiringCost": 2000.0, "phase": 1 },
-        { "name": "Lex Luger", "description": "The Narcissist?!", "perMatchCost": 6000.0, "popularity": 0.5, "isHeel": true, "hiringCost": 8000.0, "phase": 1 },
+    	{ "name": "Earthquake", "description": "Watch out for the aftershocks!", "perMatchCost": 5000.0, "popularity": 0.6, "isHeel": true, "hiringCost": 11000.0, "phase": 1, "charisma": 0.6, "work": 0.2, "appearance": 0.5 },
+    	{ "name": "Mr. Perfect", "description": "Absolutely perfect.", "perMatchCost": 6000.0, "popularity": 0.7, "isHeel": true, "hiringCost": 12000.0, "phase": 1, "charisma": 0.7, "work": 0.7, "appearance": 0.5, },
+    	{ "name": "Superfly Snuka", "description": "The Superfly", "perMatchCost": 3000.0, "popularity": 0.5, "isHeel": false, "hiringCost": 2000.0, "phase": 1, "charisma": 0.4, "work": 0.7, "appearance": 0.5, },
+        { "name": "Lex Luger", "description": "The Narcissist?!", "perMatchCost": 6000.0, "popularity": 0.5, "isHeel": true, "hiringCost": 8000.0, "phase": 1, "charisma": 0.4, "work": 0.4, "appearance": 0.8, },
     	
     	{ "name": "Animal", "description": "One half of the Road Warriors", "perMatchCost": 5000.0, "popularity": 0.7, "isHeel": false, "hiringCost": 7000.0, "phase": 2 },
         { "name": "Hawk", "description": "One half of the Road Warriors", "perMatchCost": 5000.0, "popularity": 0.7, "isHeel": false, "hiringCost": 7000.0, "phase": 2 },

@@ -12,7 +12,7 @@
 			],
 			unlockableMatchType: "Cage"
 		},
-		{ "name": "Hersheypark Arena", "description": "Hershey PA", "phase": 1, "baseCost": 5000.0, "gatePercentage": 0.0, "capacity": 7300, "popularity": 0.4,
+		{ "name": "Hersheypark Arena", "description": "Hershey PA", "phase": 1, "baseCost": 25000.0, "gatePercentage": 0.1, "capacity": 7300, "popularity": 0.4,
 			"matchFinishPreferences": [
 				{ "name": "Dirty win", "preference": 0.3 },
 				{ "name": "Disqualification", "preference": 0.7 },

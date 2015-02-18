@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviour {
 	WrestlingEvent currentEvent;
 	Company playerCompany;
 
-	float startingMoney = 10000.0f;
-
 	// Use this for initialization
 	void Awake () {
 		GameObject guiManagerObj = GameObject.FindGameObjectWithTag("GUI Manager");
@@ -186,6 +184,8 @@ public class GameManager : MonoBehaviour {
 
 	public void UpdatePhase() {
 		if (GetPhase() == -1) {
+			float startingMoney = 10000.0f;
+
 			playerCompany.money = startingMoney;
 			playerCompany.maxRosterSize = 4;
 			playerCompany.isInAlliance = false;
@@ -206,7 +206,7 @@ public class GameManager : MonoBehaviour {
 			newState.SetTransition("FINISHED", SetIdleState);
 			ReplaceState (newState);
 		}
-		else if (GetPhase() == 1 && playerCompany.Popularity > 0.5 && playerCompany.money > 1000000) {
+		else if (GetPhase() == 1 && playerCompany.money > 1000000) {
 			playerCompany.isInAlliance = true;
 			playerCompany.maxRosterSize = 8;
 			playerCompany.phase++;
@@ -216,7 +216,7 @@ public class GameManager : MonoBehaviour {
 			newState.SetTransition("FINISHED", SetIdleState);
 			ReplaceState (newState);
 		}
-		else if (GetPhase() == 2 && playerCompany.Popularity > 0.7 && playerCompany.money > 20000000) {
+		else if (GetPhase() == 2 && playerCompany.Popularity > 0.5 && playerCompany.money > 20000000) {
 			playerCompany.isInAlliance = true;
 			playerCompany.maxRosterSize = 10;
 			playerCompany.phase++;
