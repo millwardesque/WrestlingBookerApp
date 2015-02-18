@@ -55,10 +55,10 @@ public class RunEventState : GameState {
 
 		string matchReport = "";
 		matchReport += match.VersusString() + "\n";
-		matchReport += GetFanPerformanceReview(wrestlerPerformanceRating);
-		matchReport += GetFanMatchTypeReview(matchTypeRating);
-		matchReport += GetFanFinishReview(matchFinishRating);
-		matchReport += GetFanMatchReview(match.rating);
+		matchReport += GetFanPerformanceReview(wrestlerPerformanceRating) + "\n";
+		matchReport += GetFanMatchTypeReview(matchTypeRating) + "\n";
+		matchReport += GetFanFinishReview(matchFinishRating) + "\n";
+		matchReport += GetFanMatchReview(match.rating) + "\n";
 
 		// Note: currentMatchIndex is used as-is in the dialog title because it's already been incremented, eliminating the need to add one to eliminate zero-indexing confusion.
 		matchDialog = gameManager.GetGUIManager ().InstantiateInfoDialog();

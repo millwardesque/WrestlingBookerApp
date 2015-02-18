@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class ChooseMatchesGameState : GameState {
 	GameManager gameManager;
-	WrestlingMatch match = new WrestlingMatch();
+	WrestlingMatch match;
 	SinglesMatchDialog wrestlersDialog;
 	SelectOptionDialog matchTypeDialog;
 	SelectOptionDialog matchFinishDialog;
@@ -62,6 +62,7 @@ public class ChooseMatchesGameState : GameState {
 	}
 
 	void MakeNewMatch() {
+		match = new WrestlingMatch();
 		wrestlersDialog = gameManager.GetGUIManager().InstantiateSinglesMatchDialog();
 		wrestlersDialog.Initialize("Wrestlers", GetAvailableWrestlers(), GetAvailableWrestlers(), new UnityAction(OnWrestlersPicked));
 	}
