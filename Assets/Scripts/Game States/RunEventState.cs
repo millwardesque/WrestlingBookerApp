@@ -66,7 +66,7 @@ public class RunEventState : GameState {
 	}
 
 	void FinishedRunningEvent() {
-		gameManager.ReplaceState(gameManager.FindState("EventFinishedState"));
+		ExecuteTransition("FINISHED");
 	}
 
 	string GetFanMatchTypeReview(float rating) {

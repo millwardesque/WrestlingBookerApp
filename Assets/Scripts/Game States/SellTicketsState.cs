@@ -3,7 +3,6 @@ using UnityEngine.Events;
 using System.Collections;
 
 public class SellTicketsState : GameState {
-	GameManager gameManager;
 	float ticketsSold = 0.0f;
 	public float ticketsPerSecond = 10.0f;
 	public float secondsToSell = 5.0f;
@@ -11,15 +10,12 @@ public class SellTicketsState : GameState {
 	InfoDialog dialog = null;
 
 	public override void OnEnter (GameManager gameManager) {
-		this.gameManager = gameManager;
 		WrestlingEvent currentEvent = gameManager.GetCurrentEvent();
 
 		ticketsPerSecond = currentEvent.EventInterest * currentEvent.EventVenue.capacity / secondsToSell;
 	}
 
 	public override void OnUpdate(GameManager gameManager) {
-		this.gameManager = gameManager;
-
 		if (finishedSellingTickets) {
 			if (dialog == null) {
 				dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
@@ -42,6 +38,6 @@ public class SellTicketsState : GameState {
 	}
 
 	void AcknowledgedTicketSales() {
-		gameManager.ReplaceState(gameManager.FindState("RunEventState"));
+		ExecuteTransition("FINISHED");
 	}
 }

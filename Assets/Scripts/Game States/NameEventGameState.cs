@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿	using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 
@@ -36,6 +36,6 @@ public class NameEventGameState : GameState {
 	void SetEventName(string name) {
 		gameManager.GetCurrentEvent().eventName = name;
 		gameManager.OnWrestlingEventUpdated();
-		gameManager.ReplaceState(gameManager.FindState("ChooseVenueGameState"));
+		ExecuteTransition("FINISHED");
 	}
 }

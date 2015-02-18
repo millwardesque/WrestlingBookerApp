@@ -68,7 +68,7 @@ public class ChooseMatchesGameState : GameState {
 	}
 
 	void DoneWithMatches() {
-		gameManager.ReplaceState(gameManager.FindState("SellTicketsState"));
+		ExecuteTransition("FINISHED");
 	}
 
 	List<SelectOptionDialogOption> GetAvailableWrestlers() {

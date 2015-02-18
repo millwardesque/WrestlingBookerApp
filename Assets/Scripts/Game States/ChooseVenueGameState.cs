@@ -19,7 +19,7 @@ public class ChooseVenueGameState : GameState {
 
 		gameManager.GetCurrentEvent().EventVenue = selected;
 		gameManager.OnWrestlingEventUpdated();
-		gameManager.ReplaceState(gameManager.FindState("ChooseMatchesGameState"));
+		ExecuteTransition("FINISHED");
 	}
 	
 	List<SelectOptionDialogOption> GetAvailableVenues() {

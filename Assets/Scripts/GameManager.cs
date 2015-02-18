@@ -101,18 +101,6 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void CreateNewEvent() {
-		string startStateName = "ChooseEventTypeGameState";
-		ReplaceState(FindState(startStateName));
-
-		if (currentEvent != null) {
-			GameObject.Destroy(currentEvent.gameObject);
-		}
-
-		currentEvent = Instantiate(wrestlingEventPrefab) as WrestlingEvent;
-		GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);
-	}
-
 	void OnOkToCancelEvent() {
 		PopState();
 		CreateNewEvent ();
@@ -317,10 +305,78 @@ public class GameManager : MonoBehaviour {
 		case "Phase0CreateEventIntroState":
 			nextState = FindState ("IdleGameState");
 			break;
+		default:
+			Debug.Log ("Phase 0 state '" + stateStack.Peek().name + "' not recognized.");
+			break;
 		}
 
 		if (nextState != null) {
 			ReplaceState (nextState);
+		}
+	}
+
+	// Event creation callbacks
+	void CreateNewEvent() {
+		if (currentEvent != null) {
+			GameObject.Destroy(currentEvent.gameObject);
+		}
+		
+		currentEvent = Instantiate(wrestlingEventPrefab) as WrestlingEvent;
+		GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);
+		
+		GameState startState = FindState("ChooseEventTypeGameState");
+		startState.SetTransition("EventTypeChosen", OnFinishedEventCreationStep);
+		startState.SetTransition("NoEventsAvailable", OnCancelEventCreate);
+		startState.SetTransition("Cancel", OnCancelEventCreate);
+		PushState(startState);
+	}
+	
+	void OnCancelEventCreate() {
+		if (currentEvent != null) {
+			GameObject.Destroy(currentEvent.gameObject);
+			GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);
+		}
+		PopState();
+	}
+
+	void OnFinishedEventCreationStep() {
+		GameState nextState = null;
+		
+		switch (stateStack.Peek().name) {
+		case "ChooseEventTypeGameState":
+			nextState = FindState("NameEventGameState");
+			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			break;
+		case "NameEventGameState":
+			nextState = FindState("ChooseVenueGameState");
+			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			break;
+		case "ChooseVenueGameState":
+			nextState = FindState("ChooseMatchesGameState");
+			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			break;
+		case "ChooseMatchesGameState":
+			nextState = FindState("SellTicketsState");
+			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			break;
+		case "SellTicketsState":
+			nextState = FindState("RunEventState");
+			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			break;
+		case "RunEventState":
+			nextState = FindState("EventFinishedState");
+			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			break;
+		case "EventFinishedState":
+			PopState ();
+			break;
+		default:
+			Debug.LogError ("Event creation state '" + stateStack.Peek().name + "' not recognized.");
+			break;
+		}
+		
+		if (nextState != null) {
+			ReplaceState(GetDelayedGameState(nextState));
 		}
 	}
 }
