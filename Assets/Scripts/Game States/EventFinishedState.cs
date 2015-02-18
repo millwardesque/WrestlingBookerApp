@@ -50,7 +50,7 @@ public class EventFinishedState : GameState {
 
 	void OnAcknowledgeReport() {
 		gameManager.OnEventFinished();
-		gameManager.UpdatePhase();
 		ExecuteTransition("FINISHED");
+		gameManager.UpdatePhase();
 	}
 }

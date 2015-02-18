@@ -191,8 +191,8 @@ public class GameManager : MonoBehaviour {
 			OnCompanyUpdated();
 
 			GameState newState = FindState("Phase0FinishedState");
-			newState.SetTransition("FINISHED", SetIdleState);
-			ReplaceState (newState);
+			newState.SetTransition("FINISHED", PopState);
+			PushState (newState);
 		}
 		else if (GetPhase() == 1 && playerCompany.money > 1000000) {
 			playerCompany.isInAlliance = true;
@@ -369,6 +369,7 @@ public class GameManager : MonoBehaviour {
 			break;
 		case "EventFinishedState":
 			PopState ();
+			// @TODO Move UpdatePhase() check here.
 			break;
 		default:
 			Debug.LogError ("Event creation state '" + stateStack.Peek().name + "' not recognized.");
@@ -376,7 +377,7 @@ public class GameManager : MonoBehaviour {
 		}
 		
 		if (nextState != null) {
-			ReplaceState(GetDelayedGameState(nextState));
+			ReplaceState(nextState); // GetDelayedGameState(nextState));
 		}
 	}
 }
