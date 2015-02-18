@@ -29,11 +29,13 @@ public class RunEventState : GameState {
 		currentMatchIndex++;
 		bool unlockedMatchType = false;
 
-		int matchFactorCount = 0;
+		// These weights should all add up to 1.0f
+		float matchTypeWeight = 0.1f;
+		float matchFinishWeight = 0.3f;
+		float matchWrestlerPerformanceWeight = 0.6f;
+
 		float matchTypeRating = currentEvent.EventVenue.GetMatchTypePreference(match.type);
 		float matchFinishRating = currentEvent.EventVenue.GetMatchFinishPreference(match.finish);
-		match.rating = matchTypeRating + matchFinishRating;
-		matchFactorCount += 2;
 
 		// Add wrestler affinities.
 		float wrestlerPerformanceRating = 0.0f;
@@ -42,14 +44,9 @@ public class RunEventState : GameState {
 				wrestlerPerformanceRating += wrestler.GetMatchTypeAffinity(match.type) * wrestler.work;
 			}
 			wrestlerPerformanceRating /= match.ParticipantCount;
-
-			// Double the weight of the wrestler performance so that it matters more than the finish / match type.
-			match.rating += wrestlerPerformanceRating * 2;
-			matchFactorCount += 2;
 		}
 
-		// Take the average.
-		match.rating /= (float) matchFactorCount;
+		match.rating = (matchTypeRating * matchTypeWeight) + (matchFinishRating * matchFinishWeight) + (wrestlerPerformanceRating * matchWrestlerPerformanceWeight);
 
 		if (currentEvent.EventVenue.GetMatchTypePreference(match.type) > 0.5 && !unlockedMatchType) {
 		    gameManager.GetPlayerCompany().AttemptUnlockMatchTypeByVenue(currentEvent.EventVenue);
