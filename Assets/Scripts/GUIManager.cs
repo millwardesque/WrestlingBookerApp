@@ -109,6 +109,10 @@ public class GUIManager : MonoBehaviour {
 		gameManager.HireWrestlers();
 	}
 
+	public void OnFireWrestlerClick() {
+		gameManager.FireWrestler();
+	}
+
 	public void OnMainMenuClick() {
 		gameManager.GoToMainMenu();
 	}

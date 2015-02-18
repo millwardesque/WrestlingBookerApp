@@ -234,6 +234,12 @@ public class GameManager : MonoBehaviour {
 		PushState (hireState);
 	}
 
+	public void FireWrestler() {
+		GameState fireState = FindState("FireWrestlerState");
+		fireState.SetTransition("FINISHED", PopState);
+		PushState (fireState);
+	}
+
 	void SetIdleState() {
 		ReplaceState(FindState("IdleGameState"));
 	}

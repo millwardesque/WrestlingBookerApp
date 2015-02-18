@@ -36,6 +36,10 @@ public class Company : MonoBehaviour {
 		}
 	}
 
+	public void RemoveFromRoster(Wrestler wrestler) {
+		roster.Remove(wrestler);
+	}
+
 	public List<Wrestler> GetRoster() {
 		return roster;
 	}
