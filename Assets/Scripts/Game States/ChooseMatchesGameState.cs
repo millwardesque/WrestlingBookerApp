@@ -89,13 +89,13 @@ public class ChooseMatchesGameState : GameState {
 		
 		foreach (WrestlingMatchType matchType in matchTypes) {
 			float localPreference = gameManager.GetCurrentEvent().EventVenue.GetMatchTypePreference(matchType);
-			string localPreferenceString = Utilities.FractionString(localPreference, 10);
+			string localPreferenceString = Utilities.AlphaRating(localPreference);
 
 			float wrestlerEffectiveness = 0;
 			foreach (Wrestler wrestler in match.Participants) {
 				wrestlerEffectiveness += wrestler.GetMatchTypeAffinity(matchType) / match.ParticipantCount;
 			}
-			string wrestlerEffectivenessString = Utilities.FractionString(wrestlerEffectiveness, 10);
+			string wrestlerEffectivenessString = Utilities.AlphaRating(wrestlerEffectiveness);
 
 			string matchTypeDescription = string.Format("Local popularity: {0}\nWrestler effectiveness: {1}\n{2}", localPreferenceString, wrestlerEffectivenessString, matchType.description);
 			matchTypeOptions.Add(new SelectOptionDialogOption(matchType.typeName, matchTypeDescription));
@@ -111,7 +111,7 @@ public class ChooseMatchesGameState : GameState {
 		foreach (WrestlingMatchFinish matchFinish in matchFinishes) {
 
 			float localPreference = gameManager.GetCurrentEvent().EventVenue.GetMatchFinishPreference(matchFinish);
-			string localPreferenceString = Utilities.FractionString(localPreference, 10);
+			string localPreferenceString = Utilities.AlphaRating(localPreference);
 
 			string matchFinishDescription = string.Format("Local popularity: {0}\n{1}", localPreferenceString, matchFinish.description);
 			matchFinishOptions.Add(new SelectOptionDialogOption(matchFinish.finishName, matchFinishDescription));
