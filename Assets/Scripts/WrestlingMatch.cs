@@ -56,4 +56,16 @@ public class WrestlingMatch {
 
 		return versus;
 	}
+
+	public List<Wrestler> Participants {
+		get {
+			List<Wrestler> participants = new List<Wrestler>();
+			foreach (WrestlingTeam team in teams) {
+				foreach (Wrestler wrestler in team.wrestlers) {
+					participants.Add(wrestler);
+				}
+			}
+			return participants;
+		}
+	}
 }

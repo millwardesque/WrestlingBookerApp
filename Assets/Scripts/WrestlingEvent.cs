@@ -102,18 +102,19 @@ public class WrestlingEvent : MonoBehaviour {
 	public Venue EventVenue { get; set; }
 
 	public float EventInterest {
-		get { 
-			float popularityVsMatchInterestSplit = 0.5f;
-			float interest = EventVenue.popularity * popularityVsMatchInterestSplit;
+		get {	
+			float interest = 0;
 
+			// Calculate the average match interest and multiply it by the popularity of wrestling in the venue
 			foreach (WrestlingMatch match in matches) {
-				foreach (WrestlingTeam team in match.teams) {
-					foreach (Wrestler wrestler in team.wrestlers) {
-						interest += (1.0f - popularityVsMatchInterestSplit) * wrestler.popularity * wrestler.popularity / match.ParticipantCount;
-					}
+				float matchInterest = 0;
+				foreach (Wrestler wrestler in match.Participants) {
+					matchInterest += (wrestler.popularity + wrestler.charisma / 2) / match.ParticipantCount;
 				}
+				interest += matchInterest / matches.Count;
 			}
-			return interest;
+			interest *=  EventVenue.popularity;
+			return Mathf.Clamp01(interest * Random.Range(0.7f, 1.3f));
 		}
 	}
 

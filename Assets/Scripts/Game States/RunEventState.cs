@@ -38,15 +38,14 @@ public class RunEventState : GameState {
 		// Add wrestler affinities.
 		float wrestlerPerformanceRating = 0.0f;
 		if (match.ParticipantCount > 0) {
-			foreach (WrestlingTeam team in match.teams) {
-				foreach (Wrestler wrestler in team.wrestlers) {
-					wrestlerPerformanceRating += wrestler.GetMatchTypeAffinity(match.type) * wrestler.work;
-				}
+			foreach (Wrestler wrestler in match.Participants) {
+				wrestlerPerformanceRating += wrestler.GetMatchTypeAffinity(match.type) * wrestler.work;
 			}
 			wrestlerPerformanceRating /= match.ParticipantCount;
 
-			match.rating += wrestlerPerformanceRating;
-			matchFactorCount++;
+			// Double the weight of the wrestler performance so that it matters more than the finish / match type.
+			match.rating += wrestlerPerformanceRating * 2;
+			matchFactorCount += 2;
 		}
 
 		// Take the average.
