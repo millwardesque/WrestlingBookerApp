@@ -369,7 +369,9 @@ public class GameManager : MonoBehaviour {
 			break;
 		case "EventFinishedState":
 			PopState ();
-			// @TODO Move UpdatePhase() check here.
+
+			OnEventFinished();
+			UpdatePhase();
 			break;
 		default:
 			Debug.LogError ("Event creation state '" + stateStack.Peek().name + "' not recognized.");
@@ -377,7 +379,7 @@ public class GameManager : MonoBehaviour {
 		}
 		
 		if (nextState != null) {
-			ReplaceState(nextState); // GetDelayedGameState(nextState));
+			ReplaceState(GetDelayedGameState(nextState));
 		}
 	}
 }

@@ -49,8 +49,6 @@ public class EventFinishedState : GameState {
 	}
 
 	void OnAcknowledgeReport() {
-		gameManager.OnEventFinished();
 		ExecuteTransition("FINISHED");
-		gameManager.UpdatePhase();
 	}
 }
