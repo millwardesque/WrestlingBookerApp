@@ -43,4 +43,45 @@ public class Wrestler : MonoBehaviour {
 			return string.Format ("Match Cost: ${0}\nWork: {1}\nCharisma: {2}\n{3}", perMatchCost, Utilities.AlphaRating(work), Utilities.AlphaRating(charisma), description);
 		}
 	}
+
+	public void LoadAugmentedStats() {
+		string prefix = "wrestlerChanges-" + wrestlerName;
+		if (PlayerPrefs.HasKey(prefix + ".popularity")) {
+			popularity = PlayerPrefs.GetFloat(prefix + ".popularity");
+		}
+		
+		if (PlayerPrefs.HasKey(prefix + ".charisma")) {
+			charisma = PlayerPrefs.GetFloat(prefix + ".charisma");
+		}
+		
+		if (PlayerPrefs.HasKey(prefix + ".work")) {
+			work = PlayerPrefs.GetFloat(prefix + ".work");
+		}
+		
+		if (PlayerPrefs.HasKey(prefix + ".appearance")) {
+			appearance = PlayerPrefs.GetFloat(prefix + ".appearance");
+		}
+		
+		if (PlayerPrefs.HasKey(prefix + ".perMatchCost")) {
+			perMatchCost = PlayerPrefs.GetFloat(prefix + ".perMatchCost");
+		}
+	}
+	
+	public void SaveAugmentedStats() {
+		string prefix = "wrestlerChanges-" + wrestlerName;
+		PlayerPrefs.SetFloat(prefix + ".popularity", popularity);
+		PlayerPrefs.SetFloat(prefix + ".charisma", charisma);
+		PlayerPrefs.SetFloat(prefix + ".work", work);
+		PlayerPrefs.SetFloat(prefix + ".appearance", appearance);
+		PlayerPrefs.SetFloat(prefix + ".perMatchCost", perMatchCost);
+	}
+
+	public void DeleteAugmentedStats() {
+		string prefix = "wrestlerChanges-" + wrestlerName;
+		PlayerPrefs.DeleteKey(prefix + ".popularity");
+		PlayerPrefs.DeleteKey(prefix + ".charisma");
+		PlayerPrefs.DeleteKey(prefix + ".work");
+		PlayerPrefs.DeleteKey(prefix + ".appearance");
+		PlayerPrefs.DeleteKey(prefix + ".perMatchCost");
+	}
 }

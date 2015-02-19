@@ -51,7 +51,7 @@ public class WrestlerManager : MonoBehaviour {
 			Debug.LogError("Unable to load wrestler data from JSON at '" + filename + "': There was an error opening the file.");
 		}
 	}
-	
+
 	public List<Wrestler> GetWrestlers(int phase = 0) {
 		return wrestlers.FindAll( x => x.phase <= phase);
 	}
@@ -64,6 +64,7 @@ public class WrestlerManager : MonoBehaviour {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
 		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
+		wrestler.LoadAugmentedStats();
 		wrestlers.Add (wrestler);
 
 		return wrestler;
