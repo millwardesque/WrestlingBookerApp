@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 	public GameState[] availableGameStates;
-	public float stateChangeDelay = 1.0f;
+	public float stateChangeDelay = 5.0f;
 	public WrestlingEvent wrestlingEventPrefab;
 	public Company companyPrefab;
 
@@ -156,9 +156,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 
-	public GameState GetDelayedGameState(GameState state) {
+	public GameState GetDelayedGameState(GameState state, bool canSellTickets, float delayTime) {
 		WaitGameState waitState = FindState ("WaitGameState") as WaitGameState;
-		waitState.Initialize(stateChangeDelay, state);
+		waitState.Initialize(delayTime, state, canSellTickets);
 		return waitState;
 	}
 
@@ -341,15 +341,20 @@ public class GameManager : MonoBehaviour {
 
 	void OnFinishedEventCreationStep() {
 		GameState nextState = null;
+		bool canSellTickets = true;
+		bool waitBetweenStates = true;
+		float delayTime = stateChangeDelay;
 		
 		switch (stateStack.Peek().name) {
 		case "ChooseEventTypeGameState":
 			nextState = FindState("NameEventGameState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			waitBetweenStates = false;
 			break;
 		case "NameEventGameState":
 			nextState = FindState("ChooseVenueGameState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			waitBetweenStates = false;
 			break;
 		case "ChooseVenueGameState":
 			nextState = FindState("ChooseMatchesGameState");
@@ -362,10 +367,12 @@ public class GameManager : MonoBehaviour {
 		case "SellTicketsState":
 			nextState = FindState("RunEventState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			waitBetweenStates = false;
 			break;
 		case "RunEventState":
 			nextState = FindState("EventFinishedState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
+			waitBetweenStates = false;
 			break;
 		case "EventFinishedState":
 			PopState ();
@@ -379,7 +386,12 @@ public class GameManager : MonoBehaviour {
 		}
 		
 		if (nextState != null) {
-			ReplaceState(GetDelayedGameState(nextState));
+			if (waitBetweenStates) {
+				ReplaceState(GetDelayedGameState(nextState, canSellTickets, delayTime));
+			}
+			else {
+				ReplaceState(nextState);
+			}
 		}
 	}
 }

@@ -30,7 +30,7 @@ public class Venue : MonoBehaviour {
 	}
 
 	public float GetVenueCost(WrestlingEvent wrestlingEvent) {
-		return wrestlingEvent.ticketsSold * gatePercentage + baseCost;
+		return wrestlingEvent.TicketsSold * gatePercentage + baseCost;
 	}
 
 	public float GetMatchTypePreference(WrestlingMatchType type) {

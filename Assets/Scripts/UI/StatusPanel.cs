@@ -10,13 +10,13 @@ public class StatusPanel : MonoBehaviour {
 
 	public void UpdateEventStatus(WrestlingEvent wrestlingEvent) {
 		eventName.text = wrestlingEvent.eventName;
-		ticketsSoldCount.text = (wrestlingEvent.ticketsSold >= 0 && wrestlingEvent.EventVenue != null ? string.Format ("{0} / {1}", wrestlingEvent.ticketsSold.ToString(), wrestlingEvent.EventVenue.capacity) : "0");
+		ticketsSoldCount.text = (wrestlingEvent.TicketsSold >= 0 && wrestlingEvent.EventVenue != null ? string.Format ("{0} / {1}", wrestlingEvent.TicketsSold.ToString(), wrestlingEvent.EventVenue.capacity) : "0");
 		revenue.text = string.Format("${0}", wrestlingEvent.revenue);
 
 		if (wrestlingEvent.EventVenue != null) {
 			ticketsSoldProgress.minValue = 0;
 			ticketsSoldProgress.maxValue = wrestlingEvent.EventVenue.capacity;
-			ticketsSoldProgress.value = wrestlingEvent.ticketsSold;
+			ticketsSoldProgress.value = wrestlingEvent.TicketsSold;
 		}
 		else {
 			ticketsSoldProgress.value = 0;

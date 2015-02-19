@@ -5,12 +5,13 @@ using System.Collections.Generic;
 
 public class HistoricalWrestlingEvent {
 	public string name;
-	public int ticketsSold;
 	public float revenue;
 	public string type;
 	public string venue;
 	public float interest;
 	public float rating;
+	public int ticketsSold;
+
 
 	public void Initialize(string name, int ticketsSold, float revenue, string type, string venue, float interest, float rating) {
 		this.name = name;
@@ -90,10 +91,17 @@ public class HistoricalWrestlingEvent {
 
 public class WrestlingEvent : MonoBehaviour {
 	public string eventName;
-	public int ticketsSold;
 	public float revenue;
 	public List<WrestlingMatch> matches = new List<WrestlingMatch>();
 	public float ticketPrice = 20.0f;
+
+	int ticketsSold;
+	public int TicketsSold {
+		get { return ticketsSold; }
+		set {
+			ticketsSold = Mathf.Clamp(value, 0, EventVenue.capacity);
+		}
+	}
 
 	EventType type;
 	public EventType Type { get; set; }
@@ -106,12 +114,17 @@ public class WrestlingEvent : MonoBehaviour {
 			float interest = 0;
 
 			// Calculate the average match interest and multiply it by the popularity of wrestling in the venue
-			foreach (WrestlingMatch match in matches) {
-				float matchInterest = 0;
-				foreach (Wrestler wrestler in match.Participants) {
-					matchInterest += (wrestler.popularity + wrestler.charisma / 2) / match.ParticipantCount;
+			if (matches.Count > 0) {
+				foreach (WrestlingMatch match in matches) {
+					float matchInterest = 0;
+					foreach (Wrestler wrestler in match.Participants) {
+						matchInterest += (wrestler.popularity + wrestler.charisma / 2) / match.ParticipantCount;
+					}
+					interest += matchInterest / matches.Count;
 				}
-				interest += matchInterest / matches.Count;
+			}
+			else {
+				interest = Random.Range(0.01f, 0.1f);
 			}
 			interest *=  EventVenue.popularity;
 			return Mathf.Clamp01(interest * Random.Range(0.7f, 1.3f));
@@ -135,7 +148,7 @@ public class WrestlingEvent : MonoBehaviour {
 
 	public HistoricalWrestlingEvent AsHistoricalEvent() {
 		HistoricalWrestlingEvent historicalEvent = new HistoricalWrestlingEvent();
-		historicalEvent.Initialize(eventName, ticketsSold, revenue, this.Type.typeName, this.EventVenue.name, this.EventInterest, this.Rating);
+		historicalEvent.Initialize(eventName, TicketsSold, revenue, this.Type.typeName, this.EventVenue.name, this.EventInterest, this.Rating);
 		return historicalEvent;
 	}
 }
