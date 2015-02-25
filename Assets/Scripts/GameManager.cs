@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour {
 	public GameState[] availableGameStates;
 	public float stateChangeDelay = 5.0f;
 	public WrestlingEvent wrestlingEventPrefab;
-	public Company companyPrefab;
 
 	Stack<GameState> stateStack = new Stack<GameState>();
 	VenueManager venueManager;
@@ -15,8 +14,10 @@ public class GameManager : MonoBehaviour {
 	WrestlerManager wrestlerManager;
 	WrestlingMatchTypeManager matchTypeManager;
 	WrestlingMatchFinishManager matchFinishManager;
+	CompanyManager companyManager;
 	GUIManager guiManager;
 	WrestlingEvent currentEvent;
+
 	Company playerCompany;
 
 	// Use this for initialization
@@ -52,18 +53,19 @@ public class GameManager : MonoBehaviour {
 			Debug.LogError("Error starting Game Manager: No wrestling match finish manager was found.");
 		}
 
-		if (null == wrestlingEventPrefab) {
-			Debug.LogError("Error starting Game Manager: No wrestling event prefab was found.");
+		companyManager = GameObject.FindObjectOfType<CompanyManager>();
+		if (null == companyManager) {
+			Debug.LogError("Error starting Game Manager: No company manager was found.");
 		}
 
-		if (null == companyPrefab) {
-			Debug.LogError("Error starting Game Manager: No company prefab was found.");
+		if (null == wrestlingEventPrefab) {
+			Debug.LogError("Error starting Game Manager: No wrestling event prefab was found.");
 		}
 	}
 
 	void Start()  {
 		// Load the company.
-		playerCompany = Instantiate(companyPrefab) as Company;
+		playerCompany = companyManager.CreateCompany ();
 		if (playerCompany.IsSaved("playerCompany")) {
 			playerCompany.Load("playerCompany");
 			GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
@@ -165,7 +167,7 @@ public class GameManager : MonoBehaviour {
 	public void ClearSavedData() {
 		playerCompany.DeleteSaved("playerCompany");
 		GameObject.Destroy(playerCompany.gameObject);
-		playerCompany = Instantiate(companyPrefab) as Company;
+		playerCompany = companyManager.CreateCompany();
 
 		StartAtPhase0();
 	}

@@ -23,6 +23,15 @@ public class Company : MonoBehaviour {
 		}
 	}
 
+	public void Initialize(string name, float money, int maxRosterSize, int phase, List<Wrestler> roster, bool isInAlliance) {
+		this.companyName = name;
+		this.money = money;
+		this.maxRosterSize = maxRosterSize;
+		this.phase = phase;
+		this.roster = roster;
+		this.isInAlliance = isInAlliance;
+	}
+
 	public bool CanAddWrestlers() {
 		return maxRosterSize > roster.Count;
 	}

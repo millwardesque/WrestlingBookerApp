@@ -1,0 +1,6 @@
+{
+    "companies": [
+    	{ "name": "WCCW", "money": 1000000.0, "maxRosterSize": 64, "phase": 1, "isInAlliance": false },
+    	{ "name": "Mid-South Wrestling", "money": 500000.0, "maxRosterSize": 32, "phase": 1, "isInAlliance": true }
+    ]
+}
