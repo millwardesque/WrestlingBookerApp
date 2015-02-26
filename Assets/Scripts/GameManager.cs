@@ -169,6 +169,8 @@ public class GameManager : MonoBehaviour {
 		GameObject.Destroy(playerCompany.gameObject);
 		playerCompany = companyManager.CreateCompany();
 
+		venueManager.ClearSavedData();
+
 		StartAtPhase0();
 	}
 

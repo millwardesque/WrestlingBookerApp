@@ -57,6 +57,12 @@ public class VenueManager : MonoBehaviour {
 		}
 	}
 
+	public void ClearSavedData() {
+		foreach (Venue venue in venues) {
+			venue.DeleteAugmentedData();
+		}
+	}
+
 	public Venue GetRandomAvailableVenue(Company company) {
 		List<Venue> availableVenues = new List<Venue>();
 
@@ -87,6 +93,7 @@ public class VenueManager : MonoBehaviour {
 		Venue venue = Instantiate(venuePrefab) as Venue;
 		venue.transform.SetParent(transform, false);
 		venue.Initialize(name, description, baseCost, gatePercentage, capacity, popularity, matchTypePreferences, matchFinishPreferences, phase, unlockableMatchType);
+		venue.LoadAugmentedData();
 		venues.Add (venue);
 
 		return venue;

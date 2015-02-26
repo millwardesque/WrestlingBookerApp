@@ -16,6 +16,13 @@ public class Venue : MonoBehaviour {
 	public Dictionary<string, float> matchTypePreferences = new Dictionary<string, float>();
 	public Dictionary<string, float> matchFinishPreferences = new Dictionary<string, float>();
 
+	List<string> seenMatchTypes = new List<string>();
+	List<string> seenMatchFinishes = new List<string>();
+
+	string StoragePrefix {
+		get { return "venueChanges-" + venueName; }
+	}
+
 	public void Initialize(string venueName, string venueDescription, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences, int phase, string unlockableMatchType) {
 		this.venueName = venueName;
 		this.venueDescription = venueDescription;
@@ -31,6 +38,27 @@ public class Venue : MonoBehaviour {
 
 	public float GetVenueCost(WrestlingEvent wrestlingEvent) {
 		return wrestlingEvent.TicketsSold * gatePercentage + baseCost;
+	}
+
+	public void AddSeenMatchType(WrestlingMatchType type) {
+		if (!HasSeenMatchType(type)) {
+			seenMatchTypes.Add(type.typeName);
+			SaveAugmentedData();
+		}
+	}
+
+	public bool HasSeenMatchType(WrestlingMatchType type) {
+		return (null != seenMatchTypes.Find ( x => x == type.typeName));
+	}
+
+	public void AddSeenMatchFinish(WrestlingMatchFinish finish) {
+		if (!HasSeenMatchFinish(finish)) {
+			seenMatchFinishes.Add(finish.finishName);
+		}
+	}
+	
+	public bool HasSeenMatchFinish(WrestlingMatchFinish finish) {
+		return (null != seenMatchFinishes.Find ( x => x == finish.finishName));
 	}
 
 	public float GetMatchTypePreference(WrestlingMatchType type) {
@@ -49,5 +77,30 @@ public class Venue : MonoBehaviour {
 		else {
 			return 0.5f;
 		}
+	}
+
+	public void LoadAugmentedData() {
+		string prefix = StoragePrefix;
+		if (PlayerPrefs.HasKey(StoragePrefix + ".seenMatchTypes")) {
+			seenMatchTypes = new List<string>(PlayerPrefs.GetString(prefix + ".seenMatchTypes").Split(';'));
+		}
+	}
+	
+	public void SaveAugmentedData() {
+		string prefix = StoragePrefix;
+
+		if (seenMatchTypes.Count > 0) {
+			string seenMatchTypeNames = "";
+			foreach (string matchType in seenMatchTypes) {
+				seenMatchTypeNames += matchType + ";";
+			}
+			seenMatchTypeNames = seenMatchTypeNames.Substring(0, seenMatchTypeNames.Length - 1); // Remove the trailing separator
+		}
+	}
+	
+	public void DeleteAugmentedData() {
+		string prefix = StoragePrefix;
+		PlayerPrefs.DeleteKey(prefix + ".seenMatchTypes");
+		seenMatchTypes = new List<string>();
 	}
 }

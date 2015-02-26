@@ -18,6 +18,9 @@ public class EventFinishedState : GameState {
 					talentCost += wrestler.perMatchCost;
 				}
 			}
+
+			wrestlingEvent.EventVenue.AddSeenMatchType(match.type);
+			wrestlingEvent.EventVenue.AddSeenMatchFinish(match.finish);
 		}
 
 		wrestlingEvent.revenue = ticketRevenue + eventTypeSales - venueCost - eventTypeCost - talentCost;
