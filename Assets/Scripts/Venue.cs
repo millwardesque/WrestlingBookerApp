@@ -84,6 +84,10 @@ public class Venue : MonoBehaviour {
 		if (PlayerPrefs.HasKey(StoragePrefix + ".seenMatchTypes")) {
 			seenMatchTypes = new List<string>(PlayerPrefs.GetString(prefix + ".seenMatchTypes").Split(';'));
 		}
+
+		if (PlayerPrefs.HasKey(StoragePrefix + ".seenMatchFinishes")) {
+			seenMatchFinishes = new List<string>(PlayerPrefs.GetString(prefix + ".seenMatchFinishes").Split(';'));
+		}
 	}
 	
 	public void SaveAugmentedData() {
@@ -95,6 +99,17 @@ public class Venue : MonoBehaviour {
 				seenMatchTypeNames += matchType + ";";
 			}
 			seenMatchTypeNames = seenMatchTypeNames.Substring(0, seenMatchTypeNames.Length - 1); // Remove the trailing separator
+			PlayerPrefs.SetString(prefix + ".seenMatchTypes", seenMatchTypeNames);
+		}
+
+
+		if (seenMatchFinishes.Count > 0) {
+			string seenMatchFinishNames = "";
+			foreach (string matchFinish in seenMatchFinishes) {
+				seenMatchFinishNames += matchFinish + ";";
+			}
+			seenMatchFinishNames = seenMatchFinishNames.Substring(0, seenMatchFinishNames.Length - 1); // Remove the trailing separator
+			PlayerPrefs.SetString(prefix + ".seenMatchFinishes", seenMatchFinishNames);
 		}
 	}
 	
@@ -102,5 +117,8 @@ public class Venue : MonoBehaviour {
 		string prefix = StoragePrefix;
 		PlayerPrefs.DeleteKey(prefix + ".seenMatchTypes");
 		seenMatchTypes = new List<string>();
+
+		PlayerPrefs.DeleteKey(prefix + ".seenMatchFinishes");
+		seenMatchFinishes = new List<string>();
 	}
 }
