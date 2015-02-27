@@ -4,10 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
-	public GameState[] availableGameStates;
 	public float stateChangeDelay = 5.0f;
 	public WrestlingEvent wrestlingEventPrefab;
 
+	GameState[] availableGameStates;
 	Stack<GameState> stateStack = new Stack<GameState>();
 	VenueManager venueManager;
 	EventTypeManager eventTypeManager;
@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour {
 		if (null == wrestlingEventPrefab) {
 			Debug.LogError("Error starting Game Manager: No wrestling event prefab was found.");
 		}
+
+		availableGameStates = Resources.LoadAll<GameState>("Game States");
 	}
 
 	void Start()  {
