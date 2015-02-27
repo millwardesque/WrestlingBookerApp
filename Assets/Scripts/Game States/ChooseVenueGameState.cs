@@ -28,8 +28,8 @@ public class ChooseVenueGameState : GameState {
 
 		foreach (Venue venue in venues) {
 			bool isInteractable = (venue.baseCost <= gameManager.GetPlayerCompany().money);
-			string description = string.Format ("Cost: ${0} upfront + {1}% of the gate\nCapacity: {2}\nWrestling Popularity: {3}%\n\n{4}",
-			                                    venue.baseCost, Mathf.RoundToInt(venue.gatePercentage * 100.0f), venue.capacity, Mathf.RoundToInt(venue.popularity * 100.0f), venue.venueDescription);
+			string description = string.Format ("Cost: ${0} upfront + {1}% of the gate\nCapacity: {2}\nWrestling Popularity: {3}\n\n{4}",
+			                                    venue.baseCost, Mathf.RoundToInt(venue.gatePercentage * 100.0f), venue.capacity, Utilities.AlphaRating(venue.popularity), venue.venueDescription);
 			venueOptions.Add(new SelectOptionDialogOption(venue.venueName, description, isInteractable));
 		}
 		
