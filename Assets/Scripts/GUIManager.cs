@@ -15,6 +15,7 @@ public class GUIManager : MonoBehaviour {
 	public StatusPanel statusPanel;
 	public GameInfoPanel gameInfoPanel;
 	public NotificationPanel notificationPanel;
+	public GameObject menuPanel;
 
 	SelectOptionDialog dialogBox;
 	TextInputDialog textInputDialogBox;
@@ -37,6 +38,10 @@ public class GUIManager : MonoBehaviour {
 			Debug.LogError("Unable to start GUI Manager: Notification panel isn't set");
 		}
 
+		if (menuPanel == null) {
+			Debug.LogError("Unable to start GUI Manager: Menu panel isn't set");
+		}
+
 		if (selectOptionDialogPrefab == null || selectOptionDialogPrefab.GetComponent<SelectOptionDialog>() == null) {
 			Debug.LogError("Unable to start GUI Manager: Select Option Dialog prefab isn't set or is missing SelectOptionDialog script.");
 		}
@@ -56,6 +61,8 @@ public class GUIManager : MonoBehaviour {
 		if (progressBarPrefab == null) {
 			Debug.LogError("Unable to start GUI Manager: Progress bar prefab isn't set.");
 		}
+
+		HideMenu();
 	}
 
 	void Start() {
@@ -102,18 +109,22 @@ public class GUIManager : MonoBehaviour {
 	}
 
 	public void OnCreateEventClick() {
+		HideMenu();
 		gameManager.CreateNewEventAttempt();
 	}
 
 	public void OnHireWrestlersClick() {
+		HideMenu();
 		gameManager.HireWrestlers();
 	}
 
 	public void OnFireWrestlerClick() {
+		HideMenu();
 		gameManager.FireWrestler();
 	}
 
 	public void OnMainMenuClick() {
+		HideMenu();
 		gameManager.GoToMainMenu();
 	}
 
@@ -123,6 +134,14 @@ public class GUIManager : MonoBehaviour {
 
 	public StatusPanel GetStatusPanel() {
 		return statusPanel;
+	}
+
+	public void ShowMenu() {
+		menuPanel.SetActive(true);
+	}
+
+	public void HideMenu() {
+		menuPanel.SetActive(false);
 	}
 
 	public void ShowStatusPanel() {
