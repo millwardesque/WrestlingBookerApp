@@ -143,11 +143,17 @@ public class GameManager : MonoBehaviour {
 		PushState (newState);
 	}
 
-	public GameState FindState(string stateName) {
+	public GameState FindState(string stateName, string newName = "") {
 		for (int i = 0; i < availableGameStates.Length; ++i) {
 			if (availableGameStates[i].name == stateName) {
 				GameState newState = Instantiate(availableGameStates[i]) as GameState;
-				newState.name = stateName;
+
+				if (newName != "") {
+					newState.name = newName;
+				}
+				else {
+					newState.name = stateName;
+				}
 				return newState;
 			}
 		}
@@ -363,10 +369,20 @@ public class GameManager : MonoBehaviour {
 			waitBetweenStates = false;
 			break;
 		case "ChooseVenueGameState":
+			nextState = FindState("ConfirmState", "SellTicketsPostVenue");
+			((ConfirmState)nextState).Initialize("Sell some tickets!", string.Format("Alright, we'll get the word out that we're going to be holding an event at {0}! That should sell some tickets.", currentEvent.EventVenue.venueName), OnFinishedEventCreationStep);
+			waitBetweenStates = false;
+			break;
+		case "SellTicketsPostVenue":
 			nextState = FindState("ChooseMatchesGameState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
 			break;
 		case "ChooseMatchesGameState":
+			nextState = FindState("ConfirmState", "SellTicketsPostMatches");
+			((ConfirmState)nextState).Initialize("Sell some tickets!", "Alright, the card is ready to go! Let's some sell tickets!", OnFinishedEventCreationStep);
+			waitBetweenStates = false;
+			break;
+		case "SellTicketsPostMatches":
 			nextState = FindState("SellTicketsState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
 			break;
