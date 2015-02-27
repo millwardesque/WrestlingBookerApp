@@ -59,12 +59,18 @@ public class WrestlerManager : MonoBehaviour {
 	public Wrestler GetWrestler(string name) {
 		return wrestlers.Find( x => x.wrestlerName == name );
 	}
+
+	public void ClearSavedData() {
+		foreach (Wrestler wrestler in wrestlers) {
+			wrestler.DeleteAugmentedData();
+		}
+	}
 	
 	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities) {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
 		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
-		wrestler.LoadAugmentedStats();
+		wrestler.LoadAugmentedData();
 		wrestlers.Add (wrestler);
 
 		return wrestler;

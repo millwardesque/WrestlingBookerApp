@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour {
 		playerCompany = companyManager.CreateCompany();
 
 		venueManager.ClearSavedData();
-
+		wrestlerManager.ClearSavedData();
 		StartAtPhase0();
 	}
 

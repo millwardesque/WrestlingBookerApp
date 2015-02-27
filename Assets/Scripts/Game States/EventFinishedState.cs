@@ -16,6 +16,7 @@ public class EventFinishedState : GameState {
 			foreach (WrestlingTeam team in match.teams) {
 				foreach (Wrestler wrestler in team.wrestlers) {
 					talentCost += wrestler.perMatchCost;
+					wrestler.AddUsedMatchType(match.type);
 				}
 			}
 
