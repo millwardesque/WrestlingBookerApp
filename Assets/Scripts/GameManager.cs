@@ -379,7 +379,7 @@ public class GameManager : MonoBehaviour {
 			break;
 		case "ChooseMatchesGameState":
 			nextState = FindState("ConfirmState", "SellTicketsPostMatches");
-			((ConfirmState)nextState).Initialize("Sell some tickets!", "Alright, the card is ready to go! Let's some sell tickets!", OnFinishedEventCreationStep);
+			((ConfirmState)nextState).Initialize("Sell some tickets!", "Now that the card is ready to go, let's get out there and some sell tickets!", OnFinishedEventCreationStep);
 			waitBetweenStates = false;
 			break;
 		case "SellTicketsPostMatches":
