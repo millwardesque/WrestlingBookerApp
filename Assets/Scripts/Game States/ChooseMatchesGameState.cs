@@ -77,7 +77,7 @@ public class ChooseMatchesGameState : GameState {
 		
 		foreach (Wrestler wrestler in wrestlers) {
 			if (!usedWrestlers.Contains(wrestler)) {
-				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, wrestler.DescriptionWithStats));
+				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, "", wrestler.DescriptionWithStats));
 			}
 		}
 		
@@ -108,7 +108,7 @@ public class ChooseMatchesGameState : GameState {
 			string wrestlerEffectivenessString = (showWrestlerEffectiveness ? Utilities.AlphaRating(wrestlerEffectiveness) : "??");
 
 			string matchTypeDescription = string.Format("Local popularity: {0}\nWrestler effectiveness: {1}\n{2}", localPreferenceString, wrestlerEffectivenessString, matchType.description);
-			matchTypeOptions.Add(new SelectOptionDialogOption(matchType.typeName, matchTypeDescription));
+			matchTypeOptions.Add(new SelectOptionDialogOption(matchType.typeName, localPreferenceString, matchTypeDescription));
 		}
 		
 		return matchTypeOptions;
@@ -127,7 +127,7 @@ public class ChooseMatchesGameState : GameState {
 			}
 
 			string matchFinishDescription = string.Format("Local popularity: {0}\n{1}", localPreferenceString, matchFinish.description);
-			matchFinishOptions.Add(new SelectOptionDialogOption(matchFinish.finishName, matchFinishDescription));
+			matchFinishOptions.Add(new SelectOptionDialogOption(matchFinish.finishName, localPreferenceString, matchFinishDescription));
 		}
 		
 		return matchFinishOptions;

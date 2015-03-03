@@ -67,7 +67,7 @@ public class HireWrestlersState : GameState {
 		foreach (Wrestler wrestler in wrestlers) {
 			// If the wrestler isn't in the company roster, list as hireable.
 			if (null == company.GetRoster ().Find( x => x.wrestlerName == wrestler.wrestlerName) && company.money >= wrestler.hiringCost) {
-				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, "Hire: $" + wrestler.hiringCost + "\n" + wrestler.DescriptionWithStats));
+				wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, string.Format ("${0}", wrestler.hiringCost), "Hire: $" + wrestler.hiringCost + "\n" + wrestler.DescriptionWithStats));
 			}
 		}
 		

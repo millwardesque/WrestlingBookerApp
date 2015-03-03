@@ -6,11 +6,13 @@ using System.Collections.Generic;
 
 public class SelectOptionDialogOption {
 	public string name;
+	public string subName;
 	public string description;
 	public bool isInteractable;
 	
-	public SelectOptionDialogOption(string name, string description, bool isInteractable = true) {
+	public SelectOptionDialogOption(string name, string subName, string description, bool isInteractable = true) {
 		this.name = name;
+		this.subName = subName;
 		this.description = description;
 		this.isInteractable = isInteractable;
 	}
@@ -59,11 +61,23 @@ public class SelectOptionControl : MonoBehaviour {
 		foreach (SelectOptionDialogOption option in options) {			
 			Toggle optionToggle = Instantiate(optionPrefab) as Toggle;
 			optionToggle.transform.SetParent(optionContainer.transform, false);
-			optionToggle.GetComponentInChildren<Text>().text = option.name;
 			optionToggle.group = optionContainer.GetComponent<ToggleGroup>();
 			optionToggle.onValueChanged.AddListener(UpdateSelected);
 			optionToggle.interactable = option.isInteractable;
-			
+
+			foreach (Text text in optionToggle.GetComponentsInChildren<Text>()) {
+				switch (text.gameObject.name) {
+				case "Label":
+					text.text = option.name;
+					break;
+				case "SubLabel":
+					text.text = option.subName;
+					break;
+				default:
+					break;
+				}
+			}
+
 			// Save the data and the UI control for later usage.
 			optionObjects.Add(optionToggle);
 			optionData.Add (option);

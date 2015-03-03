@@ -42,7 +42,7 @@ public class ChooseEventTypeGameState : GameState {
 			bool isInteractable = (type.cost <= gameManager.GetPlayerCompany().money);
 
 			if (isInteractable) {
-				typeOptions.Add(new SelectOptionDialogOption(type.typeName, string.Format ("Cost: ${0}\n{1}", type.cost, type.description), isInteractable));
+				typeOptions.Add(new SelectOptionDialogOption(type.typeName, string.Format ("${0}", type.cost), string.Format ("Cost: ${0}\n{1}", type.cost, type.description), isInteractable));
 			}
 		}
 

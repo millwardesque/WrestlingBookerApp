@@ -52,7 +52,7 @@ public class FireWrestlerState : GameState {
 		wrestlers = gameManager.GetPlayerCompany().GetRoster();
 
 		foreach (Wrestler wrestler in wrestlers) {
-			wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, wrestler.DescriptionWithStats));
+			wrestlerOptions.Add(new SelectOptionDialogOption(wrestler.wrestlerName, "", wrestler.DescriptionWithStats));
 		}
 		
 		return wrestlerOptions;
