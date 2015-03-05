@@ -14,8 +14,7 @@ public class Wrestler : MonoBehaviour {
 	public float work;
 	public float appearance;
 	public Dictionary<string, float> matchTypeAffinities;
-	
-	List<string> usedMatchTypes = new List<string>();
+	public List<string> usedMatchTypes = new List<string>();
 
 	string StoragePrefix {
 		get { return "wrestlerChanges-" + wrestlerName; }

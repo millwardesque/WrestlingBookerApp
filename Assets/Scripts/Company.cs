@@ -64,14 +64,7 @@ public class Company : MonoBehaviour {
 		PlayerPrefs.DeleteKey(keyPrefix + ".unlockedVenues");
 		PlayerPrefs.DeleteKey(keyPrefix + ".unlockedMatchTypes");
 
-		for (int i = 0; i < eventHistory.Count; ++i) {
-			string keyName = keyPrefix + ".historicalEvent." + i;
-			if (PlayerPrefs.HasKey(keyName)) {
-				PlayerPrefs.DeleteKey(keyName);
-			}
-		}
-		PlayerPrefs.DeleteKey(keyPrefix + ".numHistoricalEvents");
-
+		ES2.Delete(keyPrefix + ".dat");
 	}
 
 	public bool Save(string keyPrefix) {
@@ -83,10 +76,7 @@ public class Company : MonoBehaviour {
 		PlayerPrefs.SetInt(keyPrefix + ".isInAlliance", (isInAlliance ? 1 : 0));
 
 		// Save the past events.
-		PlayerPrefs.SetInt(keyPrefix + ".numHistoricalEvents", this.eventHistory.Count);
-		for (int i = 0; i < eventHistory.Count; ++i) {
-			eventHistory[i].Save(keyPrefix + ".historicalEvent." + i);
-		}
+		ES2.Save(eventHistory, keyPrefix + ".dat?tag=historicalEvents");
 
 		// Save the roster
 		string wrestlerNames = "";
@@ -147,18 +137,9 @@ public class Company : MonoBehaviour {
 		}
 
 		// Load the past events.
-		if (PlayerPrefs.HasKey (keyPrefix + ".numHistoricalEvents")) {
-			int historyCount = PlayerPrefs.GetInt (keyPrefix + ".numHistoricalEvents");
-			for (int i = 0; i < historyCount; ++i) {
-				string keyName = keyPrefix + ".historicalEvent." + i;
-				if (PlayerPrefs.HasKey(keyName)) {
-					HistoricalWrestlingEvent pastEvent = new HistoricalWrestlingEvent();
-					pastEvent.Load(keyName);
-					eventHistory.Add (pastEvent);
-				}
-			}
+		if (ES2.Exists(keyPrefix + ".dat?tag=historicalEvents")) {
+			eventHistory = ES2.LoadList<HistoricalWrestlingEvent>(keyPrefix + ".dat?tag=historicalEvents");
 		}
-
 
 		if (PlayerPrefs.HasKey (keyPrefix + ".roster")) {
 			string wrestlerNamesString = PlayerPrefs.GetString(keyPrefix + ".roster");
