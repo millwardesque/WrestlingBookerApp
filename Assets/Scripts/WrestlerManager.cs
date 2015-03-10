@@ -98,7 +98,6 @@ public class WrestlerManager : MonoBehaviour {
 			var N = JSON.Parse(fileContents);
 			var wrestlerArray = N["wrestlers"].AsArray;
 			foreach (JSONNode wrestler in wrestlerArray) {
-				string name = wrestler["name"];
 				string description = wrestler["description"];
 				float perMatchCost = wrestler["perMatchCost"].AsFloat;
 				float popularity = wrestler["popularity"].AsFloat;
@@ -115,9 +114,7 @@ public class WrestlerManager : MonoBehaviour {
 					matchTypeAffinities.Add(type["name"], type["affinity"].AsFloat);
 				}
 
-				name = nameGenerator.GenerateName();
-
-				CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
+				CreateWrestler(nameGenerator.GenerateName(), description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
 			}
 		}
 		else {
