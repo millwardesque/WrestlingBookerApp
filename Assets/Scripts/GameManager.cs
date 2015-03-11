@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour {
 	Stack<GameState> stateStack = new Stack<GameState>();
 	VenueManager venueManager;
 	EventTypeManager eventTypeManager;
-	WrestlerManager wrestlerManager;
 	WrestlingMatchTypeManager matchTypeManager;
 	WrestlingMatchFinishManager matchFinishManager;
 	CompanyManager companyManager;
@@ -42,11 +41,6 @@ public class GameManager : MonoBehaviour {
 			eventTypeManager = GameObject.FindObjectOfType<EventTypeManager>();
 			if (null == eventTypeManager) {
 				Debug.LogError("Error starting Game Manager: No event type manager was found.");
-			}
-
-			wrestlerManager = GameObject.FindObjectOfType<WrestlerManager>();
-			if (null == wrestlerManager) {
-				Debug.LogError("Error starting Game Manager: No wrestler manager was found.");
 			}
 
 			matchTypeManager = GameObject.FindObjectOfType<WrestlingMatchTypeManager>();
@@ -195,7 +189,7 @@ public class GameManager : MonoBehaviour {
 		playerCompany = companyManager.CreateCompany();
 
 		venueManager.ClearSavedData();
-		wrestlerManager.ClearSavedData();
+		WrestlerManager.Instance.ClearSavedData();
 		StartAtPhase0();
 	}
 
@@ -277,10 +271,6 @@ public class GameManager : MonoBehaviour {
 		return eventTypeManager;
 	}
 
-	public WrestlerManager GetWrestlerManager() {
-		return wrestlerManager;
-	}
-
 	public WrestlingMatchTypeManager GetMatchTypeManager() {
 		return matchTypeManager;
 	}
@@ -302,6 +292,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void OnCompanyUpdated() {
+		if (playerCompany.companyName != playerCompany.name) {
+			playerCompany.name = playerCompany.companyName;
+		}
 		playerCompany.Save("playerCompany");
 		GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
 	}

@@ -148,7 +148,7 @@ public class Company : MonoBehaviour {
 			if (wrestlerNamesString.Length > 0) {
 				string[] wrestlerNames = wrestlerNamesString.Split(',');
 				foreach (string wrestlerName in wrestlerNames) {
-					roster.Add(gameManager.GetWrestlerManager().GetWrestler(wrestlerName));
+					roster.Add(WrestlerManager.Instance.GetWrestler(wrestlerName));
 				}
 			}
 		}

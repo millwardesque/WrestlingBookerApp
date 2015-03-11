@@ -61,7 +61,7 @@ public class HireWrestlersState : GameState {
 
 	List<SelectOptionDialogOption> GetWrestlersForHire() {
 		List<SelectOptionDialogOption> wrestlerOptions = new List<SelectOptionDialogOption>();
-		wrestlers = gameManager.GetWrestlerManager().GetWrestlers(gameManager.GetPhase());
+		wrestlers = WrestlerManager.Instance.GetWrestlers(gameManager.GetPhase());
 
 		Company company = gameManager.GetPlayerCompany();
 		foreach (Wrestler wrestler in wrestlers) {
