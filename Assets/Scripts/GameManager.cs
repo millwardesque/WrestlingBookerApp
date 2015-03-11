@@ -20,49 +20,63 @@ public class GameManager : MonoBehaviour {
 
 	Company playerCompany;
 
+	public static GameManager Instance;
+
 	// Use this for initialization
 	void Awake () {
-		GameObject guiManagerObj = GameObject.FindGameObjectWithTag("GUI Manager");
-		if (null == guiManagerObj || null == guiManagerObj.GetComponent<GUIManager>()) {
-			Debug.LogError("Error starting Game Manager: No tagged GUI Manager was found.");
-		}
-		guiManager = guiManagerObj.GetComponent<GUIManager>();
+		if (Instance == null) {
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
 
-		venueManager = GameObject.FindObjectOfType<VenueManager>();
-		if (null == venueManager) {
-			Debug.LogError("Error starting Game Manager: No venue manager was found.");
-		}
+			GameObject guiManagerObj = GameObject.FindGameObjectWithTag("GUI Manager");
+			if (null == guiManagerObj || null == guiManagerObj.GetComponent<GUIManager>()) {
+				Debug.LogError("Error starting Game Manager: No tagged GUI Manager was found.");
+			}
+			guiManager = guiManagerObj.GetComponent<GUIManager>();
 
-		eventTypeManager = GameObject.FindObjectOfType<EventTypeManager>();
-		if (null == eventTypeManager) {
-			Debug.LogError("Error starting Game Manager: No event type manager was found.");
-		}
+			venueManager = GameObject.FindObjectOfType<VenueManager>();
+			if (null == venueManager) {
+				Debug.LogError("Error starting Game Manager: No venue manager was found.");
+			}
 
-		wrestlerManager = GameObject.FindObjectOfType<WrestlerManager>();
-		if (null == wrestlerManager) {
-			Debug.LogError("Error starting Game Manager: No wrestler manager was found.");
-		}
+			eventTypeManager = GameObject.FindObjectOfType<EventTypeManager>();
+			if (null == eventTypeManager) {
+				Debug.LogError("Error starting Game Manager: No event type manager was found.");
+			}
 
-		matchTypeManager = GameObject.FindObjectOfType<WrestlingMatchTypeManager>();
-		if (null == matchTypeManager) {
-			Debug.LogError("Error starting Game Manager: No wrestling match type manager was found.");
-		}
+			wrestlerManager = GameObject.FindObjectOfType<WrestlerManager>();
+			if (null == wrestlerManager) {
+				Debug.LogError("Error starting Game Manager: No wrestler manager was found.");
+			}
 
-		matchFinishManager = GameObject.FindObjectOfType<WrestlingMatchFinishManager>();
-		if (null == matchFinishManager) {
-			Debug.LogError("Error starting Game Manager: No wrestling match finish manager was found.");
-		}
+			matchTypeManager = GameObject.FindObjectOfType<WrestlingMatchTypeManager>();
+			if (null == matchTypeManager) {
+				Debug.LogError("Error starting Game Manager: No wrestling match type manager was found.");
+			}
 
-		companyManager = GameObject.FindObjectOfType<CompanyManager>();
-		if (null == companyManager) {
-			Debug.LogError("Error starting Game Manager: No company manager was found.");
-		}
+			matchFinishManager = GameObject.FindObjectOfType<WrestlingMatchFinishManager>();
+			if (null == matchFinishManager) {
+				Debug.LogError("Error starting Game Manager: No wrestling match finish manager was found.");
+			}
 
-		if (null == wrestlingEventPrefab) {
-			Debug.LogError("Error starting Game Manager: No wrestling event prefab was found.");
-		}
+			companyManager = GameObject.FindObjectOfType<CompanyManager>();
+			if (null == companyManager) {
+				Debug.LogError("Error starting Game Manager: No company manager was found.");
+			}
 
-		availableGameStates = Resources.LoadAll<GameState>("Game States");
+			if (null == wrestlingEventPrefab) {
+				Debug.LogError("Error starting Game Manager: No wrestling event prefab was found.");
+			}
+
+			availableGameStates = Resources.LoadAll<GameState>("Game States");
+		}
+		else {
+			Destroy (gameObject);
+		}
+	}
+
+	public string GameID {
+		get { return "1"; }
 	}
 
 	void Start()  {
@@ -173,13 +187,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void ClearSavedData() {
-		string gameID = "1";
 		playerCompany.DeleteSaved("playerCompany");
 		GameObject.Destroy(playerCompany.gameObject);
 		playerCompany = companyManager.CreateCompany();
 
 		venueManager.ClearSavedData();
-		wrestlerManager.ClearSavedData(gameID);
+		wrestlerManager.ClearSavedData();
 		StartAtPhase0();
 	}
 

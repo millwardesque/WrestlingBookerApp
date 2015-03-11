@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bdb6f0a006e4432a575778ed1942c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wrestlers: []
   wrestlerPrefab: {fileID: 11445954, guid: 6c03bddd52020446284f02874dc79a0d, type: 2}
 --- !u!1 &22601478
 GameObject:

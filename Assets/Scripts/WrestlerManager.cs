@@ -80,28 +80,38 @@ public class WrestlerManager : MonoBehaviour {
 	public List<Wrestler> wrestlers = new List<Wrestler>();
 	public Wrestler wrestlerPrefab;
 	WrestlerNameGenerator nameGenerator = new WrestlerNameGenerator();
+
+	public static WrestlerManager Instance;
 	
 	// Use this for initialization
 	void Awake () {
-		if (!wrestlerPrefab) {
-			Debug.LogError("Unable to start Wrestler Manager: No wrestler prefab is set.");
+		if (Instance == null) {
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+
+			if (!wrestlerPrefab) {
+				Debug.LogError("Unable to start Wrestler Manager: No wrestler prefab is set.");
+			}
+
+			if (!LoadSavedWrestlers()) {
+				Debug.Log ("No existing wrestlers");
+				GenerateNewWrestlers();
+			}
 		}
-
-		string gameID = "1";
-
-		if (!LoadSavedWrestlers(gameID)) {
-			Debug.Log ("No existing wrestlers");
-			GenerateNewWrestlers(gameID);
+		else {
+			Destroy(gameObject);
 		}
 	}
 
-	bool LoadSavedWrestlers(string gameID) {
-		string wrestlerFilename = gameID + ".wrestlers";
+	public string WrestlerFilename {
+		get { return GameManager.Instance.GameID + ".wrestlers"; }
+	}
 
-		if (ES2.Exists(wrestlerFilename)) {
-			string[] tags = ES2.GetTags(wrestlerFilename);
+	bool LoadSavedWrestlers() {
+		if (ES2.Exists(WrestlerFilename)) {
+			string[] tags = ES2.GetTags(WrestlerFilename);
 			foreach (string tag in tags) {
-				string wrestlerLocation = wrestlerFilename + "?tag=" + tag;
+				string wrestlerLocation = WrestlerFilename + "?tag=" + tag;
 				Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 				wrestler.transform.SetParent(transform, false);
 				ES2.Load<Wrestler>(wrestlerLocation, wrestler);
@@ -114,8 +124,7 @@ public class WrestlerManager : MonoBehaviour {
 		}
 	}
 
-	public void GenerateNewWrestlers(string gameID) {
-		string wrestlerFilename = gameID + ".wrestlers";
+	public void GenerateNewWrestlers() {
 		int phase0Count = 4;
 		int phase1Count = 4;
 		int phase2Count = 4;
@@ -127,8 +136,8 @@ public class WrestlerManager : MonoBehaviour {
 		}
 		wrestlers.Clear();
 
-		if (ES2.Exists(wrestlerFilename)) {
-			ES2.Delete (wrestlerFilename);
+		if (ES2.Exists(WrestlerFilename)) {
+			ES2.Delete (WrestlerFilename);
 		}
 
 		nameGenerator.LoadWrestlerNames("wrestler-names");
@@ -204,11 +213,6 @@ public class WrestlerManager : MonoBehaviour {
 			
 			CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
 		}
-
-		foreach (Wrestler wrestler in wrestlers) {
-			string wrestlerLocation = wrestlerFilename + "?tag=" + wrestler.GetInstanceID();
-			ES2.Save(wrestler, wrestlerLocation);
-		}
 	}
 
 	/// <summary>
@@ -255,8 +259,8 @@ public class WrestlerManager : MonoBehaviour {
 		return wrestlers.Find( x => x.wrestlerName == name );
 	}
 
-	public void ClearSavedData(string gameID) {
-		GenerateNewWrestlers(gameID);
+	public void ClearSavedData() {
+		GenerateNewWrestlers();
 	}
 	
 	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities) {
@@ -264,6 +268,7 @@ public class WrestlerManager : MonoBehaviour {
 		wrestler.transform.SetParent(transform, false);
 		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
 		wrestlers.Add (wrestler);
+		wrestler.Save ();
 
 		return wrestler;
 	}

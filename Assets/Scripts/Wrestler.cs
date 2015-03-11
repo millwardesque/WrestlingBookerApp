@@ -48,11 +48,15 @@ public class Wrestler : MonoBehaviour {
 	public void AddUsedMatchType(WrestlingMatchType type) {
 		if (!HasUsedMatchType(type)) {
 			usedMatchTypes.Add(type.typeName);
-			SaveAugmentedData();
 		}
 	}
 	
 	public bool HasUsedMatchType(WrestlingMatchType type) {
 		return (null != usedMatchTypes.Find ( x => x == type.typeName));
+	}
+
+	public void Save() {
+		string wrestlerLocation = WrestlerManager.Instance.WrestlerFilename + "?tag=" + GetInstanceID();
+		ES2.Save(this, wrestlerLocation);
 	}
 }
