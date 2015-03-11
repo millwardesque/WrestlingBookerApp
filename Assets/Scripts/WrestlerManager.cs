@@ -52,7 +52,7 @@ public class WrestlerManager : MonoBehaviour {
 
 	public void GenerateNewWrestlers() {
 		int[] phaseCounts = new int[4];
-		phaseCounts[0] = 4;
+		phaseCounts[0] = 6;
 		phaseCounts[1] = 4;
 		phaseCounts[2] = 4;
 		phaseCounts[3] = 4;
