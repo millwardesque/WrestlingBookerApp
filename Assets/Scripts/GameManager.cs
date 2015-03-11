@@ -173,12 +173,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void ClearSavedData() {
+		string gameID = "1";
 		playerCompany.DeleteSaved("playerCompany");
 		GameObject.Destroy(playerCompany.gameObject);
 		playerCompany = companyManager.CreateCompany();
 
 		venueManager.ClearSavedData();
-		wrestlerManager.ClearSavedData();
+		wrestlerManager.ClearSavedData(gameID);
 		StartAtPhase0();
 	}
 

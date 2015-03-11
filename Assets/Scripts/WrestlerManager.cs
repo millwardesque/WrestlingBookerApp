@@ -9,6 +9,10 @@ class WrestlerNameGenerator {
 	List<string> nicknames = new List<string>();
 
 	public void LoadWrestlerNames(string filename) {
+		givenNames = new List<string>();
+		surnames = new List<string>();
+		nicknames = new List<string>();
+
 		TextAsset jsonAsset = Resources.Load<TextAsset>(filename);
 		if (jsonAsset != null) {
 			string fileContents = jsonAsset.text;
@@ -73,7 +77,7 @@ class WrestlerNameGenerator {
 }
 
 public class WrestlerManager : MonoBehaviour {
-	List<Wrestler> wrestlers = new List<Wrestler>();
+	public List<Wrestler> wrestlers = new List<Wrestler>();
 	public Wrestler wrestlerPrefab;
 	WrestlerNameGenerator nameGenerator = new WrestlerNameGenerator();
 	
@@ -83,8 +87,128 @@ public class WrestlerManager : MonoBehaviour {
 			Debug.LogError("Unable to start Wrestler Manager: No wrestler prefab is set.");
 		}
 
+		string gameID = "1";
+
+		if (!LoadSavedWrestlers(gameID)) {
+			Debug.Log ("No existing wrestlers");
+			GenerateNewWrestlers(gameID);
+		}
+	}
+
+	bool LoadSavedWrestlers(string gameID) {
+		string wrestlerFilename = gameID + ".wrestlers";
+
+		if (ES2.Exists(wrestlerFilename)) {
+			string[] tags = ES2.GetTags(wrestlerFilename);
+			foreach (string tag in tags) {
+				string wrestlerLocation = wrestlerFilename + "?tag=" + tag;
+				Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
+				wrestler.transform.SetParent(transform, false);
+				ES2.Load<Wrestler>(wrestlerLocation, wrestler);
+				wrestlers.Add (wrestler);
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void GenerateNewWrestlers(string gameID) {
+		string wrestlerFilename = gameID + ".wrestlers";
+		int phase0Count = 4;
+		int phase1Count = 4;
+		int phase2Count = 4;
+		int phase3Count = 4;
+
+		// Clean up existing data.
+		foreach (Wrestler wrestler in wrestlers) {
+			Destroy(wrestler.gameObject);
+		}
+		wrestlers.Clear();
+
+		if (ES2.Exists(wrestlerFilename)) {
+			ES2.Delete (wrestlerFilename);
+		}
+
 		nameGenerator.LoadWrestlerNames("wrestler-names");
-		LoadFromJSON("wrestlers");
+
+		for (int i = 0; i < phase0Count; ++i) {
+			string name = nameGenerator.GenerateName();
+			string description = "";
+			float perMatchCost = Random.Range (500f, 2500f);
+			float popularity = Random.Range (0.1f, 0.4f);
+			bool isHeel = (Random.Range (0, 2)) == 0 ? true : false;
+			float hiringCost = Random.Range (750f, 1500f);
+			int phase = 0;
+			float charisma = Random.Range (0.1f, 0.4f);
+			float work = Random.Range (0.1f, 0.4f);
+			float appearance = Random.Range (0.1f, 0.4f);
+			
+			Dictionary<string, float> matchTypeAffinities = new Dictionary<string, float>();
+			// @TODO Generate these from match types defined in the resource file.
+			
+			CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
+		}
+
+		for (int i = 0; i < phase1Count; ++i) {
+			string name = nameGenerator.GenerateName();
+			string description = "";
+			float perMatchCost = Random.Range (500f, 2500f);
+			float popularity = Random.Range (0.1f, 0.4f);
+			bool isHeel = (Random.Range (0, 2)) == 0 ? true : false;
+			float hiringCost = Random.Range (750f, 1500f);
+			int phase = 1;
+			float charisma = Random.Range (0.1f, 0.4f);
+			float work = Random.Range (0.1f, 0.4f);
+			float appearance = Random.Range (0.1f, 0.4f);
+
+			Dictionary<string, float> matchTypeAffinities = new Dictionary<string, float>();
+			// @TODO Generate these from match types defined in the resource file.
+
+			CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
+		}
+
+		for (int i = 0; i < phase2Count; ++i) {
+			string name = nameGenerator.GenerateName();
+			string description = "";
+			float perMatchCost = Random.Range (500f, 2500f);
+			float popularity = Random.Range (0.1f, 0.4f);
+			bool isHeel = (Random.Range (0, 2)) == 0 ? true : false;
+			float hiringCost = Random.Range (750f, 1500f);
+			int phase = 2;
+			float charisma = Random.Range (0.1f, 0.4f);
+			float work = Random.Range (0.1f, 0.4f);
+			float appearance = Random.Range (0.1f, 0.4f);
+			
+			Dictionary<string, float> matchTypeAffinities = new Dictionary<string, float>();
+			// @TODO Generate these from match types defined in the resource file.
+			
+			CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
+		}
+
+		for (int i = 0; i < phase3Count; ++i) {
+			string name = nameGenerator.GenerateName();
+			string description = "";
+			float perMatchCost = Random.Range (500f, 2500f);
+			float popularity = Random.Range (0.1f, 0.4f);
+			bool isHeel = (Random.Range (0, 2)) == 0 ? true : false;
+			float hiringCost = Random.Range (750f, 1500f);
+			int phase = 3;
+			float charisma = Random.Range (0.1f, 0.4f);
+			float work = Random.Range (0.1f, 0.4f);
+			float appearance = Random.Range (0.1f, 0.4f);
+			
+			Dictionary<string, float> matchTypeAffinities = new Dictionary<string, float>();
+			// @TODO Generate these from match types defined in the resource file.
+			
+			CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
+		}
+
+		foreach (Wrestler wrestler in wrestlers) {
+			string wrestlerLocation = wrestlerFilename + "?tag=" + wrestler.GetInstanceID();
+			ES2.Save(wrestler, wrestlerLocation);
+		}
 	}
 
 	/// <summary>
@@ -98,6 +222,7 @@ public class WrestlerManager : MonoBehaviour {
 			var N = JSON.Parse(fileContents);
 			var wrestlerArray = N["wrestlers"].AsArray;
 			foreach (JSONNode wrestler in wrestlerArray) {
+				string name = wrestler["name"];
 				string description = wrestler["description"];
 				float perMatchCost = wrestler["perMatchCost"].AsFloat;
 				float popularity = wrestler["popularity"].AsFloat;
@@ -114,7 +239,7 @@ public class WrestlerManager : MonoBehaviour {
 					matchTypeAffinities.Add(type["name"], type["affinity"].AsFloat);
 				}
 
-				CreateWrestler(nameGenerator.GenerateName(), description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
+				CreateWrestler(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
 			}
 		}
 		else {
@@ -130,17 +255,14 @@ public class WrestlerManager : MonoBehaviour {
 		return wrestlers.Find( x => x.wrestlerName == name );
 	}
 
-	public void ClearSavedData() {
-		foreach (Wrestler wrestler in wrestlers) {
-			wrestler.DeleteAugmentedData();
-		}
+	public void ClearSavedData(string gameID) {
+		GenerateNewWrestlers(gameID);
 	}
 	
 	public Wrestler CreateWrestler(string name, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities) {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
 		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
-		wrestler.LoadAugmentedData();
 		wrestlers.Add (wrestler);
 
 		return wrestler;
