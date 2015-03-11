@@ -6,9 +6,19 @@ using SimpleJSON;
 public class WrestlingMatchTypeManager : MonoBehaviour {
 	List<WrestlingMatchType> matchTypes = new List<WrestlingMatchType>();
 
+	public static WrestlingMatchTypeManager Instance;
+
 	// Use this for initialization
-	void Start () {		
-		LoadFromJSON("matchTypes");
+	void Awake () {
+		if (Instance == null) {
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+
+			LoadFromJSON("matchTypes");
+		}
+		else {
+			Destroy(gameObject);
+		}
 	}
 
 	/// <summary>
@@ -40,6 +50,11 @@ public class WrestlingMatchTypeManager : MonoBehaviour {
 	public List<WrestlingMatchType> GetMatchTypes(int phase) {
 		return matchTypes.FindAll( x => x.phase <= phase);
 	}
+
+	public List<WrestlingMatchType> GetMatchTypes() {
+		return matchTypes;
+	}
+
 	
 	public WrestlingMatchType CreateWrestlingMatchType(string name, string description, int phase) {
 		WrestlingMatchType matchType = new WrestlingMatchType();

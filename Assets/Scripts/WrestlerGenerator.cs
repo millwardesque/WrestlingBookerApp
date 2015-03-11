@@ -47,8 +47,10 @@ public class WrestlerGenerator {
 		float appearance = RandomRange(statRange[phase]);
 		
 		Dictionary<string, float> matchTypeAffinities = new Dictionary<string, float>();
-		// @TODO Generate these from match types defined in the resource file.
-		
+		foreach (WrestlingMatchType type in WrestlingMatchTypeManager.Instance.GetMatchTypes()) {
+			matchTypeAffinities.Add(type.typeName, Random.Range (0f, 1f));
+		}
+				
 		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
 	}
 
