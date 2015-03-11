@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Wrestler : MonoBehaviour {
+	public string id;
 	public string wrestlerName;
 	public string description;
 	public float perMatchCost;
@@ -17,6 +18,7 @@ public class Wrestler : MonoBehaviour {
 	public List<string> usedMatchTypes = new List<string>();
 
 	public void Initialize(string wrestlerName, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities) {
+		this.id = GetInstanceID().ToString();
 		this.wrestlerName = wrestlerName;
 		this.description = description;
 		this.perMatchCost = perMatchCost;
@@ -48,6 +50,7 @@ public class Wrestler : MonoBehaviour {
 	public void AddUsedMatchType(WrestlingMatchType type) {
 		if (!HasUsedMatchType(type)) {
 			usedMatchTypes.Add(type.typeName);
+			Save ();
 		}
 	}
 	
@@ -56,7 +59,7 @@ public class Wrestler : MonoBehaviour {
 	}
 
 	public void Save() {
-		string wrestlerLocation = WrestlerManager.Instance.WrestlerFilename + "?tag=" + GetInstanceID();
+		string wrestlerLocation = WrestlerManager.Instance.WrestlerFilename + "?tag=" + id;
 		ES2.Save(this, wrestlerLocation);
 	}
 }

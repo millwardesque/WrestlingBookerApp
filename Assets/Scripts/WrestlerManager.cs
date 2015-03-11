@@ -92,14 +92,15 @@ public class WrestlerManager : MonoBehaviour {
 			if (!wrestlerPrefab) {
 				Debug.LogError("Unable to start Wrestler Manager: No wrestler prefab is set.");
 			}
-
-			if (!LoadSavedWrestlers()) {
-				Debug.Log ("No existing wrestlers");
-				GenerateNewWrestlers();
-			}
 		}
 		else {
 			Destroy(gameObject);
+		}
+	}
+
+	public void LoadWrestlers() {
+		if (!LoadSavedWrestlers()) {
+			GenerateNewWrestlers();
 		}
 	}
 
@@ -267,8 +268,8 @@ public class WrestlerManager : MonoBehaviour {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
 		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
-		wrestlers.Add (wrestler);
 		wrestler.Save ();
+		wrestlers.Add (wrestler);
 
 		return wrestler;
 	}

@@ -80,6 +80,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Start()  {
+		// Load the wrestlers
+		WrestlerManager.Instance.LoadWrestlers();
+	
 		// Load the company.
 		playerCompany = companyManager.CreateCompany ();
 		if (playerCompany.IsSaved("playerCompany")) {
