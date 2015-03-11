@@ -122,6 +122,7 @@ public class Company : MonoBehaviour {
 
 		if (PlayerPrefs.HasKey(keyPrefix + ".name")) {
 			companyName = PlayerPrefs.GetString(keyPrefix + ".name");
+			name = companyName;
 		}
 
 		if (PlayerPrefs.HasKey(keyPrefix + ".maxRosterSize")) {
