@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class HireWrestlersState : GameState {
 	GameManager gameManager;
-	SelectOptionDialog wrestlerDialog;
+	PagedSelectOptionDialog wrestlerDialog;
 	InfoDialog addAnotherDialog;
 	List<Wrestler> wrestlers;
 
@@ -23,7 +23,7 @@ public class HireWrestlersState : GameState {
 		}
 		else if (hasMoreWrestlersToHire) {
 			bool hasTwoPlusWrestlers = (gameManager.GetPlayerCompany().GetRoster ().Count > 1); // If the player doesn't have enough wrestlers, we won't let the player leave the hiring screen.
-			wrestlerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
+			wrestlerDialog = gameManager.GetGUIManager().InstantiatePagedSelectOptionDialog();
 			wrestlerDialog.Initialize("Hire a wrestler", GetWrestlersForHire(), new UnityAction(OnHireWrestler), hasTwoPlusWrestlers, new UnityAction(DoneHiring));
 		}
 		else {

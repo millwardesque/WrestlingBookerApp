@@ -24,7 +24,7 @@ public class UIDialog : MonoBehaviour {
 	}
 
 	protected void Initialize(string title, UnityAction okAction, bool canCancel = false, UnityAction cancelAction = null, string okLabel = "OK", string cancelLabel = "Cancel") {
-		this.title.text = title;
+		SetTitle(title);
 
 		okButton.GetComponentInChildren<Text>().text = okLabel;
 		cancelButton.GetComponentInChildren<Text>().text = cancelLabel;
@@ -44,6 +44,10 @@ public class UIDialog : MonoBehaviour {
 		else {
 			Destroy(cancelButton.gameObject);
 		}
+	}
+
+	protected void SetTitle(string title) {
+		this.title.text = title;
 	}
 
 	void OnGUI() {

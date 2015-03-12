@@ -8,6 +8,7 @@ public class GUIManager : MonoBehaviour {
 	public Canvas canvas;
 	public GameObject selectOptionDialogPrefab;
 	public GameObject wideSelectOptionDialogPrefab;
+	public GameObject pagedSelectOptionDialogPrefab;
 	public GameObject textInputDialogPrefab;
 	public GameObject infoDialogPrefab;
 	public GameObject singlesMatchDialogPrefab;
@@ -44,6 +45,14 @@ public class GUIManager : MonoBehaviour {
 
 		if (selectOptionDialogPrefab == null || selectOptionDialogPrefab.GetComponent<SelectOptionDialog>() == null) {
 			Debug.LogError("Unable to start GUI Manager: Select Option Dialog prefab isn't set or is missing SelectOptionDialog script.");
+		}
+
+		if (wideSelectOptionDialogPrefab == null || wideSelectOptionDialogPrefab.GetComponent<SelectOptionDialog>() == null) {
+			Debug.LogError("Unable to start GUI Manager: Wide Select Option Dialog prefab isn't set or is missing SelectOptionDialog script.");
+		}
+
+		if (pagedSelectOptionDialogPrefab == null || pagedSelectOptionDialogPrefab.GetComponent<PagedSelectOptionDialog>() == null) {
+			Debug.LogError("Unable to start GUI Manager: Paged Select Option Dialog prefab isn't set or is missing PagedSelectOptionDialog script.");
 		}
 
 		if (textInputDialogPrefab == null || textInputDialogPrefab.GetComponent<TextInputDialog>() == null) {
@@ -85,6 +94,13 @@ public class GUIManager : MonoBehaviour {
 		dialogObj.transform.SetParent(canvas.transform, false);
 		
 		return dialogObj.GetComponent<SelectOptionDialog>();
+	}
+
+	public PagedSelectOptionDialog InstantiatePagedSelectOptionDialog() {
+		GameObject dialogObj = Instantiate(pagedSelectOptionDialogPrefab) as GameObject;
+		dialogObj.transform.SetParent(canvas.transform, false);
+		
+		return dialogObj.GetComponent<PagedSelectOptionDialog>();
 	}
 
 	public TextInputDialog InstantiateTextInputDialog() {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class FireWrestlerState : GameState {
 	GameManager gameManager;
 	List<Wrestler> wrestlers;
-	SelectOptionDialog wrestlerDialog;
+	PagedSelectOptionDialog wrestlerDialog;
 	string cantFireMessage = "You can't fire any more wrestlers because you need at least two in your roster at all times.";
 
 	public override void OnEnter (GameManager gameManager) {
@@ -18,7 +18,7 @@ public class FireWrestlerState : GameState {
 		bool hasMoreWrestlersToFire = (GetWrestlers().Count > 2);
 		
 		if (hasMoreWrestlersToFire) {
-			wrestlerDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
+			wrestlerDialog = gameManager.GetGUIManager().InstantiatePagedSelectOptionDialog();
 			wrestlerDialog.Initialize("Fire a wrestler", GetWrestlers(), new UnityAction(OnFireWrestler), true, new UnityAction(DoneFiring));
 		}
 		else {
