@@ -4,13 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ChooseVenueGameState : GameState {
-	PagedSelectOptionDialog venueDialog;
+	SelectOptionDialog venueDialog;
 	GameManager gameManager;
 	List<Venue> venues;
 	
 	public override void OnEnter(GameManager gameManager) {
 		this.gameManager = gameManager;
-		venueDialog = gameManager.GetGUIManager().InstantiatePagedSelectOptionDialog();
+		venueDialog = gameManager.GetGUIManager().InstantiateSelectOptionDialog(true);
 		venueDialog.Initialize("Choose the venue", GetAvailableVenues(), new UnityAction(OnVenueSelected));
 	}
 	
