@@ -64,4 +64,12 @@ public class UIDialog : MonoBehaviour {
 	protected void ClosePanel() {
 		Destroy (gameObject);
 	}
+
+	protected void ShowOKButton() {
+		okButton.gameObject.SetActive(true);
+	}
+
+	protected void HideOKButton() {
+		okButton.gameObject.SetActive(false);
+	}
 }

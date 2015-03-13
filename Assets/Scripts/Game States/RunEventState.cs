@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class RunEventState : GameState {
 	List<WrestlingMatch> matches;
 	WrestlingEvent currentEvent;
-	InfoDialog matchDialog;
+	InfoSliderDialog matchDialog;
 	GameManager gameManager;
 	int currentMatchIndex = 0;
 
@@ -61,8 +61,8 @@ public class RunEventState : GameState {
 		matchReport += GetFanMatchReview(match.rating) + "\n";
 
 		// Note: currentMatchIndex is used as-is in the dialog title because it's already been incremented, eliminating the need to add one to eliminate zero-indexing confusion.
-		matchDialog = gameManager.GetGUIManager ().InstantiateInfoDialog();
-		matchDialog.Initialize("Match #" + currentMatchIndex, matchReport, (currentMatchIndex < matches.Count ? new UnityAction(ProcessNextMatch) : new UnityAction(FinishedRunningEvent)));
+		matchDialog = gameManager.GetGUIManager ().InstantiateInfoSliderDialog();
+		matchDialog.Initialize("Match #" + currentMatchIndex, matchReport, "", 0f, 1f, match.rating, 1f, (currentMatchIndex < matches.Count ? new UnityAction(ProcessNextMatch) : new UnityAction(FinishedRunningEvent)));
 	}
 
 	void FinishedRunningEvent() {

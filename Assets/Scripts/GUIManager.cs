@@ -11,6 +11,7 @@ public class GUIManager : MonoBehaviour {
 	public GameObject pagedSelectOptionDialogPrefab;
 	public GameObject textInputDialogPrefab;
 	public GameObject infoDialogPrefab;
+	public GameObject infoSliderDialogPrefab;
 	public GameObject singlesMatchDialogPrefab;
 	public Slider progressBarPrefab;
 	public StatusPanel statusPanel;
@@ -61,6 +62,10 @@ public class GUIManager : MonoBehaviour {
 
 		if (infoDialogPrefab == null || infoDialogPrefab.GetComponent<InfoDialog>() == null) {
 			Debug.LogError("Unable to start GUI Manager: Info Dialog prefab isn't set or is missing InfoDialog script.");
+		}
+
+		if (infoSliderDialogPrefab == null || infoSliderDialogPrefab.GetComponent<InfoSliderDialog>() == null) {
+			Debug.LogError("Unable to start GUI Manager: Info Slider Dialog prefab isn't set or is missing InfoSliderDialog script.");
 		}
 
 		if (singlesMatchDialogPrefab == null || singlesMatchDialogPrefab.GetComponent<SinglesMatchDialog>() == null) {
@@ -115,6 +120,13 @@ public class GUIManager : MonoBehaviour {
 		dialogObj.transform.SetParent(canvas.transform, false);
 		
 		return dialogObj.GetComponent<InfoDialog>();
+	}
+
+	public InfoSliderDialog InstantiateInfoSliderDialog() {
+		GameObject dialogObj = Instantiate(infoSliderDialogPrefab) as GameObject;
+		dialogObj.transform.SetParent(canvas.transform, false);
+		
+		return dialogObj.GetComponent<InfoSliderDialog>();
 	}
 
 	public SinglesMatchDialog InstantiateSinglesMatchDialog() {
