@@ -77,6 +77,9 @@ public class CompanyManager : MonoBehaviour {
 		}
 	}
 
+	public Company GetCompany(string companyID) {
+		return companies.Find( x => x.id == companyID );
+	}
 	public List<Company> GetCompanies(int phase) {
 		return companies.FindAll( x => x.phase <= phase );
 	}

@@ -10,12 +10,15 @@ public class ES2UserType_Company : ES2Type
 	{
 		Company data = (Company)obj;
 		// Add your writer.Write calls here.
+		writer.Write(data.name);
+		writer.Write(data.id);
 		writer.Write(data.companyName);
 		writer.Write(data.money);
 		writer.Write(data.maxRosterSize);
 		writer.Write(data.phase);
 		writer.Write(data.eventHistory);
 		writer.Write(data.isInAlliance);
+		writer.Write(data.roster);
 
 	}
 	
@@ -23,12 +26,15 @@ public class ES2UserType_Company : ES2Type
 	{
 		Company data = (Company)c;
 		// Add your reader.Read calls here to read the data into the Component.
+		data.name = reader.Read<System.String>();
+		data.id = reader.Read<System.String>();
 		data.companyName = reader.Read<System.String>();
 		data.money = reader.Read<System.Single>();
 		data.maxRosterSize = reader.Read<System.Int32>();
 		data.phase = reader.Read<System.Int32>();
 		data.eventHistory = reader.ReadList<HistoricalWrestlingEvent>();
 		data.isInAlliance = reader.Read<System.Boolean>();
+		data.roster = reader.ReadList<Wrestler>();
 
 	}
 	

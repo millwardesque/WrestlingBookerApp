@@ -14,9 +14,14 @@ public class Company : MonoBehaviour {
 	public bool isInAlliance;
 	public List<Wrestler> roster = new List<Wrestler>();
 
+	public void Awake() {
+		this.id = GetInstanceID().ToString();
+	}
+
 	public void Initialize(string name, float money, int maxRosterSize, int phase, List<Wrestler> roster, bool isInAlliance) {
 		this.id = GetInstanceID().ToString();
 		this.companyName = name;
+		this.name = name;
 		this.money = money;
 		this.maxRosterSize = maxRosterSize;
 		this.phase = phase;

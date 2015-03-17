@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour {
 	EventTypeManager eventTypeManager;
 	WrestlingMatchTypeManager matchTypeManager;
 	WrestlingMatchFinishManager matchFinishManager;
-	CompanyManager companyManager;
 	GUIManager guiManager;
 	WrestlingEvent currentEvent;
 
@@ -53,11 +52,6 @@ public class GameManager : MonoBehaviour {
 				Debug.LogError("Error starting Game Manager: No wrestling match finish manager was found.");
 			}
 
-			companyManager = GameObject.FindObjectOfType<CompanyManager>();
-			if (null == companyManager) {
-				Debug.LogError("Error starting Game Manager: No company manager was found.");
-			}
-
 			if (null == wrestlingEventPrefab) {
 				Debug.LogError("Error starting Game Manager: No wrestling event prefab was found.");
 			}
@@ -73,16 +67,27 @@ public class GameManager : MonoBehaviour {
 		get { return "1"; }
 	}
 
+	string PlayerFilename {
+		get { return GameID + ".game?tag=player"; }
+	}
+
 	void Start()  {
-		// Load the wrestlers
+		CompanyManager.Instance.LoadCompanies();
 		WrestlerManager.Instance.LoadWrestlers();
 	
 		// Load the company.
-		playerCompany = companyManager.CreateCompany ();
-		if (playerCompany.IsSaved("playerCompany")) {
-			playerCompany.Load("playerCompany");
-			GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
-			ReplaceState(FindState("IdleGameState"));
+		if (ES2.Exists(PlayerFilename)) {
+			string playerID = ES2.Load<string> (PlayerFilename);
+			playerCompany = CompanyManager.Instance.GetCompany (playerID);
+
+			if (playerCompany != null) {
+				GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
+				ReplaceState(FindState("IdleGameState"));
+			}
+			else {
+				Debug.LogError("Error: Unable to load player company with ID '" + playerID + "': No such company exists.");
+				StartAtPhase0();
+			}
 		}
 		else {
 			StartAtPhase0();
@@ -90,6 +95,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void StartAtPhase0() {
+		playerCompany = CompanyManager.Instance.CreateCompany ();
 		UpdatePhase();
 		GameState startState = FindState ("NameCompanyGameState");
 		startState.SetTransition("FINISHED", OnFinishedPhase0Step);
@@ -184,12 +190,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void ClearSavedData() {
-		playerCompany.DeleteSaved("playerCompany");
-		GameObject.Destroy(playerCompany.gameObject);
-		playerCompany = companyManager.CreateCompany();
-
+		ES2.Delete(PlayerFilename);
+		CompanyManager.Instance.ClearSavedData();
 		venueManager.ClearSavedData();
 		WrestlerManager.Instance.ClearSavedData();
+
 		StartAtPhase0();
 	}
 
@@ -295,8 +300,14 @@ public class GameManager : MonoBehaviour {
 		if (playerCompany.companyName != playerCompany.name) {
 			playerCompany.name = playerCompany.companyName;
 		}
-		playerCompany.Save();
+		SavePlayer();
+
 		GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
+	}
+
+	void SavePlayer() {
+		playerCompany.Save();
+		ES2.Save(playerCompany.id, PlayerFilename);
 	}
 
 	public void OnTimeUpdated(TimeManager timeManager) {

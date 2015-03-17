@@ -20,6 +20,7 @@ public class Wrestler : MonoBehaviour {
 	public void Initialize(string wrestlerName, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities) {
 		this.id = GetInstanceID().ToString();
 		this.wrestlerName = wrestlerName;
+		this.name = name;
 		this.description = description;
 		this.perMatchCost = perMatchCost;
 		this.popularity = popularity;

@@ -10,6 +10,7 @@ public class ES2UserType_Wrestler : ES2Type
 	{
 		Wrestler data = (Wrestler)obj;
 		// Add your writer.Write calls here.
+		writer.Write(data.name);
 		writer.Write(data.id);
 		writer.Write(data.wrestlerName);
 		writer.Write(data.description);
@@ -30,6 +31,7 @@ public class ES2UserType_Wrestler : ES2Type
 	{
 		Wrestler data = (Wrestler)c;
 		// Add your reader.Read calls here to read the data into the Component.
+		data.name = reader.Read<System.String>();
 		data.id = reader.Read<System.String>();
 		data.wrestlerName = reader.Read<System.String>();
 		data.description = reader.Read<System.String>();
