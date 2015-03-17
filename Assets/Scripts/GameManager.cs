@@ -295,7 +295,7 @@ public class GameManager : MonoBehaviour {
 		if (playerCompany.companyName != playerCompany.name) {
 			playerCompany.name = playerCompany.companyName;
 		}
-		playerCompany.Save("playerCompany");
+		playerCompany.Save();
 		GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
 	}
 

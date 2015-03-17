@@ -50,8 +50,9 @@ public class ES2Init : MonoBehaviour
 		ES2TypeManager.types[typeof(UnityEngine.SkinnedMeshRenderer)] = new ES2_SkinnedMeshRenderer();
 		ES2TypeManager.types[typeof(System.SByte)] = new ES2_sbyte();
 		ES2TypeManager.types[typeof(HistoricalWrestlingEvent)] = new ES2UserType_HistoricalWrestlingEvent();
-		ES2TypeManager.types[typeof(UnityEngine.Sprite)] = new ES2_Sprite();
 		ES2TypeManager.types[typeof(Wrestler)] = new ES2UserType_Wrestler();
+		ES2TypeManager.types[typeof(UnityEngine.Sprite)] = new ES2_Sprite();
+		ES2TypeManager.types[typeof(Company)] = new ES2UserType_Company();
 
 	}
 }
