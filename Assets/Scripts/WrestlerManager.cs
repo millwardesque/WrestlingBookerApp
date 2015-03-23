@@ -41,6 +41,7 @@ public class WrestlerManager : MonoBehaviour {
 				Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 				wrestler.transform.SetParent(transform, false);
 				ES2.Load<Wrestler>(wrestlerLocation, wrestler);
+				wrestler.name = wrestler.wrestlerName;
 				wrestlers.Add (wrestler);
 			}
 			return true;

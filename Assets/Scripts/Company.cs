@@ -29,6 +29,17 @@ public class Company : MonoBehaviour {
 		this.isInAlliance = isInAlliance;
 	}
 
+	public void SyncRoster() {
+		for (int i = 0; i < roster.Count; ++i) {
+			Wrestler wrestler = roster[i];
+			Wrestler canonicalWrestler = WrestlerManager.Instance.GetWrestler(wrestler.wrestlerName);
+			if (canonicalWrestler != null) {
+				Destroy (wrestler.gameObject);
+				roster[i] = canonicalWrestler;
+			}
+		}
+	}
+
 	public bool CanAddWrestlers() {
 		return maxRosterSize > roster.Count;
 	}

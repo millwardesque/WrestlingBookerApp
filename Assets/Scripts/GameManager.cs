@@ -72,8 +72,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Start()  {
-		CompanyManager.Instance.LoadCompanies();
 		WrestlerManager.Instance.LoadWrestlers();
+		CompanyManager.Instance.LoadCompanies();
 	
 		// Load the company.
 		if (ES2.Exists(PlayerFilename)) {

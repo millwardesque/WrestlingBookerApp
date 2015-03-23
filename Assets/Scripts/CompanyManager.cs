@@ -42,6 +42,8 @@ public class CompanyManager : MonoBehaviour {
 				Company company = Instantiate(companyPrefab) as Company;
 				company.transform.SetParent(transform, false);
 				ES2.Load<Company>(companyLocation, company);
+				company.name = company.companyName;
+				company.SyncRoster();
 				companies.Add (company);
 			}
 			return true;
@@ -95,7 +97,7 @@ public class CompanyManager : MonoBehaviour {
 	public void GenerateNewCompany(int phase) {
 		Company newCompany = GameObject.Instantiate(companyPrefab) as Company;
 		newCompany.transform.SetParent(transform, false);
-
+		companyGenerator.Generate(newCompany, phase);
 		newCompany.Save ();
 		companies.Add(newCompany);
 	}
