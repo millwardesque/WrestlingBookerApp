@@ -29,6 +29,10 @@ public class Company : MonoBehaviour {
 		this.isInAlliance = isInAlliance;
 	}
 
+	/// <summary>
+	/// Wrestlers loaded by ES2 are game objects separate from wrestlers loaded by the wrestler manager, leading to duplicates.
+	/// Call this function to replace the wrestler clones with the canonical ones in the wrestler manager.
+	/// </summary>
 	public void SyncRoster() {
 		for (int i = 0; i < roster.Count; ++i) {
 			Wrestler wrestler = roster[i];
@@ -90,10 +94,15 @@ public class Company : MonoBehaviour {
 		Save ();
 	}
 
+	public void UnlockVenue(Venue venue) {
+		unlockedVenues.Add (venue);
+		Save ();
+	}
+
 	void AttemptToUnlockVenue() {
 		bool unlockNewVenue = (Random.Range(0, 5) == 0);
 		if (unlockNewVenue) {
-			Venue newVenue = GameManager.Instance.GetVenueManager().GetRandomAvailableVenue(this);
+			Venue newVenue = VenueManager.Instance.GetRandomAvailableVenue(this);
 			if (newVenue != null) {
 				GameManager.Instance.GetGUIManager().AddNotification("Venue '" + newVenue.venueName + "' unlocked");
 				unlockedVenues.Add(newVenue);

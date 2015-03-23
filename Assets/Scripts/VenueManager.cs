@@ -8,13 +8,21 @@ public class VenueManager : MonoBehaviour {
 
 	public Venue venuePrefab;
 
+	public static VenueManager Instance;
+
 	// Use this for initialization
 	void Awake () {
-		if (!venuePrefab) {
-			Debug.LogError("Unable to start Venue Manager: No venue prefab is set.");
-		}
+		if (null == Instance) {
+			Instance = this;
+			if (!venuePrefab) {
+				Debug.LogError("Unable to start Venue Manager: No venue prefab is set.");
+			}
 
-		LoadFromJSON("venues");
+			LoadFromJSON("venues");
+		}
+		else {
+			Destroy (gameObject);
+		}
 	}
 
 	/// <summary>

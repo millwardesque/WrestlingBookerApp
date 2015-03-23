@@ -11,6 +11,7 @@ public class EventType : MonoBehaviour {
 	
 	public void Initialize(string typeName, string description, float cost, float externalRevenuePerUser, float ticketsToExternalMultiplier, int phase) {
 		this.typeName = typeName;
+		this.name = typeName;
 		this.description = description;
 		this.cost = cost;
 		this.externalRevenuePerUser = externalRevenuePerUser;

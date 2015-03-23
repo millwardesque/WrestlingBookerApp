@@ -25,6 +25,7 @@ public class Venue : MonoBehaviour {
 
 	public void Initialize(string venueName, string venueDescription, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences, int phase, string unlockableMatchType) {
 		this.venueName = venueName;
+		this.name = venueName;
 		this.venueDescription = venueDescription;
 		this.baseCost = baseCost;
 		this.gatePercentage = Mathf.Clamp01(gatePercentage);

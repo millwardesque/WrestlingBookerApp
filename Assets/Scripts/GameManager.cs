@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour {
 
 	GameState[] availableGameStates;
 	Stack<GameState> stateStack = new Stack<GameState>();
-	VenueManager venueManager;
 	EventTypeManager eventTypeManager;
 	WrestlingMatchTypeManager matchTypeManager;
 	WrestlingMatchFinishManager matchFinishManager;
@@ -31,11 +30,6 @@ public class GameManager : MonoBehaviour {
 				Debug.LogError("Error starting Game Manager: No tagged GUI Manager was found.");
 			}
 			guiManager = guiManagerObj.GetComponent<GUIManager>();
-
-			venueManager = GameObject.FindObjectOfType<VenueManager>();
-			if (null == venueManager) {
-				Debug.LogError("Error starting Game Manager: No venue manager was found.");
-			}
 
 			eventTypeManager = GameObject.FindObjectOfType<EventTypeManager>();
 			if (null == eventTypeManager) {
@@ -73,6 +67,8 @@ public class GameManager : MonoBehaviour {
 
 	void Start()  {
 		WrestlerManager.Instance.LoadWrestlers();
+
+		// Load companies after wrestlers so that the rosters can be constructed properly.
 		CompanyManager.Instance.LoadCompanies();
 	
 		// Load the company.
@@ -192,7 +188,7 @@ public class GameManager : MonoBehaviour {
 	public void ClearSavedData() {
 		ES2.Delete(PlayerFilename);
 		CompanyManager.Instance.ClearSavedData();
-		venueManager.ClearSavedData();
+		VenueManager.Instance.ClearSavedData();
 		WrestlerManager.Instance.ClearSavedData();
 
 		StartAtPhase0();
@@ -207,7 +203,7 @@ public class GameManager : MonoBehaviour {
 			playerCompany.isInAlliance = false;
 			playerCompany.phase++;
 
-			playerCompany.unlockedVenues.Add (venueManager.GetVenue ("Civic Center"));
+			playerCompany.UnlockVenue(VenueManager.Instance.GetVenue("Civic Center"));
 			playerCompany.unlockedMatchTypes.Add (matchTypeManager.GetMatchType("Standard"));
 			playerCompany.unlockedMatchTypes.Add (matchTypeManager.GetMatchType("No DQ"));
 			OnCompanyUpdated();
@@ -266,10 +262,6 @@ public class GameManager : MonoBehaviour {
 
 	public GUIManager GetGUIManager() {
 		return guiManager;
-	}
-
-	public VenueManager GetVenueManager() {
-		return venueManager;
 	}
 
 	public EventTypeManager GetEventTypeManager() {

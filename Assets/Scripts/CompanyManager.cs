@@ -91,7 +91,9 @@ public class CompanyManager : MonoBehaviour {
 	}
 
 	public Company CreateCompany() {
-		return GameObject.Instantiate(companyPrefab) as Company;
+		Company newCompany = GameObject.Instantiate(companyPrefab) as Company;
+		newCompany.transform.SetParent(transform, false);
+		return newCompany;
 	}
 
 	public void GenerateNewCompany(int phase) {
