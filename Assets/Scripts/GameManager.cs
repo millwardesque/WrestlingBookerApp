@@ -19,6 +19,15 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager Instance;
 
+	public List<WrestlingMatchType> StartingMatchTypes {
+		get {
+			List<WrestlingMatchType> matchTypes = new List<WrestlingMatchType>();
+			matchTypes.Add(matchTypeManager.GetMatchType("Standard"));
+			matchTypes.Add(matchTypeManager.GetMatchType("No DQ"));
+			return matchTypes;
+		}
+	}
+
 	// Use this for initialization
 	void Awake () {
 		if (Instance == null) {
@@ -67,6 +76,7 @@ public class GameManager : MonoBehaviour {
 
 	void Start()  {
 		WrestlerManager.Instance.LoadWrestlers();
+		VenueManager.Instance.LoadVenues();
 
 		// Load companies after wrestlers so that the rosters can be constructed properly.
 		CompanyManager.Instance.LoadCompanies();
@@ -204,8 +214,10 @@ public class GameManager : MonoBehaviour {
 			playerCompany.phase++;
 
 			playerCompany.UnlockVenue(VenueManager.Instance.GetVenue("Civic Center"));
-			playerCompany.unlockedMatchTypes.Add (matchTypeManager.GetMatchType("Standard"));
-			playerCompany.unlockedMatchTypes.Add (matchTypeManager.GetMatchType("No DQ"));
+			foreach (WrestlingMatchType type in StartingMatchTypes) {
+				playerCompany.unlockedMatchTypes.Add (type);
+			}
+
 			OnCompanyUpdated();
 		}
 		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 1) {

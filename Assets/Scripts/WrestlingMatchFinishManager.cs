@@ -5,7 +5,18 @@ using SimpleJSON;
 
 public class WrestlingMatchFinishManager : MonoBehaviour {
 	List<WrestlingMatchFinish> matchFinishes = new List<WrestlingMatchFinish>();
-	
+
+	public static WrestlingMatchFinishManager Instance;
+
+	void Awake() {
+		if (Instance == null) {
+			Instance = this;
+		}
+		else {
+			Destroy(gameObject);
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		LoadFromJSON("matchFinishes");
@@ -32,7 +43,11 @@ public class WrestlingMatchFinishManager : MonoBehaviour {
 			Debug.LogError("Unable to load event type data from JSON at '" + filename + "': There was an error opening the file.");
 		}
 	}
-	
+
+	public List<WrestlingMatchFinish> GetMatchFinishes() {
+		return matchFinishes;
+	}
+
 	public List<WrestlingMatchFinish> GetMatchFinishes(int phase) {
 		return matchFinishes.FindAll( x => x.phase <= phase);
 	}

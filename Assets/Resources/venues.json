@@ -37,11 +37,11 @@
 			unlockableMatchType: "Ladder"
 		},
 		
-		{ "name": "Skydome", "description": "Pride of Toronto", "phase": 2, "baseCost": 75000.0, "gatePercentage": 0.05, "capacity": 65000, "popularity": 0.5 },
-	    { "name": "Greensboro Coliseum Complex", "description": "Greensboro North Carolina", "phase": 2, "baseCost": 20000.0, "gatePercentage": 0.1, "capacity": 23000, "popularity": 0.7 },
-	    { "name": "MGM Grand Garden Arena", "description": "Las Vegas NV", "phase": 2, "baseCost": 22000.0, "gatePercentage": 0.0, "capacity": 16800, "popularity": 0.55 },
+		{ "name": "Skydome", "description": "Pride of Toronto", "phase": 2, "baseCost": 75000.0, "gatePercentage": 0.05, "capacity": 65000, "popularity": 0.5, unlockableMatchType: "" },
+	    { "name": "Greensboro Coliseum Complex", "description": "Greensboro North Carolina", "phase": 2, "baseCost": 20000.0, "gatePercentage": 0.1, "capacity": 23000, "popularity": 0.7, unlockableMatchType: "" },
+	    { "name": "MGM Grand Garden Arena", "description": "Las Vegas NV", "phase": 2, "baseCost": 22000.0, "gatePercentage": 0.0, "capacity": 16800, "popularity": 0.55, unlockableMatchType: "" },
 		
-		{ "name": "Sportatorium", "description": "The southern equivalent to MSG", "phase": 3, "baseCost": 50000.0, "gatePercentage": 0.02, "capacity": 4500, "popularity": 0.8 },
-		{ "name": "MSG", "description": "Primetime venue in NYC.", "phase": 3, "baseCost": 100000.0, "gatePercentage": 0.05, "capacity": 18200, "popularity": 0.7 },
+		{ "name": "Sportatorium", "description": "The southern equivalent to MSG", "phase": 3, "baseCost": 50000.0, "gatePercentage": 0.02, "capacity": 4500, "popularity": 0.8, unlockableMatchType: "" },
+		{ "name": "MSG", "description": "Primetime venue in NYC.", "phase": 3, "baseCost": 100000.0, "gatePercentage": 0.05, "capacity": 18200, "popularity": 0.7, unlockableMatchType: "" },
 	]
 }

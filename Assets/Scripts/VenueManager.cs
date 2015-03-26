@@ -5,23 +5,72 @@ using SimpleJSON;
 
 public class VenueManager : MonoBehaviour {
 	List<Venue> venues = new List<Venue>();
+	VenueGenerator venueGenerator = new VenueGenerator();
 
 	public Venue venuePrefab;
 
 	public static VenueManager Instance;
 
+	public string VenueFilename {
+		get { return GameManager.Instance.GameID + ".venues"; }
+	}
+
 	// Use this for initialization
 	void Awake () {
 		if (null == Instance) {
 			Instance = this;
+			DontDestroyOnLoad(gameObject);
 			if (!venuePrefab) {
 				Debug.LogError("Unable to start Venue Manager: No venue prefab is set.");
 			}
 
-			LoadFromJSON("venues");
+			venueGenerator.Initialize();
 		}
 		else {
 			Destroy (gameObject);
+		}
+	}
+
+	public void LoadVenues() {
+		if (!LoadSavedVenues()) {
+			GenerateNewVenues();
+		}
+	}
+
+	bool LoadSavedVenues() {
+		if (ES2.Exists(VenueFilename)) {
+			string[] tags = ES2.GetTags(VenueFilename);
+			foreach (string tag in tags) {
+				string venueLocation = VenueFilename + "?tag=" + tag;
+				Venue venue = Instantiate(venuePrefab) as Venue;
+				venue.transform.SetParent(transform, false);
+				ES2.Load<Venue>(venueLocation, venue);
+				venue.name = venue.venueName;
+				venues.Add (venue);
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	void GenerateNewVenues() {
+		// Clean up existing data.
+		foreach (Venue venue in venues) {
+			Destroy(venue.gameObject);
+		}
+		venues.Clear();
+		
+		if (ES2.Exists(VenueFilename)) {
+			ES2.Delete (VenueFilename);
+		}
+
+		// In this case, we load some venue data from a JSON file (like name / description / phase) and leave the generator to fill in the blanks.
+		LoadFromJSON("venues");
+		foreach (Venue venue in venues) {
+			venueGenerator.GenerateVenue(venue, venue.phase);
+			venue.Save();
 		}
 	}
 
@@ -44,6 +93,9 @@ public class VenueManager : MonoBehaviour {
 				float popularity = venue["popularity"].AsFloat;
 				int phase = venue["phase"].AsInt;
 				string unlockableMatchType = venue["unlockableMatchType"];
+				if (null == unlockableMatchType) {
+					unlockableMatchType = "";
+				}
 
 				var matchTypePreferenceArray = venue["matchTypePreferences"].AsArray;
 				Dictionary<string, float> matchTypePreferences = new Dictionary<string, float>();
@@ -56,7 +108,6 @@ public class VenueManager : MonoBehaviour {
 				foreach (JSONNode finish in matchFinishPreferenceArray) {
 					matchFinishPreferences.Add(finish["name"], finish["preference"].AsFloat);
 				}
-
 				CreateVenue(name, description, baseCost, gatePercentage, capacity, popularity, matchTypePreferences, matchFinishPreferences, phase, unlockableMatchType);
 			}
 		}
@@ -66,9 +117,7 @@ public class VenueManager : MonoBehaviour {
 	}
 
 	public void ClearSavedData() {
-		foreach (Venue venue in venues) {
-			venue.DeleteAugmentedData();
-		}
+		GenerateNewVenues();
 	}
 
 	public Venue GetRandomAvailableVenue(Company company) {
@@ -101,7 +150,7 @@ public class VenueManager : MonoBehaviour {
 		Venue venue = Instantiate(venuePrefab) as Venue;
 		venue.transform.SetParent(transform, false);
 		venue.Initialize(name, description, baseCost, gatePercentage, capacity, popularity, matchTypePreferences, matchFinishPreferences, phase, unlockableMatchType);
-		venue.LoadAugmentedData();
+		venue.Save();
 		venues.Add (venue);
 
 		return venue;

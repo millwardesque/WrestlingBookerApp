@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Venue : MonoBehaviour {
+	public string id;
 	public string venueName;
 	public string venueDescription;
 	public float baseCost;
@@ -16,14 +17,11 @@ public class Venue : MonoBehaviour {
 	public Dictionary<string, float> matchTypePreferences = new Dictionary<string, float>();
 	public Dictionary<string, float> matchFinishPreferences = new Dictionary<string, float>();
 
-	List<string> seenMatchTypes = new List<string>();
-	List<string> seenMatchFinishes = new List<string>();
-
-	string StoragePrefix {
-		get { return "venueChanges-" + venueName; }
-	}
+	public List<string> seenMatchTypes = new List<string>();
+	public List<string> seenMatchFinishes = new List<string>();
 
 	public void Initialize(string venueName, string venueDescription, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences, int phase, string unlockableMatchType) {
+		this.id = GetInstanceID().ToString();
 		this.venueName = venueName;
 		this.name = venueName;
 		this.venueDescription = venueDescription;
@@ -44,7 +42,7 @@ public class Venue : MonoBehaviour {
 	public void AddSeenMatchType(WrestlingMatchType type) {
 		if (!HasSeenMatchType(type)) {
 			seenMatchTypes.Add(type.typeName);
-			SaveAugmentedData();
+			Save();
 		}
 	}
 
@@ -55,6 +53,7 @@ public class Venue : MonoBehaviour {
 	public void AddSeenMatchFinish(WrestlingMatchFinish finish) {
 		if (!HasSeenMatchFinish(finish)) {
 			seenMatchFinishes.Add(finish.finishName);
+			Save();
 		}
 	}
 	
@@ -80,46 +79,8 @@ public class Venue : MonoBehaviour {
 		}
 	}
 
-	public void LoadAugmentedData() {
-		string prefix = StoragePrefix;
-		if (PlayerPrefs.HasKey(StoragePrefix + ".seenMatchTypes")) {
-			seenMatchTypes = new List<string>(PlayerPrefs.GetString(prefix + ".seenMatchTypes").Split(';'));
-		}
-
-		if (PlayerPrefs.HasKey(StoragePrefix + ".seenMatchFinishes")) {
-			seenMatchFinishes = new List<string>(PlayerPrefs.GetString(prefix + ".seenMatchFinishes").Split(';'));
-		}
-	}
-	
-	public void SaveAugmentedData() {
-		string prefix = StoragePrefix;
-
-		if (seenMatchTypes.Count > 0) {
-			string seenMatchTypeNames = "";
-			foreach (string matchType in seenMatchTypes) {
-				seenMatchTypeNames += matchType + ";";
-			}
-			seenMatchTypeNames = seenMatchTypeNames.Substring(0, seenMatchTypeNames.Length - 1); // Remove the trailing separator
-			PlayerPrefs.SetString(prefix + ".seenMatchTypes", seenMatchTypeNames);
-		}
-
-
-		if (seenMatchFinishes.Count > 0) {
-			string seenMatchFinishNames = "";
-			foreach (string matchFinish in seenMatchFinishes) {
-				seenMatchFinishNames += matchFinish + ";";
-			}
-			seenMatchFinishNames = seenMatchFinishNames.Substring(0, seenMatchFinishNames.Length - 1); // Remove the trailing separator
-			PlayerPrefs.SetString(prefix + ".seenMatchFinishes", seenMatchFinishNames);
-		}
-	}
-	
-	public void DeleteAugmentedData() {
-		string prefix = StoragePrefix;
-		PlayerPrefs.DeleteKey(prefix + ".seenMatchTypes");
-		seenMatchTypes = new List<string>();
-
-		PlayerPrefs.DeleteKey(prefix + ".seenMatchFinishes");
-		seenMatchFinishes = new List<string>();
+	public void Save() {
+		string venueLocation = VenueManager.Instance.VenueFilename + "?tag=" + id;
+		ES2.Save(this, venueLocation);
 	}
 }
