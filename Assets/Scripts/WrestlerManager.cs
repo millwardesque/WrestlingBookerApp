@@ -93,6 +93,7 @@ public class WrestlerManager : MonoBehaviour {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
 		wrestlerGenerator.GenerateWrestler(wrestler, phase);
+		wrestler.name = wrestler.wrestlerName;
 		wrestler.Save ();
 		wrestlers.Add (wrestler);
 	}

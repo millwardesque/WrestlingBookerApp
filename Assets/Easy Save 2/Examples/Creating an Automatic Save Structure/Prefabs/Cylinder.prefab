@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  prefabName: Cylinder
+  prefabName: 43796c696e646572
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

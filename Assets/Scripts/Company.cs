@@ -44,6 +44,17 @@ public class Company : MonoBehaviour {
 		}
 	}
 
+	public void SyncVenues() {
+		for (int i = 0; i < unlockedVenues.Count; ++i) {
+			Venue venue = unlockedVenues[i];
+			Venue canonicalVenue = VenueManager.Instance.GetVenue(venue.venueName);
+			if (canonicalVenue != null) {
+				Destroy (venue.gameObject);
+				unlockedVenues[i] = canonicalVenue;
+			}
+		}
+	}
+
 	public bool CanAddWrestlers() {
 		return maxRosterSize > roster.Count;
 	}

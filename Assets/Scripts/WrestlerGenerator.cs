@@ -17,8 +17,8 @@ public class WrestlerGenerator {
 		LoadWrestlerNames(wrestlerNameFilename);
 
 		perMatchCostRange.Clear();
-		perMatchCostRange.Add (new Vector2(500, 2500));
-		perMatchCostRange.Add (new Vector2(7500, 10000));
+		perMatchCostRange.Add (new Vector2(500, 1000));
+		perMatchCostRange.Add (new Vector2(2000, 10000));
 		perMatchCostRange.Add (new Vector2(12500, 50000));
 		perMatchCostRange.Add (new Vector2(50000, 100000));
 

@@ -55,10 +55,11 @@ MonoBehaviour:
   optimizeMode: 0
   PCDataPath: 
   MacDataPath: 
-  encrypt: 1
-  encryptionPassword: f2WYP35djvxP2pdR
-  webUsername: ES2
-  webPassword: 65w84e4p994z3Oq
+  encrypt: 0
+  encryptionPassword: 66325759503335646a76785032706452
+  encryptionType: 0
+  webUsername: 455332
+  webPassword: 36357738346534703939347a334f71
   bufferSize: 4098
 --- !u!1001 &100100000
 Prefab:

@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  prefabName: Sphere
+  prefabName: 537068657265
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -1,4 +1,10 @@
-v2.61
+v2.6.2
+- Added Obfuscation mode, to allow data to be scrambled with better performance than encryption.
+- Support can now be added for Javascript/UnityScript classes in ‘Manage Types’.
+- Fixed issue where Metro DLL wasn’t being updated.
+- File Editor now handles custom classes without causing an error.
+
+v2.6.1
 - Temporarily removed ES2_AudioClip while Unity fix a bug at their end.
 
 v2.60

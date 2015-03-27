@@ -17,6 +17,8 @@ public class ES2UserType_Company : ES2Type
 		writer.Write(data.maxRosterSize);
 		writer.Write(data.phase);
 		writer.Write(data.eventHistory);
+		writer.Write(data.unlockedVenues);
+		writer.Write(data.unlockedMatchTypes);
 		writer.Write(data.isInAlliance);
 		writer.Write(data.roster);
 
@@ -33,6 +35,8 @@ public class ES2UserType_Company : ES2Type
 		data.maxRosterSize = reader.Read<System.Int32>();
 		data.phase = reader.Read<System.Int32>();
 		data.eventHistory = reader.ReadList<HistoricalWrestlingEvent>();
+		data.unlockedVenues = reader.ReadList<Venue>();
+		data.unlockedMatchTypes = reader.ReadList<WrestlingMatchType>();
 		data.isInAlliance = reader.Read<System.Boolean>();
 		data.roster = reader.ReadList<Wrestler>();
 

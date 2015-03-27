@@ -55,6 +55,8 @@ $tagFieldName = "tag"; 			// The name of the field where you want to save the ta
 $dataFieldName = "data"; 	// The name of the field where you want to save the data.
 $fileIDFieldName = "fileId";		// An index into the file table representing the file containing this tag.
 
+// Turn off PHP errors.
+error_reporting(0);
 // Attempt to connect to database.
 $mysqli = new mysqli();
 $mysqli->connect($db_host, $db_user, $db_password, $db_name);

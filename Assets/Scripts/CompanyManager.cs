@@ -44,6 +44,7 @@ public class CompanyManager : MonoBehaviour {
 				ES2.Load<Company>(companyLocation, company);
 				company.name = company.companyName;
 				company.SyncRoster();
+				company.SyncVenues();
 				companies.Add (company);
 			}
 			return true;
@@ -77,6 +78,10 @@ public class CompanyManager : MonoBehaviour {
 				GenerateNewCompany(phase);
 			}
 		}
+	}
+
+	public void AddCompany(Company company) {
+		companies.Add (company);
 	}
 
 	public Company GetCompany(string companyID) {

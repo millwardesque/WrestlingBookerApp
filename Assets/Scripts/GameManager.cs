@@ -102,7 +102,6 @@ public class GameManager : MonoBehaviour {
 
 	void StartAtPhase0() {
 		playerCompany = CompanyManager.Instance.CreateCompany ();
-		UpdatePhase();
 		GameState startState = FindState ("NameCompanyGameState");
 		startState.SetTransition("FINISHED", OnFinishedPhase0Step);
 		ReplaceState (startState);
@@ -328,6 +327,9 @@ public class GameManager : MonoBehaviour {
 
 		switch (stateStack.Peek().name) {
 		case "NameCompanyGameState":
+			CompanyManager.Instance.AddCompany(playerCompany);
+			UpdatePhase(); // Update the phase now to set the player's money, etc. and save the player so that the un-named players don't get saved.
+
 			nextState = FindState ("Phase0IntroGameState");
 			nextState.SetTransition("FINISHED", OnFinishedPhase0Step);
 			break;

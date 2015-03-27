@@ -11,6 +11,14 @@ public class ES2Init : MonoBehaviour
 	{
 		Init();
 	}
+	
+	public void Start()
+	{
+		if(Application.isEditor)
+			GameObject.DestroyImmediate(gameObject);
+		else
+			GameObject.Destroy(gameObject);
+	}
 
 	public static void Init()
 	{
@@ -49,11 +57,13 @@ public class ES2Init : MonoBehaviour
 		ES2TypeManager.types[typeof(UnityEngine.BoneWeight)] = new ES2_BoneWeight();
 		ES2TypeManager.types[typeof(UnityEngine.SkinnedMeshRenderer)] = new ES2_SkinnedMeshRenderer();
 		ES2TypeManager.types[typeof(System.SByte)] = new ES2_sbyte();
-		ES2TypeManager.types[typeof(Company)] = new ES2UserType_Company();
 		ES2TypeManager.types[typeof(HistoricalWrestlingEvent)] = new ES2UserType_HistoricalWrestlingEvent();
-		ES2TypeManager.types[typeof(Wrestler)] = new ES2UserType_Wrestler();
-		ES2TypeManager.types[typeof(UnityEngine.Sprite)] = new ES2_Sprite();
 		ES2TypeManager.types[typeof(Venue)] = new ES2UserType_Venue();
+		ES2TypeManager.types[typeof(Wrestler)] = new ES2UserType_Wrestler();
+		ES2TypeManager.types[typeof(WrestlingMatchFinish)] = new ES2UserType_WrestlingMatchFinish();
+		ES2TypeManager.types[typeof(WrestlingMatchType)] = new ES2UserType_WrestlingMatchType();
+		ES2TypeManager.types[typeof(UnityEngine.Sprite)] = new ES2_Sprite();
+		ES2TypeManager.types[typeof(Company)] = new ES2UserType_Company();
 
 	}
 }

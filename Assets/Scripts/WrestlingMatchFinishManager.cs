@@ -6,20 +6,22 @@ using SimpleJSON;
 public class WrestlingMatchFinishManager : MonoBehaviour {
 	List<WrestlingMatchFinish> matchFinishes = new List<WrestlingMatchFinish>();
 
+	public List<WrestlingMatchFinish> MatchFinishes {
+		get { return matchFinishes; }
+	}
+
 	public static WrestlingMatchFinishManager Instance;
 
 	void Awake() {
 		if (Instance == null) {
 			Instance = this;
+			DontDestroyOnLoad(gameObject);
+
+			LoadFromJSON("matchFinishes");
 		}
 		else {
 			Destroy(gameObject);
 		}
-	}
-
-	// Use this for initialization
-	void Start () {
-		LoadFromJSON("matchFinishes");
 	}
 
 	/// <summary>

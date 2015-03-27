@@ -10,7 +10,6 @@ public class ES2UserType_Venue : ES2Type
 	{
 		Venue data = (Venue)obj;
 		// Add your writer.Write calls here.
-		writer.Write(data.name);
 		writer.Write(data.id);
 		writer.Write(data.venueName);
 		writer.Write(data.venueDescription);
@@ -31,7 +30,6 @@ public class ES2UserType_Venue : ES2Type
 	{
 		Venue data = (Venue)c;
 		// Add your reader.Read calls here to read the data into the Component.
-		data.name = reader.Read<System.String>();
 		data.id = reader.Read<System.String>();
 		data.venueName = reader.Read<System.String>();
 		data.venueDescription = reader.Read<System.String>();
