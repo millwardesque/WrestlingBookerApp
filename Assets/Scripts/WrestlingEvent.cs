@@ -119,6 +119,8 @@ public class WrestlingEvent : MonoBehaviour {
 					interest += match.GetMatchInterest();
 				}
 				interest /= matches.Count;
+				interest *= MatchLengthFactor;
+
 			}
 			else {
 				interest = GameManager.Instance.GetPlayerCompany().Popularity;
@@ -137,9 +139,16 @@ public class WrestlingEvent : MonoBehaviour {
 					rating += match.rating;
 				}
 				rating /= matches.Count;
+				rating *= MatchLengthFactor;
 			}
 
 			return rating;
+		}
+	}
+
+	public float MatchLengthFactor {
+		get {
+			return 1f - (Mathf.Abs(GameManager.Instance.GetIdealMatchCount() - matches.Count) / (float)GameManager.Instance.GetIdealMatchCount());
 		}
 	}
 

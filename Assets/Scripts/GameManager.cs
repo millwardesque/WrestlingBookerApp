@@ -271,6 +271,28 @@ public class GameManager : MonoBehaviour {
 		return GetPlayerCompany().phase;
 	}
 
+	public int GetIdealMatchCount() {
+		int idealCount = 4;
+		switch (GetPhase()) {
+		case 0:
+			idealCount = 2;
+			break;
+		case 1:
+			idealCount = 3;
+			break;
+		case 2:
+			idealCount = 4;
+			break;
+		case 3:
+			idealCount = 4;
+			break;
+		default:
+			break;
+		}
+
+		return idealCount;
+	}
+
 	public GUIManager GetGUIManager() {
 		return guiManager;
 	}

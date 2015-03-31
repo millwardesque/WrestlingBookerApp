@@ -34,6 +34,8 @@ public class EventFinishedState : GameState {
 			wrestlingEvent.EventVenue.AddSeenMatchFinish(match.finish);
 		}
 
+		// @TODO Calculate PPV revenue.
+
 		float eventRevenue = ticketRevenue + merchSales + tvAdSales + ppvSales;
 		float eventCosts = venueCost + eventTypeCost + talentCost;
 
