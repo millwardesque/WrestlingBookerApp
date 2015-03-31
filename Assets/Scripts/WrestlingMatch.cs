@@ -45,6 +45,15 @@ public class WrestlingMatch {
 		}
 	}
 
+	public float GetMatchInterest() {
+		float interest = 0;
+		foreach (Wrestler wrestler in Participants) {
+			float wrestlerInterest = (wrestler.popularity * wrestler.charisma) + ((wrestler.popularity + wrestler.charisma) / 2f) / 2f;
+			interest += wrestlerInterest / ParticipantCount;
+		}
+		return interest;
+	}
+
 	public string VersusString() {
 		string versus = "";
 		for (int i = 0; i < teams.Count; ++i) {

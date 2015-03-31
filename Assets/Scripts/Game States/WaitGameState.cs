@@ -19,7 +19,9 @@ public class WaitGameState : GameState {
 		WrestlingEvent currentEvent = gameManager.GetCurrentEvent();
 
 		if (canSellTickets && waitTime > 0 && currentEvent.EventVenue != null) {
-			ticketsPerSecond = currentEvent.EventInterest * currentEvent.EventVenue.capacity / waitTime;
+			float ticketsSold = currentEvent.EventInterest * currentEvent.EventVenue.capacity;
+			Debug.Log (string.Format("Tickets: {0} x {1} = {2}", currentEvent.EventInterest, currentEvent.EventVenue.capacity, ticketsSold)); 
+			ticketsPerSecond = ticketsSold / waitTime;
 		}
 		else {
 			ticketsPerSecond = 0;
@@ -27,7 +29,6 @@ public class WaitGameState : GameState {
 	}
 
 	public override void OnUpdate(GameManager gameManager) {
-
 		if (waitTime > 0.0f) {
 			waitTime -= Time.deltaTime;
 

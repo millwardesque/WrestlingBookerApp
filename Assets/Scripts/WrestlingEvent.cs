@@ -116,15 +116,12 @@ public class WrestlingEvent : MonoBehaviour {
 			// Calculate the average match interest and multiply it by the popularity of wrestling in the venue
 			if (matches.Count > 0) {
 				foreach (WrestlingMatch match in matches) {
-					float matchInterest = 0;
-					foreach (Wrestler wrestler in match.Participants) {
-						matchInterest += (wrestler.popularity + wrestler.charisma / 2) / match.ParticipantCount;
-					}
-					interest += matchInterest / matches.Count;
+					interest += match.GetMatchInterest();
 				}
+				interest /= matches.Count;
 			}
 			else {
-				interest = Random.Range(0.01f, 0.1f);
+				interest = GameManager.Instance.GetPlayerCompany().Popularity;
 			}
 			interest *=  EventVenue.popularity;
 			return Mathf.Clamp01(interest * Random.Range(0.7f, 1.3f));
