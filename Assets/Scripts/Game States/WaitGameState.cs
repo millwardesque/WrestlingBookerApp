@@ -49,7 +49,7 @@ public class WaitGameState : GameState {
 			if (nextState == null) {
 				Debug.LogError ("Wait Game State is about to transition to a null state. This is probably not what you want");
 			}
-			gameManager.ReplaceState(nextState);
+			gameManager.StateMachine.ReplaceState(nextState);
 		}
 	}
 }

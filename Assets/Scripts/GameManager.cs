@@ -7,8 +7,7 @@ public class GameManager : MonoBehaviour {
 	public float stateChangeDelay = 5.0f;
 	public WrestlingEvent wrestlingEventPrefab;
 
-	GameState[] availableGameStates;
-	Stack<GameState> stateStack = new Stack<GameState>();
+	GameStateMachine stateMachine;
 	EventTypeManager eventTypeManager;
 	WrestlingMatchTypeManager matchTypeManager;
 	WrestlingMatchFinishManager matchFinishManager;
@@ -59,7 +58,11 @@ public class GameManager : MonoBehaviour {
 				Debug.LogError("Error starting Game Manager: No wrestling event prefab was found.");
 			}
 
-			availableGameStates = Resources.LoadAll<GameState>("Game States");
+			stateMachine = GetComponentInChildren<GameStateMachine>();
+			if (null == stateMachine) {
+				Debug.LogError("Error starting Game Manager: No child state machine was found.");
+			}
+			stateMachine.SetAvailableGameStates(Resources.LoadAll<GameState>("Game States"));
 		}
 		else {
 			Destroy (gameObject);
@@ -88,7 +91,7 @@ public class GameManager : MonoBehaviour {
 
 			if (playerCompany != null) {
 				GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
-				ReplaceState(FindState("IdleGameState"));
+				StateMachine.ReplaceState("IdleGameState");
 			}
 			else {
 				Debug.LogError("Error: Unable to load player company with ID '" + playerID + "': No such company exists.");
@@ -102,18 +105,11 @@ public class GameManager : MonoBehaviour {
 
 	void StartAtPhase0() {
 		playerCompany = CompanyManager.Instance.CreateCompany ();
-		GameState startState = FindState ("NameCompanyGameState");
-		startState.SetTransition("FINISHED", OnFinishedPhase0Step);
-		ReplaceState (startState);
+		GameState startState = StateMachine.FindState ("NameCompanyGameState");
+		startState.SetTransition("FINISHED", NextPhase0Step);
+		StateMachine.ReplaceState (startState);
 		
 		GetGUIManager().HideStatusPanel();
-	}
-
-	// Update is called once per frame
-	void Update () {
-		if (stateStack.Count > 0) {
-			stateStack.Peek().OnUpdate(this);
-		}
 	}
 
 	public void CreateNewEventAttempt() {
@@ -121,66 +117,19 @@ public class GameManager : MonoBehaviour {
 			CreateNewEvent();
 		}
 		else {
-			ConfirmState confirmState = FindState("ConfirmState") as ConfirmState;
+			ConfirmState confirmState = StateMachine.FindState("ConfirmState") as ConfirmState;
 			confirmState.Initialize("Stop current event?", "You can only have one active event at a time. Would you like to stop work on your current event?", new UnityAction(OnOkToCancelEvent), new UnityAction(OnCancelToCancelEvent));
-			PushState (confirmState);
+			StateMachine.PushState (confirmState);
 		}
 	}
 
 	void OnOkToCancelEvent() {
-		PopState();
+		StateMachine.PopState();
 		CreateNewEvent ();
 	}
 
 	void OnCancelToCancelEvent() {
-		PopState();
-	}
-
-	public void PushState(GameState newState) {
-		if (stateStack.Count > 0) {
-			stateStack.Peek().OnPause(this);
-		}
-		stateStack.Push(newState);
-		newState.OnEnter(this);
-	}
-
-	public void PopState() {
-		if (stateStack.Count > 0) {
-			GameState oldState = stateStack.Pop();
-			oldState.OnExit(this);
-			Destroy (oldState.gameObject);
-		}
-
-		if (stateStack.Count > 0) {
-			stateStack.Peek().OnUnpause(this);
-		}
-	}
-
-	public void ReplaceState(GameState newState) {
-		if (null == newState) {
-			return;
-		}
-
-		PopState ();
-		PushState (newState);
-	}
-
-	public GameState FindState(string stateName, string newName = "") {
-		for (int i = 0; i < availableGameStates.Length; ++i) {
-			if (availableGameStates[i].name == stateName) {
-				GameState newState = Instantiate(availableGameStates[i]) as GameState;
-
-				if (newName != "") {
-					newState.name = newName;
-				}
-				else {
-					newState.name = stateName;
-				}
-				return newState;
-			}
-		}
-		Debug.LogError("Couldn't find game state '" + stateName + "'");
-		return null;
+		StateMachine.PopState();
 	}
 
 	public void GoToMainMenu() {
@@ -189,7 +138,7 @@ public class GameManager : MonoBehaviour {
 
 
 	public GameState GetDelayedGameState(GameState state, bool canSellTickets, float delayTime) {
-		WaitGameState waitState = FindState ("WaitGameState") as WaitGameState;
+		WaitGameState waitState = StateMachine.FindState ("WaitGameState") as WaitGameState;
 		waitState.Initialize(delayTime, state, canSellTickets);
 		return waitState;
 	}
@@ -219,15 +168,15 @@ public class GameManager : MonoBehaviour {
 
 			OnCompanyUpdated();
 		}
-		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 1) {
+		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 10) {
 			playerCompany.maxRosterSize = 6;
 			playerCompany.isInAlliance = false;
 			playerCompany.phase++;
 			OnCompanyUpdated();
 
-			GameState newState = FindState("Phase0FinishedState");
-			newState.SetTransition("FINISHED", PopState);
-			PushState (newState);
+			GameState newState = StateMachine.FindState("Phase0FinishedState");
+			newState.SetTransition("FINISHED", StateMachine.PopState);
+			StateMachine.PushState (newState);
 		}
 		else if (GetPhase() == 1 && playerCompany.money > 1000000) {
 			playerCompany.isInAlliance = true;
@@ -235,9 +184,9 @@ public class GameManager : MonoBehaviour {
 			playerCompany.phase++;
 			OnCompanyUpdated();
 
-			GameState newState = FindState("Phase1FinishedState");
+			GameState newState = StateMachine.FindState("Phase1FinishedState");
 			newState.SetTransition("FINISHED", SetIdleState);
-			ReplaceState (newState);
+			StateMachine.ReplaceState (newState);
 		}
 		else if (GetPhase() == 2 && playerCompany.Popularity > 0.5 && playerCompany.money > 20000000) {
 			playerCompany.isInAlliance = true;
@@ -252,19 +201,19 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void HireWrestlers() {
-		GameState hireState = FindState("HireWrestlersState");
-		hireState.SetTransition("FINISHED", PopState);
-		PushState (hireState);
+		GameState hireState = StateMachine.FindState("HireWrestlersState");
+		hireState.SetTransition("FINISHED", StateMachine.PopState);
+		StateMachine.PushState (hireState);
 	}
 
 	public void FireWrestler() {
-		GameState fireState = FindState("FireWrestlerState");
-		fireState.SetTransition("FINISHED", PopState);
-		PushState (fireState);
+		GameState fireState = StateMachine.FindState("FireWrestlerState");
+		fireState.SetTransition("FINISHED", StateMachine.PopState);
+		StateMachine.PushState (fireState);
 	}
 
 	void SetIdleState() {
-		ReplaceState(FindState("IdleGameState"));
+		StateMachine.ReplaceState("IdleGameState");
 	}
 
 	public int GetPhase() {
@@ -317,6 +266,10 @@ public class GameManager : MonoBehaviour {
 		return playerCompany;
 	}
 
+	public GameStateMachine StateMachine {
+		get { return stateMachine; }
+	}
+
 	public void OnWrestlingEventUpdated() {
 		GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);
 	}
@@ -344,35 +297,35 @@ public class GameManager : MonoBehaviour {
 	}
 
 	// Phase 0 callbacks
-	void OnFinishedPhase0Step() {
+	void NextPhase0Step() {
 		GameState nextState = null;
 
-		switch (stateStack.Peek().name) {
+		switch (StateMachine.CurrentState.name) {
 		case "NameCompanyGameState":
 			CompanyManager.Instance.AddCompany(playerCompany);
 			UpdatePhase(); // Update the phase now to set the player's money, etc. and save the player so that the un-named players don't get saved.
 
-			nextState = FindState ("Phase0IntroGameState");
-			nextState.SetTransition("FINISHED", OnFinishedPhase0Step);
+			nextState = StateMachine.FindState ("Phase0IntroGameState");
+			nextState.SetTransition("FINISHED", NextPhase0Step);
 			break;
 		case "Phase0IntroGameState":
-			nextState = FindState ("HireWrestlersState");
-			nextState.SetTransition("FINISHED", OnFinishedPhase0Step);
+			nextState = StateMachine.FindState ("HireWrestlersState");
+			nextState.SetTransition("FINISHED", NextPhase0Step);
 			break;
 		case "HireWrestlersState":
-			nextState = FindState ("Phase0CreateEventIntroState");
-			nextState.SetTransition("FINISHED", OnFinishedPhase0Step);
+			nextState = StateMachine.FindState ("Phase0CreateEventIntroState");
+			nextState.SetTransition("FINISHED", NextPhase0Step);
 			break;
 		case "Phase0CreateEventIntroState":
-			nextState = FindState ("IdleGameState");
+			nextState = StateMachine.FindState ("IdleGameState");
 			break;
 		default:
-			Debug.Log ("Phase 0 state '" + stateStack.Peek().name + "' not recognized.");
+			Debug.Log ("Phase 0 state '" + StateMachine.CurrentState.name + "' not recognized.");
 			break;
 		}
 
 		if (nextState != null) {
-			ReplaceState (nextState);
+			StateMachine.ReplaceState (nextState);
 		}
 	}
 
@@ -385,11 +338,11 @@ public class GameManager : MonoBehaviour {
 		currentEvent = Instantiate(wrestlingEventPrefab) as WrestlingEvent;
 		GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);
 		
-		GameState startState = FindState("ChooseEventTypeGameState");
+		GameState startState = StateMachine.FindState("ChooseEventTypeGameState");
 		startState.SetTransition("EventTypeChosen", OnFinishedEventCreationStep);
 		startState.SetTransition("NoEventsAvailable", OnCancelEventCreate);
 		startState.SetTransition("Cancel", OnCancelEventCreate);
-		PushState(startState);
+		StateMachine.PushState(startState);
 	}
 	
 	void OnCancelEventCreate() {
@@ -397,7 +350,7 @@ public class GameManager : MonoBehaviour {
 			GameObject.Destroy(currentEvent.gameObject);
 			GetGUIManager().GetStatusPanel().UpdateEventStatus(currentEvent);
 		}
-		PopState();
+		StateMachine.PopState();
 	}
 
 	void OnFinishedEventCreationStep() {
@@ -406,62 +359,62 @@ public class GameManager : MonoBehaviour {
 		bool waitBetweenStates = true;
 		float delayTime = stateChangeDelay;
 		
-		switch (stateStack.Peek().name) {
+		switch (StateMachine.CurrentState.name) {
 		case "ChooseEventTypeGameState":
-			nextState = FindState("NameEventGameState");
+			nextState = StateMachine.FindState("NameEventGameState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
 			waitBetweenStates = false;
 			break;
 		case "NameEventGameState":
-			nextState = FindState("ChooseVenueGameState");
+			nextState = StateMachine.FindState("ChooseVenueGameState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
 			waitBetweenStates = false;
 			break;
 		case "ChooseVenueGameState":
-			nextState = FindState("ConfirmState", "SellTicketsPostVenue");
+			nextState = StateMachine.FindState("ConfirmState", "SellTicketsPostVenue");
 			((ConfirmState)nextState).Initialize("Sell some tickets!", string.Format("Alright, we'll get the word out that we're going to be holding an event at {0}! That should sell some tickets.", currentEvent.EventVenue.venueName), OnFinishedEventCreationStep);
 			waitBetweenStates = false;
 			break;
 		case "SellTicketsPostVenue":
-			nextState = FindState("ChooseMatchesGameState");
+			nextState = StateMachine.FindState("ChooseMatchesGameState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
 			break;
 		case "ChooseMatchesGameState":
-			nextState = FindState("ConfirmState", "SellTicketsPostMatches");
+			nextState = StateMachine.FindState("ConfirmState", "SellTicketsPostMatches");
 			((ConfirmState)nextState).Initialize("Sell some tickets!", "Now that the card is ready to go, let's get out there and some sell tickets!", OnFinishedEventCreationStep);
 			waitBetweenStates = false;
 			break;
 		case "SellTicketsPostMatches":
-			nextState = FindState("SellTicketsState");
+			nextState = StateMachine.FindState("SellTicketsState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
 			break;
 		case "SellTicketsState":
-			nextState = FindState("RunEventState");
+			nextState = StateMachine.FindState("RunEventState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
 			waitBetweenStates = false;
 			break;
 		case "RunEventState":
-			nextState = FindState("EventFinishedState");
+			nextState = StateMachine.FindState("EventFinishedState");
 			nextState.SetTransition("FINISHED", OnFinishedEventCreationStep);
 			waitBetweenStates = false;
 			break;
 		case "EventFinishedState":
-			PopState ();
+			StateMachine.PopState ();
 
 			OnEventFinished();
 			UpdatePhase();
 			break;
 		default:
-			Debug.LogError ("Event creation state '" + stateStack.Peek().name + "' not recognized.");
+			Debug.LogError ("Event creation state '" + StateMachine.CurrentState.name + "' not recognized.");
 			break;
 		}
 		
 		if (nextState != null) {
 			if (waitBetweenStates) {
-				ReplaceState(GetDelayedGameState(nextState, canSellTickets, delayTime));
+				StateMachine.ReplaceState(GetDelayedGameState(nextState, canSellTickets, delayTime));
 			}
 			else {
-				ReplaceState(nextState);
+				StateMachine.ReplaceState(nextState);
 			}
 		}
 	}

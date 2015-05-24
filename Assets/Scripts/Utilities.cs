@@ -24,4 +24,30 @@ public class Utilities : MonoBehaviour {
 			return "E";
 		}
 	}
+
+
+	public static float RangeFromPercentage(float percentage, Vector2 range) {
+		return percentage * (range.y - range.x) + range.x;
+	}
+
+	public static int RandomRangeInt(Vector2 range) {
+		return Random.Range ((int)range.x, (int)range.y);
+	}
+	
+	public static float RandomRange(Vector2 range) {
+		return Random.Range (range.x, range.y);
+	}
+
+	public static float Fuzzify(float value, float fuzziness) {
+		return value + Random.Range(-fuzziness, fuzziness);
+	}
+
+	public static float RangePercentage(float value, Vector2 range) {
+		if (float.Epsilon >= Mathf.Abs(range.y - range.x)) {
+			return 1f;
+		}
+		else {
+			return (value - range.x) / (range.y - range.x);
+		}
+	}
 }

@@ -31,8 +31,8 @@ public class RunEventState : GameState {
 
 		// These weights should all add up to 1.0f
 		float matchTypeWeight = 0.1f;
-		float matchFinishWeight = 0.3f;
-		float matchWrestlerPerformanceWeight = 0.6f;
+		float matchFinishWeight = 0.4f;
+		float matchWrestlerPerformanceWeight = 0.5f;
 
 		float matchTypeRating = currentEvent.EventVenue.GetMatchTypePreference(match.type);
 		float matchFinishRating = currentEvent.EventVenue.GetMatchFinishPreference(match.finish);

@@ -25,7 +25,7 @@ public class CompanyGenerator {
 		string name = GenerateName();
 
 		int maxRosterSize = MaxRosterSize(phase);
-		float money = RandomRange (moneyRange[phase]);
+		float money = Utilities.RandomRange (moneyRange[phase]);
 
 		List<Wrestler> roster = new List<Wrestler>(); // @TODO Add wrestlers if necessary
 		bool isInAlliance = (Random.Range (0, 2) == 0) ? true : false;
@@ -33,20 +33,12 @@ public class CompanyGenerator {
 		company.Initialize(name, money, maxRosterSize, phase, roster, isInAlliance);
 
 		// Since popularity is a calculated value and not a stored one, fudge it by creating a dummy event with the desired rating.
-		float popularity = RandomRange (popularityRange[phase]);
+		float popularity = Utilities.RandomRange (popularityRange[phase]);
 		HistoricalWrestlingEvent wrestlingEvent = new HistoricalWrestlingEvent();
 		wrestlingEvent.Initialize(name + "-event0", 0, 0, "<dummy>", "<dummy>", 0f, popularity);
 		company.AddEvent(wrestlingEvent);
 	}
-	
-	int RandomRangeInt(Vector2 range) {
-		return Random.Range ((int)range.x, (int)range.y);
-	}
-	
-	float RandomRange(Vector2 range) {
-		return Random.Range (range.x, range.y);
-	}
-	
+
 	string GenerateName() {
 		// Probabilities for the type of name to generate. Should add up to one to make the actual probability match the percentages, but not required.
 		float threeInitialProb = 0.75f;

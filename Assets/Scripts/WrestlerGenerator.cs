@@ -17,10 +17,10 @@ public class WrestlerGenerator {
 		LoadWrestlerNames(wrestlerNameFilename);
 
 		perMatchCostRange.Clear();
-		perMatchCostRange.Add (new Vector2(500, 1000));
-		perMatchCostRange.Add (new Vector2(2000, 10000));
-		perMatchCostRange.Add (new Vector2(12500, 50000));
-		perMatchCostRange.Add (new Vector2(50000, 100000));
+		perMatchCostRange.Add (new Vector2(100, 250));
+		perMatchCostRange.Add (new Vector2(500, 1500));
+		perMatchCostRange.Add (new Vector2(2500, 5000));
+		perMatchCostRange.Add (new Vector2(7500, 10000));
 
 		statRange.Clear();
 		statRange.Add (new Vector2(0.1f, 0.4f));
@@ -29,22 +29,22 @@ public class WrestlerGenerator {
 		statRange.Add (new Vector2(0.6f, 0.9f));
 
 		hiringCostRange.Clear();
-		hiringCostRange.Add (new Vector2(750, 1500));
-		hiringCostRange.Add (new Vector2(2000, 20000));
-		hiringCostRange.Add (new Vector2(35000, 100000));
-		hiringCostRange.Add (new Vector2(125000, 500000));
+		hiringCostRange.Add (new Vector2(100, 500));
+		hiringCostRange.Add (new Vector2(2000, 5000));
+		hiringCostRange.Add (new Vector2(10000, 25000));
+		hiringCostRange.Add (new Vector2(50000, 100000));
 	}
 
 	public void GenerateWrestler(Wrestler wrestler, int phase) {
 		string name = GenerateName();
 		string description = "";	// @TODO: Decide if this is still needed.
-		float perMatchCost = (float)RandomRangeInt(perMatchCostRange[phase]);
-		float popularity = RandomRange(statRange[phase]);
+		float perMatchCost = (float)Utilities.RandomRangeInt(perMatchCostRange[phase]);
+		float popularity = Utilities.RandomRange(statRange[phase]);
 		bool isHeel = (Random.Range (0, 2)) == 0 ? true : false;
-		float hiringCost = (float)RandomRangeInt(hiringCostRange[phase]);
-		float charisma = RandomRange(statRange[phase]);
-		float work = RandomRange(statRange[phase]);
-		float appearance = RandomRange(statRange[phase]);
+		float hiringCost = (float)Utilities.RandomRangeInt(hiringCostRange[phase]);
+		float charisma = Utilities.RandomRange(statRange[phase]);
+		float work = Utilities.RandomRange(statRange[phase]);
+		float appearance = Utilities.RandomRange(statRange[phase]);
 		
 		Dictionary<string, float> matchTypeAffinities = new Dictionary<string, float>();
 		foreach (WrestlingMatchType type in WrestlingMatchTypeManager.Instance.GetMatchTypes()) {
@@ -52,14 +52,6 @@ public class WrestlerGenerator {
 		}
 				
 		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
-	}
-
-	int RandomRangeInt(Vector2 range) {
-		return Random.Range ((int)range.x, (int)range.y);
-	}
-
-	float RandomRange(Vector2 range) {
-		return Random.Range (range.x, range.y);
 	}
 
 	void LoadWrestlerNames(string filename) {
