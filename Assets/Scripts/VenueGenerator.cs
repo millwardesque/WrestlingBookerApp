@@ -30,10 +30,10 @@ public class VenueGenerator {
 	public void GenerateVenue(Venue venue, int phase) {
 		string name = venue.venueName;
 		string description = venue.venueDescription;
-		int capacity = Utilities.RandomRangeInt(capacityRange[phase]);
+		int capacity = Utilities.ToNearestInt (Utilities.RandomRangeInt(capacityRange[phase]), 10);
 		float capacityPercentage = Utilities.Fuzzify(Utilities.RangePercentage(capacity, capacityRange[phase]), 0.2f);
 
-		float baseCost = Utilities.RangeFromPercentage(capacityPercentage, baseCostRange[phase]);
+		float baseCost = Utilities.ToNearest(Utilities.RangeFromPercentage(capacityPercentage, baseCostRange[phase]), 10f);
 		float gatePercentage = Utilities.RandomRange(gatePercentageRange[phase]);
 
 		float popularity = Random.Range (0f, 1f);

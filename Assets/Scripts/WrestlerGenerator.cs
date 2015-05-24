@@ -38,10 +38,10 @@ public class WrestlerGenerator {
 	public void GenerateWrestler(Wrestler wrestler, int phase) {
 		string name = GenerateName();
 		string description = "";	// @TODO: Decide if this is still needed.
-		float perMatchCost = (float)Utilities.RandomRangeInt(perMatchCostRange[phase]);
+		float perMatchCost = Utilities.ToNearest((float)Utilities.RandomRangeInt(perMatchCostRange[phase]), 10f);
 		float popularity = Utilities.RandomRange(statRange[phase]);
 		bool isHeel = (Random.Range (0, 2)) == 0 ? true : false;
-		float hiringCost = (float)Utilities.RandomRangeInt(hiringCostRange[phase]);
+		float hiringCost = Utilities.ToNearest((float)Utilities.RandomRangeInt(hiringCostRange[phase]), 10f);
 		float charisma = Utilities.RandomRange(statRange[phase]);
 		float work = Utilities.RandomRange(statRange[phase]);
 		float appearance = Utilities.RandomRange(statRange[phase]);

@@ -13,7 +13,7 @@ public class CompanyGenerator {
 		moneyRange.Add (new Vector2(18000, 180000));
 		moneyRange.Add (new Vector2(150000, 500000));
 		moneyRange.Add (new Vector2(500000, 10000000));
-		
+
 		popularityRange.Clear();
 		popularityRange.Add (new Vector2(0.1f, 0.4f));
 		popularityRange.Add (new Vector2(0.2f, 0.6f));
@@ -25,7 +25,7 @@ public class CompanyGenerator {
 		string name = GenerateName();
 
 		int maxRosterSize = MaxRosterSize(phase);
-		float money = Utilities.RandomRange (moneyRange[phase]);
+		float money = Utilities.ToNearest(Utilities.RandomRange (moneyRange[phase]), 10f);
 
 		List<Wrestler> roster = new List<Wrestler>(); // @TODO Add wrestlers if necessary
 		bool isInAlliance = (Random.Range (0, 2) == 0) ? true : false;

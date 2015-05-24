@@ -25,7 +25,6 @@ public class Utilities : MonoBehaviour {
 		}
 	}
 
-
 	public static float RangeFromPercentage(float percentage, Vector2 range) {
 		return percentage * (range.y - range.x) + range.x;
 	}
@@ -49,5 +48,13 @@ public class Utilities : MonoBehaviour {
 		else {
 			return (value - range.x) / (range.y - range.x);
 		}
+	}
+
+	public static float ToNearest(float value, float nearestValue) {
+		return Mathf.Round (value / nearestValue) * nearestValue;
+	}
+
+	public static int ToNearestInt(int value, int nearestValue) {
+		return (int)Mathf.Round ((float)value / (float)nearestValue) * nearestValue;
 	}
 }
