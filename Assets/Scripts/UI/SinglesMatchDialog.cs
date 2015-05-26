@@ -7,7 +7,8 @@ using System.Collections.Generic;
 public class SinglesMatchDialog : UIDialog {
 	public SelectOptionControl wrestler1Control;
 	public SelectOptionControl wrestler2Control;
-	
+	public Text matchCostTotal;
+
 	void Start() {
 		if (wrestler1Control == null) {
 			LogStartError("Wrestler 1 select control isn't set");
@@ -15,6 +16,10 @@ public class SinglesMatchDialog : UIDialog {
 
 		if (wrestler2Control == null) {
 			LogStartError("Wrestler 2 select control isn't set");
+		}
+
+		if (matchCostTotal == null) {
+			LogStartError ("Match Cost Summary isn't set");
 		}
 	}
 	
@@ -26,6 +31,7 @@ public class SinglesMatchDialog : UIDialog {
 		OnWrestler1Changed(true); // Manually trigger the functionality to make sure wrestler 2 can't be set to wrestler 1
 		OnWrestler2Changed(true); // Manually trigger the functionality to make sure wrestler 1 can't be set to wrestler 2
 
+		UpdateMatchCost();
 		wrestler1Control.AddChangeListener(new UnityAction<bool>(OnWrestler1Changed));
 		wrestler2Control.AddChangeListener(new UnityAction<bool>(OnWrestler2Changed));
 	}
@@ -35,6 +41,8 @@ public class SinglesMatchDialog : UIDialog {
 		if (isOn) {
 			wrestler2Control.DisableOption(GetWrestler1().name, true);
 		}
+
+		UpdateMatchCost();
 	}
 
 	public void OnWrestler2Changed(bool isOn) {
@@ -42,6 +50,7 @@ public class SinglesMatchDialog : UIDialog {
 		if (isOn) {
 			wrestler1Control.DisableOption(GetWrestler2().name, true);
 		}
+		UpdateMatchCost();
 	}
 	
 	public SelectOptionDialogOption GetWrestler1() {
@@ -50,5 +59,17 @@ public class SinglesMatchDialog : UIDialog {
 
 	public SelectOptionDialogOption GetWrestler2() {
 		return wrestler2Control.GetSelectedOption();
+	}
+
+	void UpdateMatchCost() {
+		if (GetWrestler1 () != null && GetWrestler2 () != null) {
+			float matchCost = 0f;
+			matchCost += GameManager.Instance.GetPlayerCompany().GetRoster().Find( x => x.wrestlerName == GetWrestler1().name ).perMatchCost;
+			matchCost += GameManager.Instance.GetPlayerCompany().GetRoster().Find( x => x.wrestlerName == GetWrestler2().name ).perMatchCost;
+			matchCostTotal.text = string.Format("Match cost: ${0}", matchCost);
+		}
+		else {
+			matchCostTotal.text = "Match cost: ?";
+		}
 	}
 }

@@ -25,6 +25,7 @@ public class EventFinishedState : GameState {
 					// @TODO Calculate merch sales.
 
 					wrestler.AddUsedMatchType(match.type);
+					wrestler.AddUsedMatchFinish(match.finish);
 				}
 			}
 
@@ -47,21 +48,20 @@ public class EventFinishedState : GameState {
 		gameManager.OnCompanyUpdated();
 
 		InfoDialog dialog = gameManager.GetGUIManager().InstantiateInfoDialog();
-		string reportText = string.Format("{0}\n{1} tickets @ ${2} = ${3}\n{4} costs: -${5}\nVenue: -${6}\nTalent: -${7}\n{8} buys = ${9}\nTotal profit = ${10}\n\nOverall rating: {11} / 10", 
-		                                  wrestlingEvent.eventName,
+		string reportText = string.Format("{0} tickets @ ${1} = ${2}\n{3} buys = ${4}\n\n{5} costs: -${6}\nVenue: -${7}\nTalent: -${8}\n\nTotal profit: ${9}\n\nOverall rating: {10} / 10", 
 		                                  wrestlingEvent.TicketsSold,
 		                                  wrestlingEvent.ticketPrice,
 		                                  ticketRevenue,
 		                                  wrestlingEvent.Type.typeName,
-		                                  eventTypeCost,
-		                                  venueCost,
-		                                  talentCost,
-		                                  wrestlingEvent.Type.typeName,
 		                                  (tvAdSales > 0 ? tvAdSales : ppvSales),
-		                                  wrestlingEvent.revenue,
+		                                  wrestlingEvent.Type.typeName,
+		                                  eventTypeCost,
+		                                  Mathf.RoundToInt(venueCost),
+		                                  talentCost,
+		                                  Mathf.RoundToInt (wrestlingEvent.revenue),
 		                                  Mathf.RoundToInt(wrestlingEvent.Rating * 10.0f)
 		                                 );
-		dialog.Initialize("Event Report", reportText, new UnityAction(OnAcknowledgeReport));
+		dialog.Initialize(string.Format ("Event Report: {0}", wrestlingEvent.eventName), reportText, new UnityAction(OnAcknowledgeReport));
 	}
 
 	void OnAcknowledgeReport() {

@@ -9,7 +9,7 @@ public class GameInfoPanel : MonoBehaviour {
 
 	public void UpdateCompanyStatus(Company company) {
 		this.companyName.text = company.companyName;
-		this.companyMoney.text = string.Format ("${0}", company.money);
+		this.companyMoney.text = string.Format ("${0}", Mathf.Round(company.money));
 	}
 
 	public void UpdateTime(TimeManager timeManager) {

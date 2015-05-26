@@ -126,7 +126,19 @@ public class ChooseMatchesGameState : GameState {
 				localPreferenceString = Utilities.AlphaRating(localPreference);
 			}
 
-			string matchFinishDescription = string.Format("Local popularity: {0}\n{1}", localPreferenceString, matchFinish.description);
+			bool showWrestlerEffectiveness = true;
+			float wrestlerEffectiveness = 0;
+			foreach (Wrestler wrestler in match.Participants) {
+				wrestlerEffectiveness += wrestler.GetMatchFinishAffinity(matchFinish) / match.ParticipantCount;
+				
+				if (!wrestler.HasUsedMatchFinish(matchFinish)) {
+					showWrestlerEffectiveness = false;
+					break;
+				}
+			}
+			string wrestlerEffectivenessString = (showWrestlerEffectiveness ? Utilities.AlphaRating(wrestlerEffectiveness) : "??");
+
+			string matchFinishDescription = string.Format("Local popularity: {0}\nWrestler effectiveness: {1}\n{2}", localPreferenceString, wrestlerEffectivenessString, matchFinish.description);
 			matchFinishOptions.Add(new SelectOptionDialogOption(matchFinish.finishName, localPreferenceString, matchFinishDescription));
 		}
 		

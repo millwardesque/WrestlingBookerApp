@@ -22,7 +22,9 @@ public class ES2UserType_Wrestler : ES2Type
 		writer.Write(data.work);
 		writer.Write(data.appearance);
 		writer.Write(data.matchTypeAffinities);
+		writer.Write(data.matchFinishAffinities);
 		writer.Write(data.usedMatchTypes);
+		writer.Write(data.usedMatchFinishes);
 
 	}
 	
@@ -42,7 +44,9 @@ public class ES2UserType_Wrestler : ES2Type
 		data.work = reader.Read<System.Single>();
 		data.appearance = reader.Read<System.Single>();
 		data.matchTypeAffinities = reader.ReadDictionary<System.String,System.Single>();
+		data.matchFinishAffinities = reader.ReadDictionary<System.String,System.Single>();
 		data.usedMatchTypes = reader.ReadList<System.String>();
+		data.usedMatchFinishes = reader.ReadList<System.String>();
 
 	}
 	

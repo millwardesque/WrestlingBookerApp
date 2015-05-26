@@ -54,15 +54,14 @@ public class RunEventState : GameState {
 		}
 
 		string matchReport = "";
-		matchReport += match.VersusString() + "\n";
-		matchReport += GetFanPerformanceReview(wrestlerPerformanceRating) + "\n";
 		matchReport += GetFanMatchTypeReview(matchTypeRating) + "\n";
+		matchReport += GetFanPerformanceReview(wrestlerPerformanceRating) + "\n";
 		matchReport += GetFanFinishReview(matchFinishRating) + "\n";
-		matchReport += GetFanMatchReview(match.rating) + "\n";
+		matchReport += "\n" + GetFanMatchReview(match.rating) + "\n";
 
 		// Note: currentMatchIndex is used as-is in the dialog title because it's already been incremented, eliminating the need to add one to eliminate zero-indexing confusion.
 		matchDialog = gameManager.GetGUIManager ().InstantiateInfoSliderDialog();
-		matchDialog.Initialize("Match #" + currentMatchIndex, matchReport, "", 0f, 1f, match.rating, 1f, (currentMatchIndex < matches.Count ? new UnityAction(ProcessNextMatch) : new UnityAction(FinishedRunningEvent)));
+		matchDialog.Initialize(match.VersusString(), matchReport, "", 0f, 1f, match.rating, 1f, (currentMatchIndex < matches.Count ? new UnityAction(ProcessNextMatch) : new UnityAction(FinishedRunningEvent)));
 	}
 
 	void FinishedRunningEvent() {
@@ -72,11 +71,17 @@ public class RunEventState : GameState {
 	string GetFanMatchTypeReview(float rating) {
 		string review = "";
 
-		if (rating > 0.7) {
-			review = "They really like this type of match.";
+		if (rating > 0.9) {
+			review = "They love this type of match.";
+		}
+		else if (rating > 0.7) {
+			review = "This type of match was well-received by the crowd.";
 		}
 		else if (rating > 0.5) {
 			review = "They seemed fine with the type of match.";
+		}
+		else if (rating > 0.3) {
+			review = "The crowd didn't seem to interested by the type of match.";
 		}
 		else {
 			review = "They didn't care for this type of match at all.";
@@ -88,11 +93,17 @@ public class RunEventState : GameState {
 	string GetFanFinishReview(float rating) {
 		string review = "";
 		
-		if (rating > 0.7) {
+		if (rating > 0.9) {
 			review = "The finish for this match seemed to really ignite the crowd.";
+		}
+		else if (rating > 0.7) {
+			review = "The crowd dug the match finish.";
 		}
 		else if (rating > 0.5) {
 			review = "The response to the finish was alright.";
+		}
+		else if (rating > 0.3) {
+			review = "The finish didn't really a get a reaction.";
 		}
 		else {
 			review = "They seemed to hate the finish.";
@@ -103,11 +114,17 @@ public class RunEventState : GameState {
 
 	string GetFanPerformanceReview(float rating) {
 		string review = "";
-		if (rating > 0.7) {
+		if (rating > 0.9) {
 			review = "The audience really loved the performance the wrestlers put on.";
+		}
+		else if (rating > 0.7) {
+			review = "There were some definite edge-of-the-seat moments here.";
 		}
 		else if (rating > 0.5) {
 			review = "The audience were interested for most of the match.";
+		}
+		else if (rating > 0.3) {
+			review = "The match had a couple of good spots, but was mostly forgettable.";
 		}
 		else {
 			review = "The audience seemed pretty unimpressed with the wrestlers' performance.";
@@ -119,13 +136,16 @@ public class RunEventState : GameState {
 	string GetFanMatchReview(float rating) {
 		string review = "";
 		if (rating >= 0.9) {
-			review = "In their eyes, this is a match-of-the-year candidate!.";
+			review = "This is a match-of-the-year candidate!.";
 		}
 		else if (rating > 0.7) {
-			review = "This was a great match, they definitely enjoyed it.";
+			review = "This was a great match, the crowd loved it.";
 		}
 		else if (rating > 0.5) {
-			review = "They seem content with this match.";
+			review = "The crowd seems content with this match.";
+		}
+		else if (rating > 0.3) {
+			review = "There were some definite flaws, but the crowd liked some of it.";
 		}
 		else {
 			review = "They hated this match. A real stinker.";

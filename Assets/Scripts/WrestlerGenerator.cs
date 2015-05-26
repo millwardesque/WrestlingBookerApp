@@ -38,20 +38,34 @@ public class WrestlerGenerator {
 	public void GenerateWrestler(Wrestler wrestler, int phase) {
 		string name = GenerateName();
 		string description = "";	// @TODO: Decide if this is still needed.
-		float perMatchCost = Utilities.ToNearest((float)Utilities.RandomRangeInt(perMatchCostRange[phase]), 10f);
-		float popularity = Utilities.RandomRange(statRange[phase]);
-		bool isHeel = (Random.Range (0, 2)) == 0 ? true : false;
-		float hiringCost = Utilities.ToNearest((float)Utilities.RandomRangeInt(hiringCostRange[phase]), 10f);
+
 		float charisma = Utilities.RandomRange(statRange[phase]);
 		float work = Utilities.RandomRange(statRange[phase]);
 		float appearance = Utilities.RandomRange(statRange[phase]);
-		
+		float popularity = Utilities.RandomRange(statRange[phase]);
+		float percentage = Utilities.RangePercentage(charisma, statRange[phase]) + 
+			Utilities.RangePercentage(work, statRange[phase]) + 
+			Utilities.RangePercentage(appearance, statRange[phase]) + 
+			Utilities.RangePercentage(popularity, statRange[phase]);
+		percentage /= 4f;
+		percentage = Utilities.Fuzzify(percentage, 0.2f);
+
+		float perMatchCost = Utilities.ToNearest(Utilities.RangeFromPercentage(percentage, perMatchCostRange[phase]), 10f);
+		float hiringCost = Utilities.ToNearest(Utilities.RangeFromPercentage(percentage, hiringCostRange[phase]), 10f);
+
+		bool isHeel = (Random.Range (0, 2)) == 0 ? true : false;
+
 		Dictionary<string, float> matchTypeAffinities = new Dictionary<string, float>();
 		foreach (WrestlingMatchType type in WrestlingMatchTypeManager.Instance.GetMatchTypes()) {
 			matchTypeAffinities.Add(type.typeName, Random.Range (0f, 1f));
 		}
+
+		Dictionary<string, float> matchFinishAffinities = new Dictionary<string, float>();
+		foreach (WrestlingMatchFinish finish in WrestlingMatchFinishManager.Instance.GetMatchFinishes()) {
+			matchFinishAffinities.Add(finish.finishName, Random.Range (0f, 1f));
+		}
 				
-		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities);
+		wrestler.Initialize(name, description, perMatchCost, popularity, isHeel, hiringCost, phase, charisma, work, appearance, matchTypeAffinities, matchFinishAffinities);
 	}
 
 	void LoadWrestlerNames(string filename) {

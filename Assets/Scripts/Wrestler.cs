@@ -15,9 +15,11 @@ public class Wrestler : MonoBehaviour {
 	public float work;
 	public float appearance;
 	public Dictionary<string, float> matchTypeAffinities;
+	public Dictionary<string, float> matchFinishAffinities;
 	public List<string> usedMatchTypes = new List<string>();
+	public List<string> usedMatchFinishes = new List<string>();
 
-	public void Initialize(string wrestlerName, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities) {
+	public void Initialize(string wrestlerName, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities, Dictionary<string, float> matchFinishAffinities) {
 		this.id = GetInstanceID().ToString();
 		this.wrestlerName = wrestlerName;
 		this.name = name;
@@ -31,6 +33,7 @@ public class Wrestler : MonoBehaviour {
 		this.work = work;
 		this.appearance = appearance;
 		this.matchTypeAffinities = matchTypeAffinities;
+		this.matchFinishAffinities = matchFinishAffinities;
 	}
 
 	public float GetMatchTypeAffinity(WrestlingMatchType matchType) {
@@ -38,13 +41,23 @@ public class Wrestler : MonoBehaviour {
 			return matchTypeAffinities[matchType.typeName];
 		}
 		else {
-			return 0.5f;
+			return 0f;
+		}
+	}
+
+	public float GetMatchFinishAffinity(WrestlingMatchFinish matchFinish) {
+		if (matchFinishAffinities.ContainsKey(matchFinish.finishName)) {
+			return matchFinishAffinities[matchFinish.finishName];
+		}
+		else {
+			return 0f;
 		}
 	}
 
 	public string DescriptionWithStats {
 		get {
-			return string.Format ("Match Cost: ${0}\nWork: {1}\nCharisma: {2}\n{3}", perMatchCost, Utilities.AlphaRating(work), Utilities.AlphaRating(charisma), description);
+			return string.Format ("Per-match Cost: ${0}\nWork: {1}\nCharisma: {2}\nPopularity: {3}\nAppearance: {4}\nAlignment: {5}\n{6}", 
+			                      perMatchCost, Utilities.AlphaRating(work), Utilities.AlphaRating(charisma), Utilities.AlphaRating(appearance), Utilities.AlphaRating(popularity), (isHeel ? "Heel" : "Babyface"), description);
 		}
 	}
 
@@ -54,10 +67,23 @@ public class Wrestler : MonoBehaviour {
 			Save ();
 		}
 	}
+
+	public void AddUsedMatchFinish(WrestlingMatchFinish finish) {
+		if (!HasUsedMatchFinish(finish)) {
+			usedMatchFinishes.Add(finish.finishName);
+			Save ();
+		}
+	}
+
 	
 	public bool HasUsedMatchType(WrestlingMatchType type) {
 		return (null != usedMatchTypes.Find ( x => x == type.typeName));
 	}
+
+	public bool HasUsedMatchFinish(WrestlingMatchFinish finish) {
+		return (null != usedMatchFinishes.Find ( x => x == finish.finishName));
+	}
+
 
 	public void Save() {
 		string wrestlerLocation = WrestlerManager.Instance.WrestlerFilename + "?tag=" + id;
