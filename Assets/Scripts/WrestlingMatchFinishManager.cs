@@ -38,7 +38,18 @@ public class WrestlingMatchFinishManager : MonoBehaviour {
 				string name = finish["name"];
 				string description = finish["description"];
 				int phase = finish["phase"].AsInt;
-				CreateWrestlingMatchFinish(name, description, phase);
+
+				List<WrestlingMatchType> incompatibleMatchTypes = new List<WrestlingMatchType>();
+				var incompatibleMatchTypeNames = finish["incompatible_match_types"].AsArray;
+				for (int i = 0; i < incompatibleMatchTypeNames.Count; ++i) {
+					string typeName = incompatibleMatchTypeNames[i];
+					WrestlingMatchType type = WrestlingMatchTypeManager.Instance.GetMatchType(typeName);
+					if (type != null) {
+						incompatibleMatchTypes.Add(type);
+					}
+				}
+
+				CreateWrestlingMatchFinish(name, description, phase, incompatibleMatchTypes);
 			}
 		}
 		else {
@@ -53,10 +64,14 @@ public class WrestlingMatchFinishManager : MonoBehaviour {
 	public List<WrestlingMatchFinish> GetMatchFinishes(int phase) {
 		return matchFinishes.FindAll( x => x.phase <= phase);
 	}
+
+	public List<WrestlingMatchFinish> GetCompatibleMatchFinishes(int phase, WrestlingMatchType matchType) {
+		return matchFinishes.FindAll ( x => (x.phase <= phase && x.IsCompatibleWithMatchType(matchType)) );
+	}
 	
-	public WrestlingMatchFinish CreateWrestlingMatchFinish(string name, string description, int phase) {
+	public WrestlingMatchFinish CreateWrestlingMatchFinish(string name, string description, int phase, List<WrestlingMatchType> incompatibleMatchTypes) {
 		WrestlingMatchFinish matchFinish = new WrestlingMatchFinish();
-		matchFinish.Initialize(name, description, phase);
+		matchFinish.Initialize(name, description, phase, incompatibleMatchTypes);
 		matchFinishes.Add (matchFinish);
 		return matchFinish;
 	}

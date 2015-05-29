@@ -116,7 +116,7 @@ public class ChooseMatchesGameState : GameState {
 
 	List<SelectOptionDialogOption> GetAvailableMatchFinishes() {
 		List<SelectOptionDialogOption> matchFinishOptions = new List<SelectOptionDialogOption>();
-		matchFinishes = gameManager.GetMatchFinishManager().GetMatchFinishes(gameManager.GetPhase());
+		matchFinishes = gameManager.GetMatchFinishManager().GetCompatibleMatchFinishes(gameManager.GetPhase(), match.type);
 		
 		foreach (WrestlingMatchFinish matchFinish in matchFinishes) {
 

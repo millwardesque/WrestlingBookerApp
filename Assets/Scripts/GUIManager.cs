@@ -140,6 +140,11 @@ public class GUIManager : MonoBehaviour {
 		HideMenu();
 		gameManager.CreateNewEventAttempt();
 	}
+	
+	public void OnTrainWrestlersClick() {
+		HideMenu();
+		gameManager.TrainWrestlers();
+	}
 
 	public void OnHireWrestlersClick() {
 		HideMenu();

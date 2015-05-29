@@ -200,6 +200,12 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void TrainWrestlers() {
+		GameState trainState = StateMachine.FindState("TrainWrestlersState");
+		trainState.SetTransition("FINISHED", StateMachine.PopState);
+		StateMachine.PushState (trainState);
+	}
+
 	public void HireWrestlers() {
 		GameState hireState = StateMachine.FindState("HireWrestlersState");
 		hireState.SetTransition("FINISHED", StateMachine.PopState);
