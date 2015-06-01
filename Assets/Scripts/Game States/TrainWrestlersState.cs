@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +10,9 @@ public class TrainWrestlersState : GameState {
 
 	List<Wrestler> roster;
 	Wrestler selectedWrestler;
+
+	List<Training> trainingOptions;
+	Training selectedTraining;
 
 	public override void OnEnter (GameManager gameManager) {
 		ChooseWrestler();
@@ -27,6 +30,10 @@ public class TrainWrestlersState : GameState {
 	}
 
 	void OnTrainingChosen() {
+		selectedTraining = trainingOptions.Find( x => x.trainingName == trainingTypeDialog.GetSelectedOption().name );
+		selectedTraining.ApplyEffects(GameManager.Instance.GetPlayerCompany(), selectedWrestler);
+		GameManager.Instance.OnCompanyUpdated();
+
 		trainAnotherDialog = GameManager.Instance.GetGUIManager().InstantiateInfoDialog();
 		trainAnotherDialog.Initialize("Wrestler trained!", "You trained " + selectedWrestler.wrestlerName + "!\nWould you like to train another wrestler?", new UnityAction(ChooseWrestler), true, new UnityAction(DoneTraining), "Yes", "No");
 	}
@@ -46,11 +53,17 @@ public class TrainWrestlersState : GameState {
 	}
 
 	List<SelectOptionDialogOption> GetTrainingTypes() {
-		List<SelectOptionDialogOption> trainingOptions = new List<SelectOptionDialogOption>();
+		List<SelectOptionDialogOption> trainingTypeOptions = new List<SelectOptionDialogOption>();
 
-		trainingOptions.Add(new SelectOptionDialogOption("Study tapes", "$1000", "Work+\nCharisma+\n\nStudy tapes of old matches to see how the masters did it"));
-		trainingOptions.Add(new SelectOptionDialogOption("Vocal coaching", "$2500", "Charisma++\n\nGet better on the mic"));
+		trainingOptions = TrainingManager.Instance.GetTrainingOptions(GameManager.Instance.GetPhase());
+		foreach (Training training in trainingOptions) {
+			bool canUse = true;
+			if (training.cost > GameManager.Instance.GetPlayerCompany().money) {
+				canUse = false;
+			}
+			trainingTypeOptions.Add(new SelectOptionDialogOption(training.trainingName, string.Format("${0}", training.cost), training.description, canUse));
+		}
 
-		return trainingOptions;
+		return trainingTypeOptions;
 	}
 }

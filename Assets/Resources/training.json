@@ -1,0 +1,13 @@
+{
+	"training": [
+		{ "name": "Study tapes", "description": "Charisma+\n\nStudy tapes of old matches to see how the masters did it", "cost": 1000.0, "phase": 0, "effects": [
+			{ "attribute": "work", "min": 0.1, "max": 0.1 }
+		]},
+		{ "name": "Voice coaching", "description": "Charisma+\n\nWork with an expert to improve your mic work", "cost": 1000.0, "phase": 0, "effects": [
+			{ "attribute": "charisma", "min": 0.01, "max": 0.02 }
+		]},
+		{ "name": "Gym workout", "description": "Appearance+\nHit the gym to boost your appearance", "cost": 1000.0, "phase": 0, "effects": [
+			{ "attribute": "appearance", "min": 0.01, "max": 0.02 }
+		]}
+	]
+}
