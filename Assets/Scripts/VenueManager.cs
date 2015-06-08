@@ -12,7 +12,7 @@ public class VenueManager : MonoBehaviour {
 	public static VenueManager Instance;
 
 	public string VenueFilename {
-		get { return GameManager.Instance.GameID + ".venues"; }
+		get { return SavedGameManager.Instance.CurrentGameID + ".venues"; }
 	}
 
 	// Use this for initialization
@@ -146,11 +146,16 @@ public class VenueManager : MonoBehaviour {
 		return venues;
 	}
 
+	public void SaveData() {
+		foreach (Venue venue in venues) {
+			venue.Save();
+		}
+	}
+
 	public Venue CreateVenue(string name, string description, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences, int phase, string unlockableMatchType) {
 		Venue venue = Instantiate(venuePrefab) as Venue;
 		venue.transform.SetParent(transform, false);
 		venue.Initialize(name, description, baseCost, gatePercentage, capacity, popularity, matchTypePreferences, matchFinishPreferences, phase, unlockableMatchType);
-		venue.Save();
 		venues.Add (venue);
 
 		return venue;

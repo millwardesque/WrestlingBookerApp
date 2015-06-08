@@ -69,12 +69,8 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public string GameID {
-		get { return "1"; }
-	}
-
-	string PlayerFilename {
-		get { return GameID + ".game?tag=player"; }
+	public string PlayerFilename {
+		get { return SavedGameManager.Instance.CurrentGameID + ".game?tag=player"; }
 	}
 
 	void Start()  {
@@ -143,15 +139,16 @@ public class GameManager : MonoBehaviour {
 		return waitState;
 	}
 
-	public void ClearSavedData() {
-		ES2.Delete(PlayerFilename);
-		CompanyManager.Instance.ClearSavedData();
-		VenueManager.Instance.ClearSavedData();
-		WrestlerManager.Instance.ClearSavedData();
-
+	public void RestartGame() {
+		SavedGameManager.Instance.ClearSavedGames();
+		SavedGameManager.Instance.ClearCurrentGame();
 		StartAtPhase0();
 	}
 
+	public void ClearSavedData() {
+		ES2.Delete(GameManager.Instance.PlayerFilename);
+	}
+		
 	public void UpdatePhase() {
 		if (GetPhase() == -1) {
 			float startingMoney = 10000.0f;
@@ -167,6 +164,7 @@ public class GameManager : MonoBehaviour {
 			}
 
 			OnCompanyUpdated();
+			SavedGameManager.Instance.SaveGame();
 		}
 		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 10) {
 			playerCompany.maxRosterSize = 6;
@@ -284,12 +282,11 @@ public class GameManager : MonoBehaviour {
 		if (playerCompany.companyName != playerCompany.name) {
 			playerCompany.name = playerCompany.companyName;
 		}
-		SavePlayer();
-
+		SavedGameManager.Instance.SaveGame();
 		GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
 	}
 
-	void SavePlayer() {
+	public void SaveData() {
 		playerCompany.Save();
 		ES2.Save(playerCompany.id, PlayerFilename);
 	}

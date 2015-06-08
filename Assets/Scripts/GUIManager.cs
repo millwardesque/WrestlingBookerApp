@@ -162,7 +162,7 @@ public class GUIManager : MonoBehaviour {
 	}
 
 	public void OnClearSavedClick() {
-		gameManager.ClearSavedData();
+		gameManager.RestartGame();
 	}
 
 	public StatusPanel GetStatusPanel() {

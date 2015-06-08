@@ -31,7 +31,7 @@ public class CompanyManager : MonoBehaviour {
 	}
 
 	public string CompanyFilename {
-		get { return GameManager.Instance.GameID + ".companies"; }
+		get { return SavedGameManager.Instance.CurrentGameID + ".companies"; }
 	}
 
 	bool LoadSavedCompanies() {
@@ -101,11 +101,16 @@ public class CompanyManager : MonoBehaviour {
 		return newCompany;
 	}
 
+	public void SaveData() {
+		foreach (Company company in companies) {
+			company.Save();
+		}
+	}
+
 	public void GenerateNewCompany(int phase) {
 		Company newCompany = GameObject.Instantiate(companyPrefab) as Company;
 		newCompany.transform.SetParent(transform, false);
 		companyGenerator.Generate(newCompany, phase);
-		newCompany.Save ();
 		companies.Add(newCompany);
 	}
 }

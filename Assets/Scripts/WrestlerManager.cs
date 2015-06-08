@@ -24,13 +24,14 @@ public class WrestlerManager : MonoBehaviour {
 	}
 
 	public void LoadWrestlers() {
+		Debug.Log (WrestlerFilename);
 		if (!LoadSavedWrestlers()) {
 			GenerateNewWrestlers();
 		}
 	}
 
 	public string WrestlerFilename {
-		get { return GameManager.Instance.GameID + ".wrestlers"; }
+		get { return SavedGameManager.Instance.CurrentGameID + ".wrestlers"; }
 	}
 
 	bool LoadSavedWrestlers() {
@@ -88,13 +89,18 @@ public class WrestlerManager : MonoBehaviour {
 	public void ClearSavedData() {
 		GenerateNewWrestlers();
 	}
+
+	public void SaveData() {
+		foreach (Wrestler wrestler in wrestlers) {
+			wrestler.Save();
+		}
+	}
 	
 	public void GenerateNewWrestler(int phase) {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
 		wrestlerGenerator.GenerateWrestler(wrestler, phase);
 		wrestler.name = wrestler.wrestlerName;
-		wrestler.Save ();
 		wrestlers.Add (wrestler);
 	}
 }

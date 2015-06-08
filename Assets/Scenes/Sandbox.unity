@@ -795,6 +795,52 @@ MonoBehaviour:
   m_PreferredHeight: 60
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+--- !u!1001 &545032400
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1185589934}
+    m_Modifications:
+    - target: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 128.58432
+      objectReference: {fileID: 0}
+    - target: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 198.055771
+      objectReference: {fileID: 0}
+    - target: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 2.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+  m_IsPrefabParent: 0
+--- !u!4 &545032401
+Transform:
+  m_PrefabParentObject: {fileID: 432424, guid: 891b812d9b58f4b77949515d78ebe37d, type: 2}
+  m_PrefabInternal: {fileID: 545032400}
 --- !u!1 &655946236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1511,6 +1557,7 @@ Transform:
   - {fileID: 1164226353}
   - {fileID: 445039799}
   - {fileID: 960714880}
+  - {fileID: 545032401}
   m_Father: {fileID: 0}
   m_RootOrder: 3
 --- !u!1 &1222468240
