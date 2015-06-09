@@ -69,38 +69,27 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public string PlayerFilename {
-		get { return SavedGameManager.Instance.CurrentGameID + ".game?tag=player"; }
+	public string GetPlayerFilename(string gameID) {
+		return gameID + ".game?tag=player";
 	}
 
 	void Start()  {
-		WrestlerManager.Instance.LoadWrestlers();
-		VenueManager.Instance.LoadVenues();
-
-		// Load companies after wrestlers so that the rosters can be constructed properly.
-		CompanyManager.Instance.LoadCompanies();
-	
-		// Load the company.
-		if (ES2.Exists(PlayerFilename)) {
-			string playerID = ES2.Load<string> (PlayerFilename);
-			playerCompany = CompanyManager.Instance.GetCompany (playerID);
-
-			if (playerCompany != null) {
-				GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
-				StateMachine.ReplaceState("IdleGameState");
-			}
-			else {
-				Debug.LogError("Error: Unable to load player company with ID '" + playerID + "': No such company exists.");
-				StartAtPhase0();
-			}
+		string levelToLoadKey = "levelToLoad";
+		bool loadedGame = false;
+		if (PlayerPrefs.HasKey (levelToLoadKey)) {
+			string gameID = PlayerPrefs.GetString(levelToLoadKey);
+			PlayerPrefs.DeleteKey(levelToLoadKey);
+			SavedGameManager.Instance.Load (gameID);
+			loadedGame = true;
 		}
-		else {
+
+		if (!loadedGame) {
+			SavedGameManager.Instance.CreateNewGame();
 			StartAtPhase0();
 		}
 	}
 
 	void StartAtPhase0() {
-		playerCompany = CompanyManager.Instance.CreateCompany ();
 		GameState startState = StateMachine.FindState ("NameCompanyGameState");
 		startState.SetTransition("FINISHED", NextPhase0Step);
 		StateMachine.ReplaceState (startState);
@@ -140,13 +129,10 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void RestartGame() {
-		SavedGameManager.Instance.ClearSavedGames();
-		SavedGameManager.Instance.ClearCurrentGame();
-		StartAtPhase0();
-	}
+		SavedGameManager.Instance.DeleteSaved(SavedGameManager.Instance.CurrentGameID);
+		SavedGameManager.Instance.CreateNewGame();
 
-	public void ClearSavedData() {
-		ES2.Delete(GameManager.Instance.PlayerFilename);
+		StartAtPhase0();
 	}
 		
 	public void UpdatePhase() {
@@ -164,7 +150,7 @@ public class GameManager : MonoBehaviour {
 			}
 
 			OnCompanyUpdated();
-			SavedGameManager.Instance.SaveGame();
+			SavedGameManager.Instance.Save();
 		}
 		else if (GetPhase() == 0 && playerCompany.eventHistory.Count >= 10) {
 			playerCompany.maxRosterSize = 6;
@@ -282,13 +268,8 @@ public class GameManager : MonoBehaviour {
 		if (playerCompany.companyName != playerCompany.name) {
 			playerCompany.name = playerCompany.companyName;
 		}
-		SavedGameManager.Instance.SaveGame();
+		SavedGameManager.Instance.Save();
 		GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
-	}
-
-	public void SaveData() {
-		playerCompany.Save();
-		ES2.Save(playerCompany.id, PlayerFilename);
 	}
 
 	public void OnTimeUpdated(TimeManager timeManager) {
@@ -420,5 +401,53 @@ public class GameManager : MonoBehaviour {
 				StateMachine.ReplaceState(nextState);
 			}
 		}
+	}
+
+	public void Save(string gameID) {
+		Company.Save(playerCompany, gameID);
+		ES2.Save(playerCompany.id, GetPlayerFilename(gameID));
+	}
+	
+	public void Load(string gameID) {
+		DestroyCurrentGameObjects();
+
+		string filename = GetPlayerFilename(gameID);
+		if (ES2.Exists(filename)) {
+			string playerID = ES2.Load<string> (filename);
+			playerCompany = CompanyManager.Instance.GetCompany (playerID);
+
+			if (playerCompany == null) {
+				Debug.LogError("Error: Unable to load player company with ID '" + playerID + "': No such company exists.");
+			}
+			else {
+				GetGUIManager().GetGameInfoPanel().UpdateCompanyStatus(playerCompany);
+				StateMachine.ReplaceState("IdleGameState");
+			}
+		}
+		else {
+			Debug.LogError("Error: Unable to load player company for game ID '" + gameID + "': No player company exists.");
+		}
+	}
+	
+	public void DeleteSaved(string gameID) {
+		string filename = GetPlayerFilename(gameID);
+
+		if (ES2.Exists(filename)) {
+			ES2.Delete(filename);
+		}
+
+		if (gameID == SavedGameManager.Instance.CurrentGameID) {
+			DestroyCurrentGameObjects();
+		}
+	}
+	
+	public void CreateNew() {
+		DestroyCurrentGameObjects();
+
+		playerCompany = CompanyManager.Instance.CreateEmptyCompany ();
+	}
+	
+	void DestroyCurrentGameObjects() {
+		Destroy (playerCompany.gameObject);
 	}
 }

@@ -18,9 +18,8 @@ public class MainMenuManager : MonoBehaviour {
 	}
 
 	public void StartNewGame() {
-		SavedGameManager.Instance.ClearSavedGames();
-		SavedGameManager.Instance.ClearCurrentGame();
-		SavedGameManager.Instance.CreateNewGame();
+		SavedGameManager.Instance.DeleteAllSaved();
+		PlayerPrefs.SetString ("levelToLoad", "");
 
 		Application.LoadLevel("Sandbox");
 	}
@@ -31,7 +30,7 @@ public class MainMenuManager : MonoBehaviour {
 			return;
 		}
 		else {
-			SavedGameManager.Instance.SetCurrentGame(savedGames[0]);
+			PlayerPrefs.SetString ("levelToLoad", savedGames[0].gameID);
 			Application.LoadLevel("Sandbox");
 		}
 	}

@@ -30,8 +30,8 @@ public class WrestlerManager : MonoBehaviour {
 		}
 	}
 
-	public string WrestlerFilename {
-		get { return SavedGameManager.Instance.CurrentGameID + ".wrestlers"; }
+	void GetWrestlerFilename(string gameID) {
+		return gameID + ".wrestlers";
 	}
 
 	bool LoadSavedWrestlers() {
@@ -65,10 +65,6 @@ public class WrestlerManager : MonoBehaviour {
 		}
 		wrestlers.Clear();
 
-		if (ES2.Exists(WrestlerFilename)) {
-			ES2.Delete (WrestlerFilename);
-		}
-
 		wrestlerGenerator.Initialize("wrestler-names");
 
 		for (int phase = 0; phase < phaseCounts.Length; ++phase) {
@@ -86,8 +82,10 @@ public class WrestlerManager : MonoBehaviour {
 		return wrestlers.Find( x => x.wrestlerName == name );
 	}
 
-	public void ClearSavedData() {
-		GenerateNewWrestlers();
+	public void ClearSavedData(string gameID) {
+		if (ES2.Exists(GetWrestlerFilename(gameID))) {
+			ES2.Delete (GetWrestlerFilename(gameID));
+		}
 	}
 
 	public void SaveData() {

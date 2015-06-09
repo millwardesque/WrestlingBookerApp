@@ -24,60 +24,64 @@ public class CompanyManager : MonoBehaviour {
 		}
 	}
 
-	public void LoadCompanies() {
-		if (!LoadSavedCompanies()) {
-			GenerateNewCompanies();
+	public string GetCompanyFilename(string gameID) {
+		return gameID + ".companies";
+	}
+
+	public void Save(string gameID) {
+		foreach (Company company in companies) {
+			Company.Save(company, gameID);
 		}
 	}
 
-	public string CompanyFilename {
-		get { return SavedGameManager.Instance.CurrentGameID + ".companies"; }
-	}
+	public void Load(string gameID) {
+		DestroyCurrentGameObjects();
 
-	bool LoadSavedCompanies() {
-		if (ES2.Exists(CompanyFilename)) {
-			string[] tags = ES2.GetTags(CompanyFilename);
+		string companyFilename = GetCompanyFilename(gameID);
+		if (ES2.Exists(companyFilename)) {
+			string[] tags = ES2.GetTags(companyFilename);
 			foreach (string tag in tags) {
-				string companyLocation = CompanyFilename + "?tag=" + tag;
 				Company company = Instantiate(companyPrefab) as Company;
 				company.transform.SetParent(transform, false);
-				ES2.Load<Company>(companyLocation, company);
-				company.name = company.companyName;
-				company.SyncRoster();
-				company.SyncVenues();
+				Company.Load (company, tag, gameID);
 				companies.Add (company);
 			}
-			return true;
-		}
-		else {
-			return false;
 		}
 	}
 
-	public void GenerateNewCompanies() {
+	public void DeleteSaved(string gameID) {
+		string companyLocation = GetCompanyFilename(gameID);
+		if (ES2.Exists(companyLocation)) {
+			ES2.Delete(companyLocation);
+		}
+
+		if (gameID == SavedGameManager.Instance.CurrentGameID) {
+			DestroyCurrentGameObjects();
+		}
+	}
+
+	public void CreateNew() {
 		int[] phaseCounts = new int[4];
-		phaseCounts[0] = 4;
-		phaseCounts[1] = 2;
+		phaseCounts[0] = 2;
+		phaseCounts[1] = 4;
 		phaseCounts[2] = 2;
-		phaseCounts[3] = 1;
+		phaseCounts[3] = 2;
 		
-		// Clean up existing data.
-		foreach (Company company in companies) {
-			Destroy(company.gameObject);
-		}
-		companies.Clear();
-		
-		if (ES2.Exists(CompanyFilename)) {
-			ES2.Delete (CompanyFilename);
-		}
-		
+		DestroyCurrentGameObjects();
+
 		companyGenerator.Initialize();
-		
 		for (int phase = 0; phase < phaseCounts.Length; ++phase) {
 			for (int i = 0; i < phaseCounts[phase]; ++i) {
 				GenerateNewCompany(phase);
 			}
 		}
+	}
+
+	void DestroyCurrentGameObjects() {
+		foreach (Company company in companies) {
+			Destroy(company.gameObject);
+		}
+		companies.Clear();
 	}
 
 	public void AddCompany(Company company) {
@@ -91,25 +95,14 @@ public class CompanyManager : MonoBehaviour {
 		return companies.FindAll( x => x.phase <= phase );
 	}
 
-	public void ClearSavedData() {
-		GenerateNewCompanies();
-	}
-
-	public Company CreateCompany() {
+	public Company CreateEmptyCompany() {
 		Company newCompany = GameObject.Instantiate(companyPrefab) as Company;
 		newCompany.transform.SetParent(transform, false);
 		return newCompany;
 	}
 
-	public void SaveData() {
-		foreach (Company company in companies) {
-			company.Save();
-		}
-	}
-
-	public void GenerateNewCompany(int phase) {
-		Company newCompany = GameObject.Instantiate(companyPrefab) as Company;
-		newCompany.transform.SetParent(transform, false);
+	void GenerateNewCompany(int phase) {
+		Company newCompany = CreateEmptyCompany();
 		companyGenerator.Generate(newCompany, phase);
 		companies.Add(newCompany);
 	}

@@ -33,7 +33,7 @@ public class Company : MonoBehaviour {
 	/// Wrestlers loaded by ES2 are game objects separate from wrestlers loaded by the wrestler manager, leading to duplicates.
 	/// Call this function to replace the wrestler clones with the canonical ones in the wrestler manager.
 	/// </summary>
-	public void SyncRoster() {
+	void SyncRoster() {
 		for (int i = 0; i < roster.Count; ++i) {
 			Wrestler wrestler = roster[i];
 			Wrestler canonicalWrestler = WrestlerManager.Instance.GetWrestler(wrestler.wrestlerName);
@@ -44,7 +44,7 @@ public class Company : MonoBehaviour {
 		}
 	}
 
-	public void SyncVenues() {
+	void SyncVenues() {
 		for (int i = 0; i < unlockedVenues.Count; ++i) {
 			Venue venue = unlockedVenues[i];
 			Venue canonicalVenue = VenueManager.Instance.GetVenue(venue.venueName);
@@ -62,7 +62,7 @@ public class Company : MonoBehaviour {
 	public void AddWrestlerToRoster(Wrestler wrestler) {
 		if (CanAddWrestlers()) {
 			roster.Add(wrestler);
-			Save ();
+			Save (this, SavedGameManager.Instance.CurrentGameID);
 		}
 		else {
 			throw new UnityException("Unable to add wrestler to company '" + companyName + ": The roster is full");
@@ -71,16 +71,11 @@ public class Company : MonoBehaviour {
 
 	public void RemoveFromRoster(Wrestler wrestler) {
 		roster.Remove(wrestler);
-		Save ();
+		Save (this, SavedGameManager.Instance.CurrentGameID);
 	}
 
 	public List<Wrestler> GetRoster() {
 		return roster;
-	}
-
-	public void Save() {
-		string companyLocation = CompanyManager.Instance.CompanyFilename + "?tag=" + id;
-		ES2.Save(this, companyLocation);
 	}
 
 	public void AddEvent(WrestlingEvent wrestlingEvent) {
@@ -91,7 +86,7 @@ public class Company : MonoBehaviour {
 		if (newPopularity >= oldPopularity) {
 			AttemptToUnlockVenue();
 		}
-		Save ();
+		Save (this, SavedGameManager.Instance.CurrentGameID);
 	}
 
 	public void AddEvent(HistoricalWrestlingEvent wrestlingEvent) {
@@ -102,12 +97,12 @@ public class Company : MonoBehaviour {
 		if (newPopularity >= oldPopularity) {
 			AttemptToUnlockVenue();
 		}
-		Save ();
+		Save (this, SavedGameManager.Instance.CurrentGameID);
 	}
 
 	public void UnlockVenue(Venue venue) {
 		unlockedVenues.Add (venue);
-		Save ();
+		Save (this, SavedGameManager.Instance.CurrentGameID);
 	}
 
 	void AttemptToUnlockVenue() {
@@ -117,7 +112,7 @@ public class Company : MonoBehaviour {
 			if (newVenue != null) {
 				GameManager.Instance.GetGUIManager().AddNotification("Venue '" + newVenue.venueName + "' unlocked");
 				unlockedVenues.Add(newVenue);
-				Save ();
+				Save (this, SavedGameManager.Instance.CurrentGameID);
 			}
 		}
 	}
@@ -129,7 +124,7 @@ public class Company : MonoBehaviour {
 			if (matchType != null && matchType.phase <= phase && unlockedMatchTypes.Find(x => x.typeName == matchType.typeName) == null) {
 				GameManager.Instance.GetGUIManager().AddNotification("Match type '" + matchType.typeName + "' unlocked");
 				unlockedMatchTypes.Add (matchType);
-				Save ();
+				Save (this, SavedGameManager.Instance.CurrentGameID);
 			}
 		}
 	}
@@ -143,6 +138,37 @@ public class Company : MonoBehaviour {
 			}
 
 			return (maxHistoryLength == 0 ? 0.1f : eventRatingSum / maxHistoryLength);
+		}
+	}
+
+	public static bool Save(Company company, string gameID) {
+		string companyLocation = CompanyManager.Instance.GetCompanyFilename(gameID) + "?tag=" + company.id;
+		ES2.Save(company, companyLocation);
+		return true;
+	}
+
+	public static bool Load(Company company, string id, string gameID) {
+		string companyLocation = CompanyManager.Instance.GetCompanyFilename(gameID) + "?tag=" + id;
+		if (ES2.Exists(companyLocation)) {
+			ES2.Load<Company>(companyLocation, company);
+			company.name = company.companyName;
+			company.SyncRoster();
+			company.SyncVenues();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public static bool DeleteSaved(string id, string gameID) {
+		string companyLocation = CompanyManager.Instance.GetCompanyFilename(gameID) + "?tag=" + id;
+		if (ES2.Exists(companyLocation)) {
+			ES2.Delete(companyLocation);
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 }

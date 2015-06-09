@@ -6,7 +6,7 @@ public class SavedGame {
 	public string gameID;
 
 	public SavedGame() { 
-		gameID = SavedGameManager.NewGameID;
+		gameID = "new";
 	}
 
 	public SavedGame(string gameID) {
@@ -14,9 +14,7 @@ public class SavedGame {
 	}
 }
 
-public class SavedGameManager : MonoBehaviour {
-	public static string NewGameID = "new";
-	
+public class SavedGameManager : MonoBehaviour {	
 	List<SavedGame> games = new List<SavedGame>();
 	SavedGame currentGame = null;
 
@@ -54,6 +52,14 @@ public class SavedGameManager : MonoBehaviour {
 		}
 	}
 
+	public List<SavedGame> GetSavedGames() {
+		return games;
+	}
+
+	public SavedGame GetSavedGame(string gameID) {
+		return games.Find (x => x.gameID == gameID);
+	}
+
 	public SavedGame CreateNewGame() {
 		// Generate a unique ID for new games who are saving for the first time.
 		int gameID = 0;
@@ -61,69 +67,90 @@ public class SavedGameManager : MonoBehaviour {
 			gameID++;
 		}
 		currentGame = new SavedGame(gameID.ToString());
-		SaveGame();
+
+		// @TODO Replace with listener implementation instead of hardcoded objects.
+
+		// @TODO Handle venues, wrestlers before company
+
+		if (CompanyManager.Instance != null) {
+			CompanyManager.Instance.CreateNew();
+		}
+
+		// @TODO Handle player company.
+		GameManager.Instance.CreateNew();
+
+		Save ();
 		games.Add(currentGame);
 		return currentGame;
 	}
 
-	public void ClearSavedGames() {
-		games.Clear();
+	public void Save() {
+		ES2.Save<SavedGame>(currentGame, SavedGameFilename + "?tag=" + CurrentGameID);
+
+		// @TODO Replace with listener implementation instead of hardcoded objects.
+		if (CompanyManager.Instance != null) {
+			CompanyManager.Instance.Save(CurrentGameID);
+		}
+
+		GameManager.Instance.Save(CurrentGameID);
+
+		// @TODO Handle venues, wrestlers
+	}
+
+	public void DeleteSaved(string gameID) {
+		SavedGame toDelete = GetSavedGame(gameID);
+		if (toDelete != null) {
+			DeleteSaved (toDelete);
+		}
+		else {
+			throw new UnityException(string.Format ("Unable to delete saved game {0}: No such game was found", gameID));
+		}
+	}
+
+	public void DeleteSaved(SavedGame game) {
+		// @TODO Replace with listener implementation instead of hardcoded objects.
+		GameManager.Instance.DeleteSaved(game.gameID);
+
+		if (CompanyManager.Instance != null) {
+			CompanyManager.Instance.DeleteSaved(game.gameID);
+		}
+
+		// @TODO Handle venues, wrestlers
+
+		games.Remove(game);
+	}
+
+	public void DeleteAllSaved() {
+		foreach (SavedGame game in GetSavedGames()) {
+			DeleteSaved (game);
+		}
+
+		if (ES2.Exists(SavedGameFilename)) {
+			ES2.Delete (SavedGameFilename);
+		}
+	}
+
+	public void Load(string gameID) {
+		SavedGame toLoad = GetSavedGame(gameID);
+		if (toLoad != null) {
+			Load (toLoad);
+		}
+		else {
+			throw new UnityException(string.Format ("Unable to load saved game {0}: No such game was found", gameID));
+		}
+	}
 	
-		ES2.Delete (SavedGameFilename);
+	public void Load(SavedGame game) {
+		// @TODO Replace with listener implementation instead of hardcoded objects.
 
-		ClearCurrentGame();
-	}
+		// @TODO Handle venues, wrestlers before companies.
 
-	public List<SavedGame> GetSavedGames() {
-		return games;
-	}
+		if (CompanyManager.Instance != null) {
+			CompanyManager.Instance.Load(game.gameID);
+		}
 
-	public void SetCurrentGame(SavedGame game) {
+		GameManager.Instance.Load(game.gameID);
+
 		currentGame = game;
-	}
-
-	public void ClearCurrentGame() {
-		// Cleared saved data using the current game ID.
-
-		// @TODO Replace with listener implementation instead of hardcoded objects.
-		if (GameManager.Instance != null) {
-			GameManager.Instance.ClearSavedData();
-		}
-
-		if (CompanyManager.Instance != null) {
-			CompanyManager.Instance.ClearSavedData();
-		}
-
-		if (VenueManager.Instance != null) {
-			VenueManager.Instance.ClearSavedData();
-		}
-
-		if (WrestlerManager.Instance != null) {
-			WrestlerManager.Instance.ClearSavedData();
-		}
-
-		// Generate a new game ID.
-		currentGame = new SavedGame();
-	}
-
-	public void SaveGame() {
-		ES2.Save<SavedGame>(currentGame, SavedGameFilename + "?tag=" + currentGame.gameID);
-
-		// @TODO Replace with listener implementation instead of hardcoded objects.
-		if (GameManager.Instance != null) {
-			GameManager.Instance.SaveData();
-		}
-		
-		if (CompanyManager.Instance != null) {
-			CompanyManager.Instance.SaveData();
-		}
-		
-		if (VenueManager.Instance != null) {
-			VenueManager.Instance.SaveData();
-		}
-		
-		if (WrestlerManager.Instance != null) {
-			WrestlerManager.Instance.SaveData();
-		}
 	}
 }
