@@ -22,7 +22,7 @@ public class Wrestler : MonoBehaviour {
 	public void Initialize(string wrestlerName, string description, float perMatchCost, float popularity, bool isHeel, float hiringCost, int phase, float charisma, float work, float appearance, Dictionary<string, float> matchTypeAffinities, Dictionary<string, float> matchFinishAffinities) {
 		this.id = GetInstanceID().ToString();
 		this.wrestlerName = wrestlerName;
-		this.name = name;
+		this.name = wrestlerName;
 		this.description = description;
 		this.perMatchCost = perMatchCost;
 		this.popularity = popularity;
@@ -85,13 +85,13 @@ public class Wrestler : MonoBehaviour {
 	}
 
 	public static bool Save(Wrestler wrestler, string gameID) {
-		string filename = WrestlerManager.Instance.GetFilename(gameID) + "?tag=" + wrestler.id;
+		string filename = WrestlerManager.GetFilename(gameID) + "?tag=" + wrestler.id;
 		ES2.Save(wrestler, filename);
 		return true;
 	}
 	
 	public static bool Load(Wrestler wrestler, string id, string gameID) {
-		string filename = WrestlerManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		string filename = WrestlerManager.GetFilename(gameID) + "?tag=" + id;
 		if (ES2.Exists(filename)) {
 			ES2.Load<Wrestler>(filename, wrestler);
 			wrestler.name = wrestler.wrestlerName;
@@ -104,7 +104,7 @@ public class Wrestler : MonoBehaviour {
 	}
 	
 	public static bool DeleteSaved(string id, string gameID) {
-		string filename = WrestlerManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		string filename = WrestlerManager.GetFilename(gameID) + "?tag=" + id;
 		if (ES2.Exists(filename)) {
 			ES2.Delete(filename);
 			return true;

@@ -80,13 +80,13 @@ public class Venue : MonoBehaviour {
 	}
 	
 	public static bool Save(Venue venue, string gameID) {
-		string filename = VenueManager.Instance.GetFilename(gameID) + "?tag=" + venue.id;
+		string filename = VenueManager.GetFilename(gameID) + "?tag=" + venue.id;
 		ES2.Save(venue, filename);
 		return true;
 	}
 	
 	public static bool Load(Venue venue, string id, string gameID) {
-		string filename = VenueManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		string filename = VenueManager.GetFilename(gameID) + "?tag=" + id;
 		if (ES2.Exists(filename)) {
 			ES2.Load<Venue>(filename, venue);
 			venue.name = venue.venueName;
@@ -99,7 +99,7 @@ public class Venue : MonoBehaviour {
 	}
 	
 	public static bool DeleteSaved(string id, string gameID) {
-		string filename = VenueManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		string filename = VenueManager.GetFilename(gameID) + "?tag=" + id;
 		if (ES2.Exists(filename)) {
 			ES2.Delete(filename);
 			return true;

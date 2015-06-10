@@ -142,13 +142,13 @@ public class Company : MonoBehaviour {
 	}
 
 	public static bool Save(Company company, string gameID) {
-		string filename = CompanyManager.Instance.GetFilename(gameID) + "?tag=" + company.id;
+		string filename = CompanyManager.GetFilename(gameID) + "?tag=" + company.id;
 		ES2.Save(company, filename);
 		return true;
 	}
 
 	public static bool Load(Company company, string id, string gameID) {
-		string filename = CompanyManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		string filename = CompanyManager.GetFilename(gameID) + "?tag=" + id;
 		if (ES2.Exists(filename)) {
 			ES2.Load<Company>(filename, company);
 			company.name = company.companyName;
@@ -163,7 +163,7 @@ public class Company : MonoBehaviour {
 	}
 
 	public static bool DeleteSaved(string id, string gameID) {
-		string filename = CompanyManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		string filename = CompanyManager.GetFilename(gameID) + "?tag=" + id;
 		if (ES2.Exists(filename)) {
 			ES2.Delete(filename);
 			return true;

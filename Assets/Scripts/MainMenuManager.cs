@@ -19,7 +19,7 @@ public class MainMenuManager : MonoBehaviour {
 
 	public void StartNewGame() {
 		SavedGameManager.Instance.DeleteAllSaved();
-		PlayerPrefs.SetString ("levelToLoad", "");
+		PlayerPrefs.DeleteKey("levelToLoad");
 
 		Application.LoadLevel("Sandbox");
 	}

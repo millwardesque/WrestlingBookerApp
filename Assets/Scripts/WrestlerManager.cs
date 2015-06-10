@@ -23,7 +23,7 @@ public class WrestlerManager : MonoBehaviour {
 		}
 	}
 
-	public string GetFilename(string gameID) {
+	public static string GetFilename(string gameID) {
 		return gameID + ".wrestlers";
 	}
 
@@ -35,8 +35,8 @@ public class WrestlerManager : MonoBehaviour {
 	
 	public void Load(string gameID) {
 		DestroyCurrentGameObjects();
-		
-		string filename = GetFilename(gameID);
+
+		string filename = WrestlerManager.GetFilename(gameID);
 		if (ES2.Exists(filename)) {
 			string[] tags = ES2.GetTags(filename);
 			foreach (string tag in tags) {
@@ -47,14 +47,14 @@ public class WrestlerManager : MonoBehaviour {
 		}
 	}
 	
-	public void DeleteSaved(string gameID) {
-		string filename = GetFilename(gameID);
+	public static void DeleteSaved(string gameID) {
+		string filename = WrestlerManager.GetFilename(gameID);
 		if (ES2.Exists(filename)) {
 			ES2.Delete(filename);
 		}
-		
-		if (gameID == SavedGameManager.Instance.CurrentGameID) {
-			DestroyCurrentGameObjects();
+
+		if (WrestlerManager.Instance != null && SavedGameManager.Instance.IsGameLoaded() && gameID == SavedGameManager.Instance.CurrentGameID) {
+			WrestlerManager.Instance.DestroyCurrentGameObjects();
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class WrestlerManager : MonoBehaviour {
 		phaseCounts[3] = 4;
 		
 		wrestlerGenerator.Initialize("wrestler-names");
-		
+
 		for (int phase = 0; phase < phaseCounts.Length; ++phase) {
 			for (int i = 0; i < phaseCounts[phase]; ++i) {
 				GenerateNewWrestler(phase);

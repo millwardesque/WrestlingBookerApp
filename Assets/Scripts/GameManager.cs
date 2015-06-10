@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public string GetPlayerFilename(string gameID) {
+	public static string GetPlayerFilename(string gameID) {
 		return gameID + ".game?tag=player";
 	}
 
@@ -405,7 +405,7 @@ public class GameManager : MonoBehaviour {
 
 	public void Save(string gameID) {
 		Company.Save(playerCompany, gameID);
-		ES2.Save(playerCompany.id, GetPlayerFilename(gameID));
+		ES2.Save(playerCompany.id, GameManager.GetPlayerFilename(gameID));
 	}
 	
 	public void Load(string gameID) {
@@ -429,15 +429,15 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 	
-	public void DeleteSaved(string gameID) {
-		string filename = GetPlayerFilename(gameID);
+	public static void DeleteSaved(string gameID) {
+		string filename = GameManager.GetPlayerFilename(gameID);
 
 		if (ES2.Exists(filename)) {
 			ES2.Delete(filename);
 		}
 
-		if (gameID == SavedGameManager.Instance.CurrentGameID) {
-			DestroyCurrentGameObjects();
+		if (GameManager.Instance != null && SavedGameManager.Instance.IsGameLoaded() && gameID == SavedGameManager.Instance.CurrentGameID) {
+			GameManager.Instance.DestroyCurrentGameObjects();
 		}
 	}
 	
@@ -448,6 +448,8 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	void DestroyCurrentGameObjects() {
-		Destroy (playerCompany.gameObject);
+		if (playerCompany != null) {
+			Destroy (playerCompany.gameObject);
+		}
 	}
 }

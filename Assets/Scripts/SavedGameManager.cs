@@ -27,6 +27,10 @@ public class SavedGameManager : MonoBehaviour {
 	public string CurrentGameID {
 		get { return currentGame.gameID; }
 	}
+
+	public bool IsGameLoaded() {
+		return (currentGame == null);
+	}
 	
 	void Awake() {
 		if (Instance == null) {
@@ -120,27 +124,17 @@ public class SavedGameManager : MonoBehaviour {
 	}
 
 	public void DeleteSaved(SavedGame game) {
-		if (GameManager.Instance != null) {
-			GameManager.Instance.DeleteSaved(game.gameID);
-		}
-
-		if (CompanyManager.Instance != null) {
-			CompanyManager.Instance.DeleteSaved(game.gameID);
-		}
-
-		if (WrestlerManager.Instance != null) {
-			WrestlerManager.Instance.DeleteSaved(game.gameID);
-		}
-
-		if (VenueManager.Instance != null) {
-			VenueManager.Instance.DeleteSaved(game.gameID);
-		}
+		GameManager.DeleteSaved(game.gameID);
+		CompanyManager.DeleteSaved(game.gameID);
+		WrestlerManager.DeleteSaved(game.gameID);
+		VenueManager.DeleteSaved(game.gameID);
 
 		games.Remove(game);
 	}
 
 	public void DeleteAllSaved() {
-		foreach (SavedGame game in GetSavedGames()) {
+		while (GetSavedGames().Count > 0) {
+			SavedGame game = GetSavedGames()[0];
 			DeleteSaved (game);
 		}
 

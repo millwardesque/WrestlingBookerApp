@@ -24,7 +24,7 @@ public class CompanyManager : MonoBehaviour {
 		}
 	}
 
-	public string GetFilename(string gameID) {
+	public static string GetFilename(string gameID) {
 		return gameID + ".companies";
 	}
 
@@ -37,7 +37,7 @@ public class CompanyManager : MonoBehaviour {
 	public void Load(string gameID) {
 		DestroyCurrentGameObjects();
 
-		string companyFilename = GetFilename(gameID);
+		string companyFilename = CompanyManager.GetFilename(gameID);
 		if (ES2.Exists(companyFilename)) {
 			string[] tags = ES2.GetTags(companyFilename);
 			foreach (string tag in tags) {
@@ -48,14 +48,14 @@ public class CompanyManager : MonoBehaviour {
 		}
 	}
 
-	public void DeleteSaved(string gameID) {
-		string companyLocation = GetFilename(gameID);
+	public static void DeleteSaved(string gameID) {
+		string companyLocation = CompanyManager.GetFilename(gameID);
 		if (ES2.Exists(companyLocation)) {
 			ES2.Delete(companyLocation);
 		}
 
-		if (gameID == SavedGameManager.Instance.CurrentGameID) {
-			DestroyCurrentGameObjects();
+		if (SavedGameManager.Instance.IsGameLoaded() && CompanyManager.Instance != null && gameID == SavedGameManager.Instance.CurrentGameID) {
+			CompanyManager.Instance.DestroyCurrentGameObjects();
 		}
 	}
 
