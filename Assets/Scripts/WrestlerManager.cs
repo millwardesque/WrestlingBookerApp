@@ -23,55 +23,62 @@ public class WrestlerManager : MonoBehaviour {
 		}
 	}
 
-	public void LoadWrestlers() {
-		Debug.Log (WrestlerFilename);
-		if (!LoadSavedWrestlers()) {
-			GenerateNewWrestlers();
-		}
-	}
-
-	void GetWrestlerFilename(string gameID) {
+	public string GetFilename(string gameID) {
 		return gameID + ".wrestlers";
 	}
 
-	bool LoadSavedWrestlers() {
-		if (ES2.Exists(WrestlerFilename)) {
-			string[] tags = ES2.GetTags(WrestlerFilename);
-			foreach (string tag in tags) {
-				string wrestlerLocation = WrestlerFilename + "?tag=" + tag;
-				Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
-				wrestler.transform.SetParent(transform, false);
-				ES2.Load<Wrestler>(wrestlerLocation, wrestler);
-				wrestler.name = wrestler.wrestlerName;
-				wrestlers.Add (wrestler);
-			}
-			return true;
-		}
-		else {
-			return false;
+	public void Save(string gameID) {
+		foreach (Wrestler wrestler in wrestlers) {
+			Wrestler.Save(wrestler, gameID);
 		}
 	}
-
-	public void GenerateNewWrestlers() {
+	
+	public void Load(string gameID) {
+		DestroyCurrentGameObjects();
+		
+		string filename = GetFilename(gameID);
+		if (ES2.Exists(filename)) {
+			string[] tags = ES2.GetTags(filename);
+			foreach (string tag in tags) {
+				Wrestler wrestler = CreateEmptyWrestler();
+				Wrestler.Load(wrestler, tag, gameID);
+				wrestlers.Add (wrestler);
+			}
+		}
+	}
+	
+	public void DeleteSaved(string gameID) {
+		string filename = GetFilename(gameID);
+		if (ES2.Exists(filename)) {
+			ES2.Delete(filename);
+		}
+		
+		if (gameID == SavedGameManager.Instance.CurrentGameID) {
+			DestroyCurrentGameObjects();
+		}
+	}
+	
+	public void CreateNew() {
 		int[] phaseCounts = new int[4];
 		phaseCounts[0] = 6;
 		phaseCounts[1] = 4;
 		phaseCounts[2] = 4;
 		phaseCounts[3] = 4;
-
-		// Clean up existing data.
-		foreach (Wrestler wrestler in wrestlers) {
-			Destroy(wrestler.gameObject);
-		}
-		wrestlers.Clear();
-
+		
 		wrestlerGenerator.Initialize("wrestler-names");
-
+		
 		for (int phase = 0; phase < phaseCounts.Length; ++phase) {
 			for (int i = 0; i < phaseCounts[phase]; ++i) {
 				GenerateNewWrestler(phase);
 			}
 		}
+	}
+	
+	void DestroyCurrentGameObjects() {
+		foreach (Wrestler wrestler in wrestlers) {
+			Destroy(wrestler.gameObject);
+		}
+		wrestlers.Clear();
 	}
 
 	public List<Wrestler> GetWrestlers(int phase = 0) {
@@ -82,23 +89,15 @@ public class WrestlerManager : MonoBehaviour {
 		return wrestlers.Find( x => x.wrestlerName == name );
 	}
 
-	public void ClearSavedData(string gameID) {
-		if (ES2.Exists(GetWrestlerFilename(gameID))) {
-			ES2.Delete (GetWrestlerFilename(gameID));
-		}
-	}
-
-	public void SaveData() {
-		foreach (Wrestler wrestler in wrestlers) {
-			wrestler.Save();
-		}
-	}
-	
-	public void GenerateNewWrestler(int phase) {
+	public Wrestler CreateEmptyWrestler() {
 		Wrestler wrestler = Instantiate(wrestlerPrefab) as Wrestler;
 		wrestler.transform.SetParent(transform, false);
+		return wrestler;
+	}
+
+	void GenerateNewWrestler(int phase) {
+		Wrestler wrestler = CreateEmptyWrestler();
 		wrestlerGenerator.GenerateWrestler(wrestler, phase);
-		wrestler.name = wrestler.wrestlerName;
 		wrestlers.Add (wrestler);
 	}
 }

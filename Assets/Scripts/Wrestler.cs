@@ -64,14 +64,14 @@ public class Wrestler : MonoBehaviour {
 	public void AddUsedMatchType(WrestlingMatchType type) {
 		if (!HasUsedMatchType(type)) {
 			usedMatchTypes.Add(type.typeName);
-			Save ();
+			Wrestler.Save (this, SavedGameManager.Instance.CurrentGameID);
 		}
 	}
 
 	public void AddUsedMatchFinish(WrestlingMatchFinish finish) {
 		if (!HasUsedMatchFinish(finish)) {
 			usedMatchFinishes.Add(finish.finishName);
-			Save ();
+			Wrestler.Save (this, SavedGameManager.Instance.CurrentGameID);
 		}
 	}
 
@@ -84,9 +84,34 @@ public class Wrestler : MonoBehaviour {
 		return (null != usedMatchFinishes.Find ( x => x == finish.finishName));
 	}
 
-
-	public void Save() {
-		string wrestlerLocation = WrestlerManager.Instance.WrestlerFilename + "?tag=" + id;
-		ES2.Save(this, wrestlerLocation);
+	public static bool Save(Wrestler wrestler, string gameID) {
+		string filename = WrestlerManager.Instance.GetFilename(gameID) + "?tag=" + wrestler.id;
+		ES2.Save(wrestler, filename);
+		return true;
+	}
+	
+	public static bool Load(Wrestler wrestler, string id, string gameID) {
+		string filename = WrestlerManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		if (ES2.Exists(filename)) {
+			ES2.Load<Wrestler>(filename, wrestler);
+			wrestler.name = wrestler.wrestlerName;
+			return true;
+		}
+		else {
+			Debug.LogError(string.Format ("Unable to load wrestler from {0}: No such file found", filename));
+			return false;
+		}
+	}
+	
+	public static bool DeleteSaved(string id, string gameID) {
+		string filename = WrestlerManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		if (ES2.Exists(filename)) {
+			ES2.Delete(filename);
+			return true;
+		}
+		else {
+			Debug.LogError(string.Format ("Unable to delete wrestler at {0}: No such file found", filename));
+			return false;
+		}
 	}
 }

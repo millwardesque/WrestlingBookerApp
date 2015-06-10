@@ -68,16 +68,21 @@ public class SavedGameManager : MonoBehaviour {
 		}
 		currentGame = new SavedGame(gameID.ToString());
 
-		// @TODO Replace with listener implementation instead of hardcoded objects.
+		if (VenueManager.Instance != null) {
+			VenueManager.Instance.CreateNew();
+		}
 
-		// @TODO Handle venues, wrestlers before company
+		if (WrestlerManager.Instance != null) {
+			WrestlerManager.Instance.CreateNew();
+		}
 
 		if (CompanyManager.Instance != null) {
 			CompanyManager.Instance.CreateNew();
 		}
 
-		// @TODO Handle player company.
-		GameManager.Instance.CreateNew();
+		if (GameManager.Instance != null) {
+			GameManager.Instance.CreateNew();
+		}
 
 		Save ();
 		games.Add(currentGame);
@@ -87,14 +92,21 @@ public class SavedGameManager : MonoBehaviour {
 	public void Save() {
 		ES2.Save<SavedGame>(currentGame, SavedGameFilename + "?tag=" + CurrentGameID);
 
-		// @TODO Replace with listener implementation instead of hardcoded objects.
 		if (CompanyManager.Instance != null) {
 			CompanyManager.Instance.Save(CurrentGameID);
 		}
 
-		GameManager.Instance.Save(CurrentGameID);
+		if (GameManager.Instance != null) {
+			GameManager.Instance.Save(CurrentGameID);
+		}
 
-		// @TODO Handle venues, wrestlers
+		if (WrestlerManager.Instance != null) {
+			WrestlerManager.Instance.Save (CurrentGameID);
+		}
+
+		if (VenueManager.Instance != null) {
+			VenueManager.Instance.Save (CurrentGameID);
+		}
 	}
 
 	public void DeleteSaved(string gameID) {
@@ -108,14 +120,21 @@ public class SavedGameManager : MonoBehaviour {
 	}
 
 	public void DeleteSaved(SavedGame game) {
-		// @TODO Replace with listener implementation instead of hardcoded objects.
-		GameManager.Instance.DeleteSaved(game.gameID);
+		if (GameManager.Instance != null) {
+			GameManager.Instance.DeleteSaved(game.gameID);
+		}
 
 		if (CompanyManager.Instance != null) {
 			CompanyManager.Instance.DeleteSaved(game.gameID);
 		}
 
-		// @TODO Handle venues, wrestlers
+		if (WrestlerManager.Instance != null) {
+			WrestlerManager.Instance.DeleteSaved(game.gameID);
+		}
+
+		if (VenueManager.Instance != null) {
+			VenueManager.Instance.DeleteSaved(game.gameID);
+		}
 
 		games.Remove(game);
 	}
@@ -141,15 +160,21 @@ public class SavedGameManager : MonoBehaviour {
 	}
 	
 	public void Load(SavedGame game) {
-		// @TODO Replace with listener implementation instead of hardcoded objects.
+		if (VenueManager.Instance != null) {
+			VenueManager.Instance.Load (game.gameID);
+		}
 
-		// @TODO Handle venues, wrestlers before companies.
+		if (WrestlerManager.Instance != null) {
+			WrestlerManager.Instance.Load (game.gameID);
+		}
 
 		if (CompanyManager.Instance != null) {
 			CompanyManager.Instance.Load(game.gameID);
 		}
 
-		GameManager.Instance.Load(game.gameID);
+		if (GameManager.Instance != null) {
+			GameManager.Instance.Load(game.gameID);
+		}
 
 		currentGame = game;
 	}

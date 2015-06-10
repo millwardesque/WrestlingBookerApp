@@ -11,10 +11,6 @@ public class VenueManager : MonoBehaviour {
 
 	public static VenueManager Instance;
 
-	public string VenueFilename {
-		get { return SavedGameManager.Instance.CurrentGameID + ".venues"; }
-	}
-
 	// Use this for initialization
 	void Awake () {
 		if (null == Instance) {
@@ -31,46 +27,61 @@ public class VenueManager : MonoBehaviour {
 		}
 	}
 
-	public void LoadVenues() {
-		if (!LoadSavedVenues()) {
-			GenerateNewVenues();
+	public string GetFilename(string gameID) {
+		return gameID + ".venues";
+	}
+	
+	public void Save(string gameID) {
+		foreach (Venue venue in venues) {
+			Venue.Save(venue, gameID);
 		}
 	}
-
-	bool LoadSavedVenues() {
-		if (ES2.Exists(VenueFilename)) {
-			string[] tags = ES2.GetTags(VenueFilename);
+	
+	public void Load(string gameID) {
+		DestroyCurrentGameObjects();
+		
+		string filename = GetFilename(gameID);
+		if (ES2.Exists(filename)) {
+			string[] tags = ES2.GetTags(filename);
 			foreach (string tag in tags) {
-				string venueLocation = VenueFilename + "?tag=" + tag;
-				Venue venue = Instantiate(venuePrefab) as Venue;
-				venue.transform.SetParent(transform, false);
-				ES2.Load<Venue>(venueLocation, venue);
-				venue.name = venue.venueName;
+				Venue venue = CreateEmptyVenue();
+				Venue.Load(venue, tag, gameID);
 				venues.Add (venue);
 			}
-			return true;
-		}
-		else {
-			return false;
 		}
 	}
-
-	void GenerateNewVenues() {
-		// Clean up existing data.
-		foreach (Venue venue in venues) {
-			Destroy(venue.gameObject);
+	
+	public void DeleteSaved(string gameID) {
+		string filename = GetFilename(gameID);
+		if (ES2.Exists(filename)) {
+			ES2.Delete(filename);
 		}
-		venues.Clear();
 		
-		if (ES2.Exists(VenueFilename)) {
-			ES2.Delete (VenueFilename);
+		if (gameID == SavedGameManager.Instance.CurrentGameID) {
+			DestroyCurrentGameObjects();
 		}
-
+	}
+	
+	public void CreateNew() {
 		// In this case, we load some venue data from a JSON file (like name / description / phase) and leave the generator to fill in the blanks.
 		LoadFromJSON("venues");
 		foreach (Venue venue in venues) {
 			venueGenerator.GenerateVenue(venue, venue.phase);
-			venue.Save();
+		}
+	}
+	
+	void DestroyCurrentGameObjects() {
+		foreach (Venue venue in venues) {
+			Destroy(venue.gameObject);
+		}
+		venues.Clear();
+	}
+
+	void GenerateNewVenues() {
+		// In this case, we load some venue data from a JSON file (like name / description / phase) and leave the generator to fill in the blanks.
+		LoadFromJSON("venues");
+		foreach (Venue venue in venues) {
+			venueGenerator.GenerateVenue(venue, venue.phase);
 		}
 	}
 
@@ -116,10 +127,6 @@ public class VenueManager : MonoBehaviour {
 		}
 	}
 
-	public void ClearSavedData() {
-		GenerateNewVenues();
-	}
-
 	public Venue GetRandomAvailableVenue(Company company) {
 		List<Venue> availableVenues = new List<Venue>();
 
@@ -146,10 +153,10 @@ public class VenueManager : MonoBehaviour {
 		return venues;
 	}
 
-	public void SaveData() {
-		foreach (Venue venue in venues) {
-			venue.Save();
-		}
+	public Venue CreateEmptyVenue() {
+		Venue venue = Instantiate(venuePrefab) as Venue;
+		venue.transform.SetParent(transform, false);
+		return venue;
 	}
 
 	public Venue CreateVenue(string name, string description, float baseCost, float gatePercentage, int capacity, float popularity, Dictionary<string, float> matchTypePreferences, Dictionary<string, float> matchFinishPreferences, int phase, string unlockableMatchType) {

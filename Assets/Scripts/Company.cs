@@ -142,32 +142,34 @@ public class Company : MonoBehaviour {
 	}
 
 	public static bool Save(Company company, string gameID) {
-		string companyLocation = CompanyManager.Instance.GetCompanyFilename(gameID) + "?tag=" + company.id;
-		ES2.Save(company, companyLocation);
+		string filename = CompanyManager.Instance.GetFilename(gameID) + "?tag=" + company.id;
+		ES2.Save(company, filename);
 		return true;
 	}
 
 	public static bool Load(Company company, string id, string gameID) {
-		string companyLocation = CompanyManager.Instance.GetCompanyFilename(gameID) + "?tag=" + id;
-		if (ES2.Exists(companyLocation)) {
-			ES2.Load<Company>(companyLocation, company);
+		string filename = CompanyManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		if (ES2.Exists(filename)) {
+			ES2.Load<Company>(filename, company);
 			company.name = company.companyName;
 			company.SyncRoster();
 			company.SyncVenues();
 			return true;
 		}
 		else {
+			Debug.LogError(string.Format ("Unable to load company from {0}: No such file found", filename));
 			return false;
 		}
 	}
 
 	public static bool DeleteSaved(string id, string gameID) {
-		string companyLocation = CompanyManager.Instance.GetCompanyFilename(gameID) + "?tag=" + id;
-		if (ES2.Exists(companyLocation)) {
-			ES2.Delete(companyLocation);
+		string filename = CompanyManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		if (ES2.Exists(filename)) {
+			ES2.Delete(filename);
 			return true;
 		}
 		else {
+			Debug.LogError(string.Format ("Unable to delete company at {0}: No such file found", filename));
 			return false;
 		}
 	}

@@ -42,7 +42,7 @@ public class Venue : MonoBehaviour {
 	public void AddSeenMatchType(WrestlingMatchType type) {
 		if (!HasSeenMatchType(type)) {
 			seenMatchTypes.Add(type.typeName);
-			Save();
+			Venue.Save (this, SavedGameManager.Instance.CurrentGameID);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class Venue : MonoBehaviour {
 	public void AddSeenMatchFinish(WrestlingMatchFinish finish) {
 		if (!HasSeenMatchFinish(finish)) {
 			seenMatchFinishes.Add(finish.finishName);
-			Save();
+			Venue.Save (this, SavedGameManager.Instance.CurrentGameID);
 		}
 	}
 	
@@ -78,9 +78,35 @@ public class Venue : MonoBehaviour {
 			return 0.5f;
 		}
 	}
-
-	public void Save() {
-		string venueLocation = VenueManager.Instance.VenueFilename + "?tag=" + id;
-		ES2.Save(this, venueLocation);
+	
+	public static bool Save(Venue venue, string gameID) {
+		string filename = VenueManager.Instance.GetFilename(gameID) + "?tag=" + venue.id;
+		ES2.Save(venue, filename);
+		return true;
+	}
+	
+	public static bool Load(Venue venue, string id, string gameID) {
+		string filename = VenueManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		if (ES2.Exists(filename)) {
+			ES2.Load<Venue>(filename, venue);
+			venue.name = venue.venueName;
+			return true;
+		}
+		else {
+			Debug.LogError(string.Format ("Unable to load venue from {0}: No such file found", filename));
+			return false;
+		}
+	}
+	
+	public static bool DeleteSaved(string id, string gameID) {
+		string filename = VenueManager.Instance.GetFilename(gameID) + "?tag=" + id;
+		if (ES2.Exists(filename)) {
+			ES2.Delete(filename);
+			return true;
+		}
+		else {
+			Debug.LogError(string.Format ("Unable to delete venue at {0}: No such file found", filename));
+			return false;
+		}
 	}
 }
