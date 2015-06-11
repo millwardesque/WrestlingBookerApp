@@ -57,7 +57,7 @@ public class Wrestler : MonoBehaviour {
 	public string DescriptionWithStats {
 		get {
 			return string.Format ("Per-match Cost: ${0}\nWork: {1}\nCharisma: {2}\nPopularity: {3}\nAppearance: {4}\nAlignment: {5}\n{6}", 
-			                      perMatchCost, Utilities.AlphaRating(work), Utilities.AlphaRating(charisma), Utilities.AlphaRating(appearance), Utilities.AlphaRating(popularity), (isHeel ? "Heel" : "Babyface"), description);
+			                      perMatchCost, Utilities.FractionString(work, 10), Utilities.FractionString(charisma, 10), Utilities.FractionString(appearance, 10), Utilities.FractionString(popularity, 10), (isHeel ? "Heel" : "Babyface"), description);
 		}
 	}
 
